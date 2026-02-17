@@ -33,34 +33,37 @@
             min-height: 100vh;
         }
 
-       /* CONFIGURAZIONE MOBILE - FADE + SNAP PULITO */
+       /* CONFIGURAZIONE MOBILE - CONTAINER SCROLL */
         @media (max-width: 768px) {
-            html {
-                /* ALTEZZA FISSA OBBLIGATORIA PER LO SNAP */
-                height: 100dvh !important; 
+            /* 1. BLOCCA LA FINESTRA PRINCIPALE (Fix Firefox/Safari) */
+            html, body {
+                height: 100% !important;
+                width: 100% !important;
+                margin: 0;
+                padding: 0;
+                overflow: hidden !important; /* Nessuno scroll sul body */
+                position: fixed !important;  /* Inchioda il sito */
+                overscroll-behavior: none;
+            }
+
+            /* 2. ATTIVA LO SCROLL SUL CONTENITORE FANTASMA */
+            #ghost-scroll {
+                display: block !important;
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 100%;
+                height: 100dvh !important; /* Usa tutta l'altezza disponibile */
                 
-                /* FORZA LO SCROLL INTERNO AL CONTENITORE */
-                overflow-y: scroll !important; 
-                
-                /* MAGNETISMO FORTE */
-                scroll-snap-type: y mandatory !important;
+                overflow-y: scroll !important; /* Lo scroll avviene QUI */
+                scroll-snap-type: y mandatory !important; /* Magnetismo QUI */
                 scroll-behavior: smooth;
                 
-                /* PREVIENE RIMBALZI ELASTICI SU IOS */
-                position: fixed;
-                overflow-x: hidden;
+                z-index: 50 !important; /* Deve stare sopra a tutto per prendere il tocco */
+                pointer-events: all !important;
             }
 
-            body {
-                /* Il body si adatta esattamente al contenitore html */
-                height: 100dvh !important;
-                width: 100%;
-                margin: 0;
-                overflow: hidden; /* Il body non scrolla, scrolla html */
-            }
-
-            /* NAVBAR (Resta invariata) */
+            /* 3. NAVBAR */
             nav {
                 pointer-events: auto !important;
                 z-index: 10001 !important;
@@ -72,18 +75,12 @@
                 -webkit-overflow-scrolling: touch; 
                 padding-bottom: 30px; 
             }
-            
             .main-link, .sub-link {
                 pointer-events: auto !important;
                 display: inline-flex !important;
             }
 
-            /* Le facce devono essere alte esattamente come lo schermo */
-            .cube-face {
-                height: 100dvh !important;
-            }
-
-            /* Posizione Ciao */
+            /* 4. POSIZIONE CIAO */
             .centered-container em.italic-script:first-child {
                 transform: translateY(-1.5vh); 
                 display: block;
@@ -277,7 +274,18 @@
         .scene { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; perspective: 1500px; z-index: 5; pointer-events: none; }
         .cube-wrapper { width: 100%; height: 100%; transform-style: preserve-3d; }
         .scroll-container { position: relative; z-index: 10; pointer-events: none; }
-        .snap-point { height: 100vh; scroll-snap-align: center; scroll-snap-stop: always; pointer-events: none; }
+        .snap-point { 
+            height: 100vh; /* PC */
+            
+            /* MOBILE: Altezza identica al contenitore scrollabile */
+            height: 100dvh !important; 
+            
+            /* Se contenitore e figlio sono alti uguali, START = CENTRO PERFETTO */
+            scroll-snap-align: start !important; 
+            
+            scroll-snap-stop: always !important; /* Obbliga a fermarsi */
+            pointer-events: none; 
+        }
         .cube-face { width: 100%; height: 100vh; display: flex; position: absolute; top: 0; left: 0; backface-visibility: hidden; opacity: 0; will-change: transform, opacity; pointer-events: none; }
         .cube-face.active-content { pointer-events: all; }
 
@@ -721,14 +729,17 @@
 
         function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
         
-       // --- FUNZIONE UPDATE (FADE STATICO SU MOBILE) ---
+       // --- FUNZIONE UPDATE (CONTAINER SCROLL MODE) ---
         function update() {
-            // Leggiamo lo scroll
+            // *** MODIFICA FONDAMENTALE ***
+            // Se mobile, leggi lo scroll dal div #ghost-scroll. Se PC, dalla finestra.
             if (isMobile()) {
-               currentScrollY = window.scrollY; // Scroll nativo
+                const scroller = document.getElementById('ghost-scroll');
+                currentScrollY = scroller.scrollTop;
             } else {
-               currentScrollY = window.scrollY;
+                currentScrollY = window.scrollY;
             }
+            // *****************************
 
             const sY = currentScrollY;
             const progress = sY / vh;
@@ -743,7 +754,6 @@
                 } else {
                     rgb = flatFaces[flatFaces.length - 1].color;
                 }
-                
                 const bright = (rgb[0]*299 + rgb[1]*587 + rgb[2]*114)/1000;
                 document.body.style.backgroundColor = `rgb(${rgb.join(',')})`;
                 document.body.style.color = bright > 130 ? 'rgb(40,40,40)' : 'rgb(245,245,245)';
@@ -759,42 +769,27 @@
                 navbar.classList.remove('visible');
             }
 
-            // --- CUORE DELL'ANIMAZIONE ---
             const fcs = document.querySelectorAll('.cube-face');
             fcs.forEach((face, i) => {
-                const dist = sY - (i * vh); // Distanza dallo scroll attuale
-                
-                // Calcoliamo quanto è distante questa pagina dallo schermo (da -1 a 1)
+                const dist = sY - (i * vh); 
                 const off = dist / vh; 
 
-                // Se la pagina è nel raggio visivo
                 if (Math.abs(off) < 1.5) {
                     face.style.display = 'flex';
 
                     if (isMobile()) {
-                        // *** FIX FADE MOBILE ***
-                        // 1. BLOCCA LA POSIZIONE: Non usiamo 'dist' nella translate. 
-                        // La pagina resta inchiodata a (0,0,0) rispetto alla finestra fissa.
-                        face.style.transform = `translate3d(0, 0, 0)`; 
-                        
-                        // 2. DISSOLVENZA: Calcola l'opacità.
-                        // Se off è 0 (centrata) -> opacity 1. Se off è 1 (lontana) -> opacity 0.
+                        // *** FADE MOBILE ***
+                        face.style.transform = `translate3d(0, 0, 0)`; // Fisso
                         let opacity = 1 - Math.abs(off);
-                        // Aggiungo un piccolo 'pow' per rendere la sfumatura più rapida ai bordi
-                        face.style.opacity = Math.max(0, Math.pow(opacity, 1.5));
-                        
-                        // 3. ORDINE LIVELLI: La pagina più vicina al centro (off basso) deve stare sopra.
-                        // Moltiplico per 100 per avere numeri interi sicuri.
-                        face.style.zIndex = 100 - Math.round(Math.abs(off) * 100);
-
+                        face.style.opacity = Math.max(0, Math.pow(opacity, 1.5)); // Fade
+                        face.style.zIndex = 100 - Math.round(Math.abs(off) * 100); // Ordine
                     } else {
-                        // *** LOGICA PC: CUBO 3D (Invariata) ***
+                        // *** PC 3D ***
                         face.style.transform = `translate3d(0, ${-dist}px, ${Math.abs(off)*-1200}px) rotateX(${off*90}deg)`;
                         face.style.opacity = Math.max(0, 1 - Math.pow(Math.abs(off), 2.2));
                         face.style.zIndex = 'auto';
                     }
                     
-                    // Logica Contenuto Attivo (Click e Interazioni)
                     if (Math.abs(off) < 0.5) {
                         face.classList.add('active-content'); const d = flatFaces[i];
                         
@@ -844,6 +839,7 @@
     </script>
 </body>
 </html>
+
 
 
 
