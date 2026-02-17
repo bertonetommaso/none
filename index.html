@@ -624,12 +624,20 @@
             });
         });
 
-        // --- NAVIGATION ENGINE ---
+        // --- NAVIGATION ENGINE CORRETTO ---
         function navigateTo(index) {
             const target = index * window.innerHeight;
-            // Su mobile usa lo scroll nativo del browser (più fluido)
-            // Su PC usa lo scroll dolce
-            window.scrollTo({ top: target, behavior: 'smooth' });
+            
+            if (isMobile()) {
+                // SU MOBILE: Dobbiamo scrollare il contenitore interno, non la finestra
+                const scroller = document.getElementById('ghost-scroll');
+                if (scroller) {
+                    scroller.scrollTo({ top: target, behavior: 'smooth' });
+                }
+            } else {
+                // SU PC: Scrolla la finestra normalmente
+                window.scrollTo({ top: target, behavior: 'smooth' });
+            }
         }
 
         // Tasti freccia mobile (se visibili)
@@ -717,12 +725,14 @@
             slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
         }
 
-        // TASTO B.T. (FIXATO)
+        // FIX TASTO B.T.
         signature.onclick = () => { 
-            navigateTo(0); 
+            navigateTo(0); // Usa la nuova funzione che funziona su mobile
+            
+            // Resetta lo slider orizzontale alla posizione iniziale (0), non a sinistra (-width)
             currentXOffset = 0; 
             slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'; 
-            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`; 
+            slider.style.transform = `translate3d(0, 0, 0)`; 
         };
 
         // --- INTERACTIONS ---
@@ -869,6 +879,7 @@
     </script>
 </body>
 </html>
+
 
 
 
