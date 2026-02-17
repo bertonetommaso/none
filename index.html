@@ -33,41 +33,47 @@
             min-height: 100vh;
         }
 
-       /* CONFIGURAZIONE MOBILE (Sostituisci tutto il vecchio blocco media query con questo) */
+       /* CONFIGURAZIONE MOBILE (Sostituisci il vecchio blocco con questo) */
         @media (max-width: 768px) {
+            /* FIX SNAP: Applicato a HTML per funzionare in entrambe le direzioni */
             html {
-                /* Attiva il magnetismo sul contenitore principale */
-                scroll-snap-type: y mandatory;
+                height: 100vh;
+                overflow-y: scroll;
+                scroll-snap-type: y mandatory; /* Magnetismo obbligatorio */
+                scroll-behavior: smooth;
             }
 
             body {
-                height: 100% !important;
-                overflow-y: scroll !important; /* Fondamentale per lo snap */
+                height: auto;
+                min-height: 100vh;
                 overflow-x: hidden;
-                position: relative;
             }
 
-            /* Nasconde le frecce su mobile */
-            #mob-up, #mob-down {
-                display: none !important;
-            }
-
-            /* Alza la scritta "ciao!" solo su mobile */
+            /* FIX CIAO: Alzato solo leggermente (era -4vh, ora -1.5vh) */
             .centered-container em.italic-script:first-child {
-                transform: translateY(-4vh); /* Tira su la scritta */
+                transform: translateY(-1.5vh); 
                 display: block;
             }
 
-            /* Rende la navbar cliccabile */
+            /* FIX NAVBAR: Abilita scorrimento orizzontale col dito */
             nav {
                 pointer-events: auto !important;
                 z-index: 10001 !important;
+                overflow-x: auto !important;      /* Scroll orizzontale */
+                display: flex !important;         /* Assicura il layout */
+                width: 100% !important;
+                touch-action: pan-x !important;   /* Sblocca il dito orizzontalmente */
+                -webkit-overflow-scrolling: touch; /* Inerzia fluida su iPhone */
+                padding-bottom: 30px; /* Spazio extra per il dito */
             }
+            
             .main-link, .sub-link {
                 pointer-events: auto !important;
             }
-        }
 
+            /* Nasconde le frecce */
+            #mob-up, #mob-down { display: none !important; }
+        }
         /* --- MOBILE ARROWS --- */
         .mobile-nav-arrow {
             position: fixed; left: 20px; z-index: 10020; font-size: 2.5rem;
@@ -790,6 +796,7 @@
     </script>
 </body>
 </html>
+
 
 
 
