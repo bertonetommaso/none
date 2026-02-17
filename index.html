@@ -33,29 +33,40 @@
             min-height: 100vh;
         }
 
-       /* CONFIGURAZIONE MOBILE SCROLL */
+       /* CONFIGURAZIONE MOBILE (Sostituisci tutto il vecchio blocco media query con questo) */
         @media (max-width: 768px) {
-    html, body {
-        /* IMPORTANTE: auto permette al sito di allungarsi fisicamente */
-        height: auto !important; 
-        min-height: 100vh;
-        
-        /* IMPORTANTE: visible usa lo scroll nativo della finestra (quello che JS legge) */
-        overflow-y: visible !important; 
-        overflow-x: hidden;
-        
-        scroll-snap-type: y mandatory; /* Mantiene lo scatto magnetico */
-        position: relative;
-    }
+            html {
+                /* Attiva il magnetismo sul contenitore principale */
+                scroll-snap-type: y mandatory;
+            }
 
-    nav {
-        pointer-events: auto !important;
-        z-index: 10001 !important;
-    }
-    .main-link, .sub-link {
-        pointer-events: auto !important;
-    }
-}
+            body {
+                height: 100% !important;
+                overflow-y: scroll !important; /* Fondamentale per lo snap */
+                overflow-x: hidden;
+                position: relative;
+            }
+
+            /* Nasconde le frecce su mobile */
+            #mob-up, #mob-down {
+                display: none !important;
+            }
+
+            /* Alza la scritta "ciao!" solo su mobile */
+            .centered-container em.italic-script:first-child {
+                transform: translateY(-4vh); /* Tira su la scritta */
+                display: block;
+            }
+
+            /* Rende la navbar cliccabile */
+            nav {
+                pointer-events: auto !important;
+                z-index: 10001 !important;
+            }
+            .main-link, .sub-link {
+                pointer-events: auto !important;
+            }
+        }
 
         /* --- MOBILE ARROWS --- */
         .mobile-nav-arrow {
@@ -779,6 +790,7 @@
     </script>
 </body>
 </html>
+
 
 
 
