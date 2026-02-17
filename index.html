@@ -35,22 +35,27 @@
 
        /* CONFIGURAZIONE MOBILE SCROLL */
         @media (max-width: 768px) {
-            html, body { 
-                height: 100% !important;        /* Forza l'altezza al 100% della finestra */
-                overflow-y: scroll !important;  /* Abilita lo scroll e lo snap */
-                overflow-x: hidden;             /* Nasconde scroll orizzontale */
-                scroll-snap-type: y mandatory;  /* Attiva il magnetismo */
-                position: relative;
-            }
-            
-            nav {
-                pointer-events: auto !important;
-                z-index: 10001 !important;
-            }
-            .main-link, .sub-link {
-                pointer-events: auto !important;
-            }
-        }
+    html, body {
+        /* IMPORTANTE: auto permette al sito di allungarsi fisicamente */
+        height: auto !important; 
+        min-height: 100vh;
+        
+        /* IMPORTANTE: visible usa lo scroll nativo della finestra (quello che JS legge) */
+        overflow-y: visible !important; 
+        overflow-x: hidden;
+        
+        scroll-snap-type: y mandatory; /* Mantiene lo scatto magnetico */
+        position: relative;
+    }
+
+    nav {
+        pointer-events: auto !important;
+        z-index: 10001 !important;
+    }
+    .main-link, .sub-link {
+        pointer-events: auto !important;
+    }
+}
 
         /* --- MOBILE ARROWS --- */
         .mobile-nav-arrow {
@@ -571,19 +576,20 @@
         // --- SLIDER & TOUCH ---
         const slider = document.getElementById('main-slider');
         
-        // 1. GESTIONE PC: Blocca lo scroll elastico se usi un laptop touch (ma lascia stare il mobile)
+        // 1. BLOCCO PER PC: Impedisce lo scroll elastico su trackpad/touchscreen PC
+        // (Non attivo su mobile grazie a !isMobile)
         document.addEventListener('touchmove', (e) => { 
             if (!isMobile() && !isDragging) {
                 e.preventDefault(); 
             }
         }, { passive: false });
 
-        // 2. GESTIONE MOBILE: Genera le particelle mentre scrolli (senza bloccare lo scroll)
+        // 2. PARTICELLE PER MOBILE: Genera le gocce quando scorri col dito
         if (isMobile()) {
             document.addEventListener('touchmove', (e) => {
                 const touch = e.touches[0];
                 spawnDroplets(touch.clientX, touch.clientY);
-            }, { passive: true }); 
+            }, { passive: true }); // passive: true permette lo scroll fluido
         }
         slider.addEventListener('touchstart', (e) => {
             // Attiva lo slider orizzontale solo se siamo nella prima pagina (landing)
@@ -773,5 +779,6 @@
     </script>
 </body>
 </html>
+
 
 
