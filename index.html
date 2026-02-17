@@ -33,55 +33,62 @@
             min-height: 100vh;
         }
 
-       /* CONFIGURAZIONE MOBILE (Sostituisci il vecchio blocco con questo) */
+       /* CONFIGURAZIONE MOBILE UNIVERSALE */
         @media (max-width: 768px) {
-            html {
-                /* Snap applicato direttamente alla finestra del browser */
-                scroll-snap-type: y mandatory;
-                scroll-behavior: smooth;
-            }
-
-            body {
-                /* Rimuoviamo vincoli di altezza per lasciare lo scroll naturale */
-                overflow-x: hidden;
+            html, body {
+                height: 100% !important;
                 width: 100%;
-                position: relative;
+                overflow: hidden !important; /* BLOCCO SCROLL NATIVO */
+                position: fixed; /* BLOCCA RIMBALZI SU IOS */
             }
 
-            /* NAVBAR FLUIDA SENZA VIBRAZIONI */
+            /* È QUESTO CHE SCROLLA ORA */
+            .scroll-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100dvh !important; /* ALTEZZA DINAMICA PERFETTA */
+                overflow-y: scroll !important;
+                scroll-snap-type: y mandatory;
+                z-index: 20 !important; /* Sopra la scena 3D */
+                pointer-events: all !important; /* Abilita il tocco */
+            }
+
+            /* FIX NAVBAR */
             nav {
                 pointer-events: auto !important;
                 z-index: 10001 !important;
-                
                 display: flex !important;
-                flex-direction: row !important;
                 width: 100% !important;
-                
-                /* Scroll Orizzontale */
                 overflow-x: auto !important;
                 white-space: nowrap !important;
-                
-                /* IL SEGRETO ANTIVIBRAZIONE: */
-                touch-action: pan-x; /* Blocca lo scroll verticale se tocchi la nav */
+                touch-action: pan-x; 
                 -webkit-overflow-scrolling: touch; 
-                overscroll-behavior-x: contain;
-                
                 padding-bottom: 30px; 
             }
             
             .main-link, .sub-link {
                 pointer-events: auto !important;
                 display: inline-flex !important;
-                flex-shrink: 0;
             }
 
-            /* Posizione Ciao */
             .centered-container em.italic-script:first-child {
                 transform: translateY(-1.5vh); 
                 display: block;
             }
 
             #mob-up, #mob-down { display: none !important; }
+        }
+
+        /* AGGIORNA QUESTA CLASSE (Serve per l'altezza dinamica) */
+        .snap-point { 
+            height: 100vh;
+            /* Su mobile usa l'altezza dinamica per centrare perfetto */ 
+            height: 100dvh; 
+            scroll-snap-align: start; 
+            scroll-snap-stop: always; 
+            pointer-events: none; 
         }
         /* --- MOBILE ARROWS --- */
         .mobile-nav-arrow {
@@ -703,23 +710,23 @@
 
         function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
         
-        // --- FUNZIONE UPDATE ---
+       // --- FUNZIONE UPDATE MODIFICATA ---
         function update() {
-            // Leggiamo la posizione reale dello scroll (fondamentale per mobile)
-            currentScrollY = window.scrollY;
+            if (isMobile()) {
+                // SU MOBILE: Leggi lo scroll dal contenitore, non dalla finestra
+                const scroller = document.getElementById('ghost-scroll');
+                currentScrollY = scroller.scrollTop;
+            } else {
+                // SU PC: Leggi normale
+                currentScrollY = window.scrollY;
+            }
 
             const sY = currentScrollY;
             const progress = sY / vh;
             const idx = Math.floor(progress);
             const f = progress - idx;
             
-            // Arrow Visibility Logic
-            if (isMobile()) {
-                if (idx === 0) { mobUp.style.display = 'none'; mobDown.style.display = 'none'; } 
-                else { mobUp.style.display = 'block'; mobDown.style.display = 'block'; }
-            } else { mobUp.style.display = 'none'; mobDown.style.display = 'none'; }
-
-            // Color Change Logic
+            // Logica Colori
             if (idx < flatFaces.length) {
                 let rgb;
                 if (idx < flatFaces.length - 1) {
@@ -732,22 +739,18 @@
                 document.body.style.backgroundColor = `rgb(${rgb.join(',')})`;
                 document.body.style.color = bright > 130 ? 'rgb(40,40,40)' : 'rgb(245,245,245)';
                 signature.style.filter = `invert(${bright > 130 ? 0 : 1})`;
-                mobUp.style.color = document.body.style.color;
-                mobDown.style.color = document.body.style.color;
             }
 
-            // --- FIXED: AUTO-HIDE PC NAV ON LAST PAGE ---
+            // Navbar visibilità
             const isAtEnd = sY > (flatFaces.length - 1.2) * vh; 
             const isPCLanding = sY > vh * 0.4;
-            
-            // Navbar visibility logic
             if (isPCLanding && (!isAtEnd || isMobile())) {
                 navbar.classList.add('visible');
             } else {
                 navbar.classList.remove('visible');
             }
 
-            // 3D Cube Logic
+            // Logica Cubo 3D
             const fcs = document.querySelectorAll('.cube-face');
             fcs.forEach((face, i) => {
                 const dist = sY - (i * vh);
@@ -765,9 +768,7 @@
                             if (!excitedInterval) excitedInterval = setInterval(() => spawnDroplets(mouseX, mouseY), 150);
                         } else { if (excitedInterval) { clearInterval(excitedInterval); excitedInterval = null; } }
 
-                        // NAVBAR & CONTACTS HIGHLIGHT LOGIC
                         document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
-                        
                         let activeId = null;
                         if (d.type === 'final-call') activeId = 'group-contacts';
                         else if (d.projectIdx !== undefined) activeId = `group-${d.projectIdx}`;
@@ -781,8 +782,6 @@
                                     const sl = document.getElementById(`sublink-${d.projectIdx}-${d.subIdx}`);
                                     if (sl) sl.classList.add('active');
                                 }
-                                
-                                // Auto-scroll navbar on mobile to keep active item in view
                                 if (isMobile()) {
                                     const nav = document.getElementById('navbar');
                                     const navWidth = nav.offsetWidth;
@@ -810,6 +809,7 @@
     </script>
 </body>
 </html>
+
 
 
 
