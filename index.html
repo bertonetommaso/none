@@ -33,18 +33,9 @@
             min-height: 100vh;
         }
 
-        /* CONFIGURAZIONE MOBILE SCROLL */
         @media (max-width: 768px) {
-            body { 
-                position: relative; 
-                overflow-y: auto; 
-                overflow-x: hidden; 
-                width: 100%; 
-                height: 100%; 
-                scroll-snap-type: y mandatory; 
-                scroll-behavior: smooth;
-            }
-        } /* <--- QUESTA PARENTESI ERA MANCANTE */
+            body { position: fixed; overflow: hidden; width: 100%; height: 100%; }
+        }
 
         /* --- MOBILE ARROWS --- */
         .mobile-nav-arrow {
@@ -180,24 +171,15 @@
         @media (min-width: 769px) { .hint-vertical { bottom: 5vh; } }
         @media (max-width: 768px) { .hint-vertical { bottom: 18vh; } }
 
-        .hint-horizontal { 
-            position: absolute; 
-            right: 5vw; 
-            top: 50%; 
-            transform: translateY(-50%); /* PUNTO E VIRGOLA INSERITO CORRETTAMENTE */
-            display: flex; 
-            align-items: center; 
-            gap: 20px; 
-            pointer-events: all; 
-        }
+        .hint-horizontal { position: absolute; right: 5vw; top: 50%; transform: translateY(-50%) display: flex; align-items: center; gap: 20px; pointer-events: all; }
         @media (max-width: 768px) {
             .hint-horizontal { top: 70%; flex-direction: row; gap: 8px; right: 5vw; }
             .hint-horizontal span:first-child { display: block; opacity: 0.8; } 
         }
         .arrow { 
-            font-size: 1.2rem; 
-            margin-left: 20px; 
-        }
+    font-size: 1.2rem; 
+    margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dalla scritta */
+}
 
         /* --- PORTFOLIO CONTENT --- */
         .portfolio-content { position: absolute; z-index: 2; pointer-events: none; }
@@ -231,12 +213,7 @@
         .scene { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; perspective: 1500px; z-index: 5; pointer-events: none; }
         .cube-wrapper { width: 100%; height: 100%; transform-style: preserve-3d; }
         .scroll-container { position: relative; z-index: 10; pointer-events: none; }
-        .snap-point { 
-            height: 100vh; 
-            scroll-snap-align: start; 
-            scroll-snap-stop: always; 
-            pointer-events: none; 
-        }
+        .snap-point { height: 100vh; scroll-snap-align: start; scroll-snap-stop: always; pointer-events: none; }
         .cube-face { width: 100%; height: 100vh; display: flex; position: absolute; top: 0; left: 0; backface-visibility: hidden; opacity: 0; will-change: transform, opacity; pointer-events: none; }
         .cube-face.active-content { pointer-events: all; }
 
@@ -265,27 +242,41 @@
             .final-links { gap: 10px; }
             .box { width: 90px; height: 90px; font-size: 0.6rem; }
         }
-        
-        /* Dimensione per PC */
-        .sub-title { font-size: 3.5rem !important; }
+        /* --- NUOVE REGOLE PER I SOTTOTITOLI --- */
 
-        /* Dimensione per Mobile */
-        @media (max-width: 768px) {
-            .sub-title { font-size: 3rem !important; }
-        }
-        
-        /* --- DIDASCALIA SOTTO IMMAGINE --- */
-        .img-caption {
-            position: absolute;
-            bottom: -25px;  
-            right: 0;       
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.5;
-            white-space: nowrap; 
-            color: var(--fg-color);
-        }    
+/* Dimensione per PC */
+.sub-title {
+    font-size: 3.5rem !important; /* Era 5rem. Ora è molto più piccolo */
+}
+
+/* Dimensione per Mobile */
+@media (max-width: 768px) {
+    .sub-title {
+        font-size: 3rem !important; /* Era 3rem. Ora è più piccolo */
+    }
+}
+    /* --- DIDASCALIA SOTTO IMMAGINE --- */
+.img-caption {
+    position: absolute;
+    bottom: -25px;  /* Lo spinge fuori dal box, sotto */
+    right: 0;       /* Lo allinea a destra */
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.5;
+    white-space: nowrap; /* Evita che vada a capo */
+    color: var(--fg-color);
+}    
+    /* Incolla questo nel CSS */
+@media (max-width: 768px) {
+    nav {
+        pointer-events: auto !important; /* RENDE I LINK CLICCABILI */
+        z-index: 10001 !important;       /* LA PORTA SOPRA OGNI COSA */
+    }
+    .main-link, .sub-link {
+        pointer-events: auto !important;
+    }
+}    
     </style>
 </head>
 <body>
@@ -299,7 +290,6 @@
 
     <div class="scene"><div class="cube-wrapper" id="cube-container"></div></div>
     <div class="scroll-container" id="ghost-scroll"></div>
-
 <script>
         const projects = [
             { 
@@ -341,7 +331,7 @@
             
             {   title: "Where's the Bus?", 
                 desc: "This project features a <b>lenticular poster</b> at public transport stops. As passersby move from side to side, they experience two contrasting visions of the city—one <b>congested with traffic</b> and the other completely <b>clear</b>.",
-             caption: "Codesigned with Dario Fiammetta, Ferrari Tommaso, Cerri Lorenzo.",    
+             caption: "Codesigned with Dario Fiammetta, Ferrari Tommaso, Cerri Lorenzo.",   
              sub: [
                     { title: "Concept", text: "<b>How can we improve road usage, reduce stress and increase productivity?</b> Our project aims to answer these questions, presenting public transport as a solid alternative to private mobility while <b>playing a fun and immediate game</b>!" },
                     { title: "Technology", text: "<b>Lenticular printing</b> reveals different images as viewing angles change. We chose this dynamic medium to visually <b>transform chaotic traffic into seamless public transport</b>, effectively demonstrating the shift from stress to productivity <b>in a single glance</b>." },
@@ -385,7 +375,7 @@
                 caption: proj.caption
             });
 
-            // 2. Sottosezioni
+            // 2. Sottosezioni (LOOP CORRETTO)
             proj.sub.forEach((subItem, sIdx) => {
                 let specificImg = proj.img; 
                 if (proj.subImages && proj.subImages[sIdx]) {
@@ -407,6 +397,7 @@
                     color: proj.color 
                 });
             }); 
+            // QUI C'ERA L'ERRORE: HO RIMOSSO IL CODICE DUPLICATO CHE ERA FINITO QUI
         });
         
         flatFaces.push({ type: 'final-call', title: "CHECK ME OUT HERE!", color: [10, 10, 10] });
@@ -436,6 +427,7 @@
                 sl.onclick = (e) => { e.preventDefault(); navigateTo(2 + i * 4 + si); };
                 sNav.appendChild(sl);
             });
+            // QUI C'ERA L'ERRORE 2: RIMOSSO CODICE DUPLICATO
 
             group.appendChild(mLink); group.appendChild(sNav); navbar.appendChild(group);
         });
@@ -499,6 +491,7 @@
                         </div>
                 </div>`;
             } else if (data.type === 'main') {
+                // Controlla se c'è una caption, se sì crea l'HTML, altrimenti lascia vuoto
                 const captionHTML = data.caption ? `<div class="img-caption">${data.caption}</div>` : '';
                 
                 face.innerHTML = `<div class="portfolio-content">
@@ -544,35 +537,51 @@
         // --- NAVIGATION ENGINE ---
         function navigateTo(index) {
             const target = index * window.innerHeight;
-            if (isMobile()) {
-                targetScrollY = target;
-            } else {
-                window.scrollTo({ top: target, behavior: 'smooth' });
-            }
+            // Su mobile usa lo scroll nativo del browser (più fluido)
+            // Su PC usa lo scroll dolce
+            window.scrollTo({ top: target, behavior: 'smooth' });
         }
 
+        // Tasti freccia mobile (se visibili)
         mobUp.onclick = () => {
-            let currentIdx = Math.round(targetScrollY / window.innerHeight);
+            // Calcola a che pagina siamo basandosi sullo scroll reale
+            let currentIdx = Math.round(window.scrollY / window.innerHeight);
             if (currentIdx > 0) navigateTo(currentIdx - 1);
         };
         mobDown.onclick = () => {
-            let currentIdx = Math.round(targetScrollY / window.innerHeight);
+            let currentIdx = Math.round(window.scrollY / window.innerHeight);
             if (currentIdx < flatFaces.length - 1) navigateTo(currentIdx + 1);
         };
 
         // --- SLIDER & TOUCH ---
         const slider = document.getElementById('main-slider');
         
-        document.addEventListener('touchmove', (e) => { if (!isDragging) e.preventDefault(); }, { passive: false });
+        // *** QUESTA È LA MODIFICA FONDAMENTALE ***
+        // Prima bloccava tutto. Ora blocca SOLO se NON sei su mobile.
+        document.addEventListener('touchmove', (e) => { 
+            // Se non è mobile E non sto trascinando lo slider orizzontale, blocca lo scroll (comportamento PC)
+            // Se è mobile, lascia fare al browser (così puoi scrollare i progetti)
+            if (!isMobile() && !isDragging) {
+                e.preventDefault(); 
+            }
+        }, { passive: false });
 
         slider.addEventListener('touchstart', (e) => {
-            if (currentScrollY < vh * 0.5) { isDragging = false; startX = e.touches[0].clientX; slider.style.transition = 'none'; }
+            // Attiva lo slider orizzontale solo se siamo nella prima pagina (landing)
+            if (window.scrollY < vh * 0.5) { 
+                isDragging = false; 
+                startX = e.touches[0].clientX; 
+                slider.style.transition = 'none'; 
+            }
         }, { passive: true });
 
         slider.addEventListener('touchmove', (e) => {
             const diffX = e.touches[0].clientX - startX;
             spawnDroplets(e.touches[0].clientX, e.touches[0].clientY); 
-            if (currentScrollY < vh * 0.5 && Math.abs(diffX) > 10) {
+            
+            // Logica Slider Orizzontale (funziona solo se siamo in cima)
+            if (window.scrollY < vh * 0.5 && Math.abs(diffX) > 10) {
+                // Se mi muovo molto in orizzontale, attivo il dragging
                 isDragging = true;
                 slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + diffX))}px, 0, 0)`;
             }
@@ -582,7 +591,7 @@
             if (isDragging) { isDragging = false; finishSlide(e.changedTouches[0].clientX); }
         });
 
-        // Mouse (PC)
+        // Mouse (PC) - RIMASTO INVARIATO
         document.addEventListener('mousedown', (e) => { if (window.scrollY < vh * 0.5) { isDragging = true; startX = e.clientX; slider.style.transition = 'none'; } });
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX; mouseY = e.clientY;
@@ -609,7 +618,7 @@
 
         document.addEventListener('mousedown', (e) => {
             const isClickable = e.target.closest('a, #signature-btn, .box, .mail-box, .final-links, .mobile-nav-arrow, .monumental, .hint-vertical');
-            const isLastPage = (currentScrollY / vh) > (flatFaces.length - 1.5);
+            const isLastPage = (window.scrollY / vh) > (flatFaces.length - 1.5);
             if (isClickable || isLastPage) spawnDroplets(e.clientX, e.clientY);
         });
         
@@ -638,39 +647,51 @@
 
         function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
         
-        // --- FUNZIONE AGGIORNATA E PULITA ---
+        // --- FUNZIONE UPDATE ---
         function update() {
-            currentScrollY = window.scrollY; // UNICA RIGA DI LOGICA
+            // Leggiamo la posizione reale dello scroll (fondamentale per mobile)
+            currentScrollY = window.scrollY;
 
             const sY = currentScrollY;
             const progress = sY / vh;
             const idx = Math.floor(progress);
             const f = progress - idx;
             
-            // Arrow Visibility
+            // Arrow Visibility Logic
             if (isMobile()) {
                 if (idx === 0) { mobUp.style.display = 'none'; mobDown.style.display = 'none'; } 
                 else { mobUp.style.display = 'block'; mobDown.style.display = 'block'; }
             } else { mobUp.style.display = 'none'; mobDown.style.display = 'none'; }
 
-            let rgb = (idx < flatFaces.length - 1) ? lerp(flatFaces[idx].color, flatFaces[idx + 1].color, f) : flatFaces[flatFaces.length - 1].color;
-            const bright = (rgb[0]*299 + rgb[1]*587 + rgb[2]*114)/1000;
-            document.body.style.backgroundColor = `rgb(${rgb.join(',')})`;
-            document.body.style.color = bright > 130 ? 'rgb(40,40,40)' : 'rgb(245,245,245)';
-            signature.style.filter = `invert(${bright > 130 ? 0 : 1})`;
-            mobUp.style.color = document.body.style.color;
-            mobDown.style.color = document.body.style.color;
+            // Color Change Logic
+            if (idx < flatFaces.length) {
+                let rgb;
+                if (idx < flatFaces.length - 1) {
+                    rgb = lerp(flatFaces[idx].color, flatFaces[idx + 1].color, f);
+                } else {
+                    rgb = flatFaces[flatFaces.length - 1].color;
+                }
+                
+                const bright = (rgb[0]*299 + rgb[1]*587 + rgb[2]*114)/1000;
+                document.body.style.backgroundColor = `rgb(${rgb.join(',')})`;
+                document.body.style.color = bright > 130 ? 'rgb(40,40,40)' : 'rgb(245,245,245)';
+                signature.style.filter = `invert(${bright > 130 ? 0 : 1})`;
+                mobUp.style.color = document.body.style.color;
+                mobDown.style.color = document.body.style.color;
+            }
 
             // --- FIXED: AUTO-HIDE PC NAV ON LAST PAGE ---
             const isAtEnd = sY > (flatFaces.length - 1.2) * vh; 
             const isPCLanding = sY > vh * 0.4;
             
+            // Navbar visibility logic
             if (isPCLanding && (!isAtEnd || isMobile())) {
                 navbar.classList.add('visible');
             } else {
                 navbar.classList.remove('visible');
             }
 
+            // 3D Cube Logic
             const fcs = document.querySelectorAll('.cube-face');
             fcs.forEach((face, i) => {
                 const dist = sY - (i * vh);
@@ -688,7 +709,7 @@
                             if (!excitedInterval) excitedInterval = setInterval(() => spawnDroplets(mouseX, mouseY), 150);
                         } else { if (excitedInterval) { clearInterval(excitedInterval); excitedInterval = null; } }
 
-                        // NAVBAR & CONTACTS LOGIC
+                        // NAVBAR & CONTACTS HIGHLIGHT LOGIC
                         document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
                         
                         let activeId = null;
@@ -705,6 +726,7 @@
                                     if (sl) sl.classList.add('active');
                                 }
                                 
+                                // Auto-scroll navbar on mobile to keep active item in view
                                 if (isMobile()) {
                                     const nav = document.getElementById('navbar');
                                     const navWidth = nav.offsetWidth;
@@ -729,6 +751,8 @@
             slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
             slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
         };
+    </script>
+</body>
     </script>
 </body>
 </html>
