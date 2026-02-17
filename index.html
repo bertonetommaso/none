@@ -705,10 +705,14 @@
 
         function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
         
-       // --- FUNZIONE UPDATE (IBRIDA: 3D SU PC / FADE SU MOBILE) ---
+       // --- FUNZIONE UPDATE (FADE STATICO SU MOBILE) ---
         function update() {
             // Leggiamo lo scroll
-            currentScrollY = window.scrollY;
+            if (isMobile()) {
+               currentScrollY = window.scrollY; // Scroll nativo
+            } else {
+               currentScrollY = window.scrollY;
+            }
 
             const sY = currentScrollY;
             const progress = sY / vh;
@@ -742,34 +746,39 @@
             // --- CUORE DELL'ANIMAZIONE ---
             const fcs = document.querySelectorAll('.cube-face');
             fcs.forEach((face, i) => {
-                const dist = sY - (i * vh); // Distanza dal centro visuale
+                const dist = sY - (i * vh); // Distanza dallo scroll attuale
                 
-                // Se la pagina è vicina allo schermo
-                if (Math.abs(dist) < vh * 1.1) {
+                // Calcoliamo quanto è distante questa pagina dallo schermo (da -1 a 1)
+                const off = dist / vh; 
+
+                // Se la pagina è nel raggio visivo
+                if (Math.abs(off) < 1.5) {
                     face.style.display = 'flex';
-                    const off = dist / vh; // Valore normalizzato (-1 a 1)
 
                     if (isMobile()) {
-                        // *** LOGICA MOBILE: FADE ***
-                        // 1. Annulla lo scroll fisico per tenere l'elemento fermo al centro
-                        face.style.transform = `translate3d(0, ${-dist}px, 0)`;
+                        // *** FIX FADE MOBILE ***
+                        // 1. BLOCCA LA POSIZIONE: Non usiamo 'dist' nella translate. 
+                        // La pagina resta inchiodata a (0,0,0) rispetto alla finestra fissa.
+                        face.style.transform = `translate3d(0, 0, 0)`; 
                         
-                        // 2. Calcola opacità in base alla distanza (Fade In/Out)
-                        // Più è vicino al centro (off=0), più è visibile.
+                        // 2. DISSOLVENZA: Calcola l'opacità.
+                        // Se off è 0 (centrata) -> opacity 1. Se off è 1 (lontana) -> opacity 0.
                         let opacity = 1 - Math.abs(off);
-                        face.style.opacity = Math.max(0, opacity);
+                        // Aggiungo un piccolo 'pow' per rendere la sfumatura più rapida ai bordi
+                        face.style.opacity = Math.max(0, Math.pow(opacity, 1.5));
                         
-                        // Z-Index: la pagina corrente deve stare sopra
-                        face.style.zIndex = Math.round(10 - Math.abs(off) * 10);
+                        // 3. ORDINE LIVELLI: La pagina più vicina al centro (off basso) deve stare sopra.
+                        // Moltiplico per 100 per avere numeri interi sicuri.
+                        face.style.zIndex = 100 - Math.round(Math.abs(off) * 100);
 
                     } else {
-                        // *** LOGICA PC: CUBO 3D ***
+                        // *** LOGICA PC: CUBO 3D (Invariata) ***
                         face.style.transform = `translate3d(0, ${-dist}px, ${Math.abs(off)*-1200}px) rotateX(${off*90}deg)`;
                         face.style.opacity = Math.max(0, 1 - Math.pow(Math.abs(off), 2.2));
                         face.style.zIndex = 'auto';
                     }
                     
-                    // Logica Contenuto Attivo (comune)
+                    // Logica Contenuto Attivo (Click e Interazioni)
                     if (Math.abs(off) < 0.5) {
                         face.classList.add('active-content'); const d = flatFaces[i];
                         
@@ -819,6 +828,7 @@
     </script>
 </body>
 </html>
+
 
 
 
