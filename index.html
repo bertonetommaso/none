@@ -33,8 +33,24 @@
             min-height: 100vh;
         }
 
+       /* CONFIGURAZIONE MOBILE SCROLL */
         @media (max-width: 768px) {
-            body { position: fixed; overflow: hidden; width: 100%; height: 100%; }
+            html, body { 
+                /* IMPORTANTE: Lascia che il sito si allunghi per attivare lo scroll della finestra */
+                height: auto !important; 
+                min-height: 100vh;
+                overflow-y: visible !important; /* Disabilita scroll interno, usa quello principale */
+                overflow-x: hidden;
+                scroll-snap-type: y mandatory; /* Scatto magnetico */
+            }
+            
+            nav {
+                pointer-events: auto !important; /* RENDE I LINK CLICCABILI */
+                z-index: 10001 !important;
+            }
+            .main-link, .sub-link {
+                pointer-events: auto !important;
+            }
         }
 
         /* --- MOBILE ARROWS --- */
@@ -556,16 +572,12 @@
         // --- SLIDER & TOUCH ---
         const slider = document.getElementById('main-slider');
         
-        // *** QUESTA È LA MODIFICA FONDAMENTALE ***
-        // Prima bloccava tutto. Ora blocca SOLO se NON sei su mobile.
+        // MODIFICA: Blocca lo scroll SOLO se siamo su PC. Su mobile lascia fare al browser.
         document.addEventListener('touchmove', (e) => { 
-            // Se non è mobile E non sto trascinando lo slider orizzontale, blocca lo scroll (comportamento PC)
-            // Se è mobile, lascia fare al browser (così puoi scrollare i progetti)
             if (!isMobile() && !isDragging) {
                 e.preventDefault(); 
             }
         }, { passive: false });
-
         slider.addEventListener('touchstart', (e) => {
             // Attiva lo slider orizzontale solo se siamo nella prima pagina (landing)
             if (window.scrollY < vh * 0.5) { 
@@ -756,3 +768,4 @@
     </script>
 </body>
 </html>
+
