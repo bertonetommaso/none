@@ -348,6 +348,24 @@
     .main-link, .sub-link {
         pointer-events: auto !important;
     }
+
+            /* 1. DIDASCALIE CENTRATE */
+            .img-caption {
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) !important;
+                text-align: center !important;
+                bottom: -30px !important;
+                width: 100%;
+            }
+
+            /* 2. RIPARA TASTI ULTIMA PAGINA E SLIDER ORIZZONTALE */
+            /* Li portiamo sopra il ghost-scroll (z-index 50) */
+            .final-links, .horizontal-slider {
+                position: relative;
+                z-index: 60 !important; 
+                pointer-events: auto !important;
+            }
 }    
     </style>
 </head>
@@ -628,12 +646,11 @@
       // --- SLIDER & TOUCH ---
         const slider = document.getElementById('main-slider');
         
-        // GESTIONE UNIFICATA TOUCH
+        // GESTIONE UNIFICATA TOUCH (Mobile + PC)
         document.addEventListener('touchmove', (e) => {
-            // 1. BLOCCO ASSOLUTO: Se tocchi la navbar, FERMATI.
-            // Lascia che il CSS 'touch-action: pan-x' gestisca tutto.
+            // 1. SALVAVITA NAVBAR: Se tocchi la navbar, FERMATI.
             if (e.target.closest('nav') || e.target.closest('.sub-nav') || e.target.closest('.nav-group')) {
-                return; // Non fare nulla, non prevenire default, non generare particelle.
+                return; 
             }
 
             // 2. PC: Blocca scroll elastico
@@ -641,36 +658,44 @@
                 e.preventDefault();
             }
 
-            // 3. MOBILE: Particelle (solo se NON sono sulla navbar)
-            if (isMobile()) {
+            // 3. LOGICA SLIDER ORIZZONTALE (PRIMA PAGINA)
+            // Calcoliamo il movimento orizzontale se siamo in cima (Landing Page)
+            if (isMobile() && currentScrollY < vh * 0.5) {
+                const touch = e.touches[0];
+                const diffX = touch.clientX - startX;
+                const diffY = touch.clientY - startY;
+
+                // Se ci muoviamo più in orizzontale che in verticale, attiviamo lo slider
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                    isDragging = true;
+                    // Blocca lo scroll verticale mentre muovi orizzontalmente
+                    e.preventDefault(); 
+                    slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + diffX))}px, 0, 0)`;
+                }
+            }
+
+            // 4. PARTICELLE (solo se non sto trascinando lo slider)
+            if (isMobile() && !isDragging) {
                 const touch = e.touches[0];
                 spawnDroplets(touch.clientX, touch.clientY);
             }
         }, { passive: false });
-    
-        slider.addEventListener('touchstart', (e) => {
-            // Attiva lo slider orizzontale solo se siamo nella prima pagina (landing)
-            if (window.scrollY < vh * 0.5) { 
+
+        // LISTENER GLOBALI PER IL TOCCO (Per bypassare i layer)
+        document.addEventListener('touchstart', (e) => {
+            if (currentScrollY < vh * 0.5) { 
                 isDragging = false; 
                 startX = e.touches[0].clientX; 
+                startY = e.touches[0].clientY; // Salviamo anche Y per capire la direzione
                 slider.style.transition = 'none'; 
             }
         }, { passive: true });
 
-        slider.addEventListener('touchmove', (e) => {
-            const diffX = e.touches[0].clientX - startX;
-            spawnDroplets(e.touches[0].clientX, e.touches[0].clientY); 
-            
-            // Logica Slider Orizzontale (funziona solo se siamo in cima)
-            if (window.scrollY < vh * 0.5 && Math.abs(diffX) > 10) {
-                // Se mi muovo molto in orizzontale, attivo il dragging
-                isDragging = true;
-                slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + diffX))}px, 0, 0)`;
+        document.addEventListener('touchend', (e) => {
+            if (isDragging) { 
+                isDragging = false; 
+                finishSlide(e.changedTouches[0].clientX); 
             }
-        }, { passive: false });
-
-        slider.addEventListener('touchend', (e) => {
-            if (isDragging) { isDragging = false; finishSlide(e.changedTouches[0].clientX); }
         });
 
         // Mouse (PC) - RIMASTO INVARIATO
@@ -686,11 +711,24 @@
 
         function finishSlide(endX) {
             slider.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
-            if (Math.abs(endX - startX) > 100) currentXOffset = (endX - startX < 0) ? -window.innerWidth : 0;
+            // Logica scatto: se trascini più di 100px, cambia pagina
+            if (Math.abs(endX - startX) > 100) {
+                // Se andavo a sinistra (endX < startX), vai alla slide 2 (-width). Altrimenti torna a 0.
+                currentXOffset = (endX - startX < 0) ? -window.innerWidth : 0;
+            } else {
+                // Se ho trascinato poco, rimani dove sei (snap back)
+                currentXOffset = currentXOffset === 0 ? 0 : -window.innerWidth;
+            }
             slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
         }
 
-        signature.onclick = () => { navigateTo(0); currentXOffset = -window.innerWidth; slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'; slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`; };
+        // FIX TASTO B.T. (Ora torna alla slide iniziale corretta)
+        signature.onclick = () => { 
+            navigateTo(0); 
+            currentXOffset = 0; // RESETTA A ZERO, NON A -WIDTH
+            slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'; 
+            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`; 
+        };
 
         // --- INTERACTIONS ---
         document.addEventListener('mouseover', (e) => {
@@ -700,7 +738,7 @@
 
         document.addEventListener('mousedown', (e) => {
             const isClickable = e.target.closest('a, #signature-btn, .box, .mail-box, .final-links, .mobile-nav-arrow, .monumental, .hint-vertical');
-            const isLastPage = (window.scrollY / vh) > (flatFaces.length - 1.5);
+            const isLastPage = (currentScrollY / vh) > (flatFaces.length - 1.5);
             if (isClickable || isLastPage) spawnDroplets(e.clientX, e.clientY);
         });
         
@@ -729,17 +767,14 @@
 
         function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
         
-       // --- FUNZIONE UPDATE (CONTAINER SCROLL MODE) ---
+        // --- FUNZIONE UPDATE (CONTAINER SCROLL MODE) ---
         function update() {
-            // *** MODIFICA FONDAMENTALE ***
-            // Se mobile, leggi lo scroll dal div #ghost-scroll. Se PC, dalla finestra.
             if (isMobile()) {
                 const scroller = document.getElementById('ghost-scroll');
                 currentScrollY = scroller.scrollTop;
             } else {
                 currentScrollY = window.scrollY;
             }
-            // *****************************
 
             const sY = currentScrollY;
             const progress = sY / vh;
@@ -779,10 +814,10 @@
 
                     if (isMobile()) {
                         // *** FADE MOBILE ***
-                        face.style.transform = `translate3d(0, 0, 0)`; // Fisso
+                        face.style.transform = `translate3d(0, 0, 0)`; 
                         let opacity = 1 - Math.abs(off);
-                        face.style.opacity = Math.max(0, Math.pow(opacity, 1.5)); // Fade
-                        face.style.zIndex = 100 - Math.round(Math.abs(off) * 100); // Ordine
+                        face.style.opacity = Math.max(0, Math.pow(opacity, 1.5)); 
+                        face.style.zIndex = 100 - Math.round(Math.abs(off) * 100); 
                     } else {
                         // *** PC 3D ***
                         face.style.transform = `translate3d(0, ${-dist}px, ${Math.abs(off)*-1200}px) rotateX(${off*90}deg)`;
@@ -839,6 +874,7 @@
     </script>
 </body>
 </html>
+
 
 
 
