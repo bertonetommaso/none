@@ -659,7 +659,6 @@
             }
 
             // 3. LOGICA SLIDER ORIZZONTALE (PRIMA PAGINA)
-            // Calcoliamo il movimento orizzontale se siamo in cima (Landing Page)
             if (isMobile() && currentScrollY < vh * 0.5) {
                 const touch = e.touches[0];
                 const diffX = touch.clientX - startX;
@@ -668,7 +667,6 @@
                 // Se ci muoviamo più in orizzontale che in verticale, attiviamo lo slider
                 if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
                     isDragging = true;
-                    // Blocca lo scroll verticale mentre muovi orizzontalmente
                     e.preventDefault(); 
                     slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + diffX))}px, 0, 0)`;
                 }
@@ -681,12 +679,12 @@
             }
         }, { passive: false });
 
-        // LISTENER GLOBALI PER IL TOCCO (Per bypassare i layer)
+        // LISTENER GLOBALI PER IL TOCCO
         document.addEventListener('touchstart', (e) => {
             if (currentScrollY < vh * 0.5) { 
                 isDragging = false; 
                 startX = e.touches[0].clientX; 
-                startY = e.touches[0].clientY; // Salviamo anche Y per capire la direzione
+                startY = e.touches[0].clientY; 
                 slider.style.transition = 'none'; 
             }
         }, { passive: true });
@@ -698,7 +696,7 @@
             }
         });
 
-        // Mouse (PC) - RIMASTO INVARIATO
+        // Mouse (PC)
         document.addEventListener('mousedown', (e) => { if (window.scrollY < vh * 0.5) { isDragging = true; startX = e.clientX; slider.style.transition = 'none'; } });
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX; mouseY = e.clientY;
@@ -711,21 +709,18 @@
 
         function finishSlide(endX) {
             slider.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
-            // Logica scatto: se trascini più di 100px, cambia pagina
             if (Math.abs(endX - startX) > 100) {
-                // Se andavo a sinistra (endX < startX), vai alla slide 2 (-width). Altrimenti torna a 0.
                 currentXOffset = (endX - startX < 0) ? -window.innerWidth : 0;
             } else {
-                // Se ho trascinato poco, rimani dove sei (snap back)
                 currentXOffset = currentXOffset === 0 ? 0 : -window.innerWidth;
             }
             slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
         }
 
-        // FIX TASTO B.T. (Ora torna alla slide iniziale corretta)
+        // TASTO B.T. (FIXATO)
         signature.onclick = () => { 
             navigateTo(0); 
-            currentXOffset = 0; // RESETTA A ZERO, NON A -WIDTH
+            currentXOffset = 0; 
             slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'; 
             slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`; 
         };
@@ -874,6 +869,7 @@
     </script>
 </body>
 </html>
+
 
 
 
