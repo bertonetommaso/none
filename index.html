@@ -33,29 +33,24 @@
             min-height: 100vh;
         }
 
-       /* CONFIGURAZIONE MOBILE UNIVERSALE */
+       /* CONFIGURAZIONE MOBILE DEFINITIVA */
         @media (max-width: 768px) {
-            html, body {
-                height: 100% !important;
+            html {
+                /* Scroll nativo sulla finestra: risolve i problemi di direzione */
+                height: 100dvh; 
                 width: 100%;
-                overflow: hidden !important; /* BLOCCO SCROLL NATIVO */
-                position: fixed; /* BLOCCA RIMBALZI SU IOS */
+                overflow-y: scroll; 
+                scroll-snap-type: y mandatory; /* Magnetismo OBBLIGATORIO */
+                scroll-behavior: smooth;
             }
 
-            /* È QUESTO CHE SCROLLA ORA */
-            .scroll-container {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100dvh !important; /* ALTEZZA DINAMICA PERFETTA */
-                overflow-y: scroll !important;
-                scroll-snap-type: y mandatory;
-                z-index: 20 !important; /* Sopra la scena 3D */
-                pointer-events: all !important; /* Abilita il tocco */
+            body {
+                min-height: 100dvh;
+                margin: 0;
+                overflow-x: hidden; /* Nasconde scroll orizzontale */
             }
 
-            /* FIX NAVBAR */
+            /* NAVBAR */
             nav {
                 pointer-events: auto !important;
                 z-index: 10001 !important;
@@ -73,6 +68,12 @@
                 display: inline-flex !important;
             }
 
+            /* Forza le facce del cubo ad adattarsi alla barra dinamica */
+            .cube-face {
+                height: 100dvh !important;
+            }
+
+            /* Posizione Ciao */
             .centered-container em.italic-script:first-child {
                 transform: translateY(-1.5vh); 
                 display: block;
@@ -710,16 +711,10 @@
 
         function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
         
-       // --- FUNZIONE UPDATE MODIFICATA ---
+       // --- FUNZIONE UPDATE ---
         function update() {
-            if (isMobile()) {
-                // SU MOBILE: Leggi lo scroll dal contenitore, non dalla finestra
-                const scroller = document.getElementById('ghost-scroll');
-                currentScrollY = scroller.scrollTop;
-            } else {
-                // SU PC: Leggi normale
-                currentScrollY = window.scrollY;
-            }
+            // Leggiamo sempre lo scroll della finestra (funziona ovunque ora)
+            currentScrollY = window.scrollY;
 
             const sY = currentScrollY;
             const progress = sY / vh;
@@ -741,7 +736,7 @@
                 signature.style.filter = `invert(${bright > 130 ? 0 : 1})`;
             }
 
-            // Navbar visibilità
+            // Navbar Auto-Hide (PC & Mobile)
             const isAtEnd = sY > (flatFaces.length - 1.2) * vh; 
             const isPCLanding = sY > vh * 0.4;
             if (isPCLanding && (!isAtEnd || isMobile())) {
@@ -763,11 +758,13 @@
                     if (Math.abs(off) < 0.5) {
                         face.classList.add('active-content'); const d = flatFaces[i];
                         
+                        // Particelle (Mouse PC)
                         if (d.type === 'final-call' && window.matchMedia("(pointer: fine)").matches) {
                             cursor.classList.add('active');
                             if (!excitedInterval) excitedInterval = setInterval(() => spawnDroplets(mouseX, mouseY), 150);
                         } else { if (excitedInterval) { clearInterval(excitedInterval); excitedInterval = null; } }
 
+                        // Navbar Highlight
                         document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
                         let activeId = null;
                         if (d.type === 'final-call') activeId = 'group-contacts';
@@ -782,6 +779,7 @@
                                     const sl = document.getElementById(`sublink-${d.projectIdx}-${d.subIdx}`);
                                     if (sl) sl.classList.add('active');
                                 }
+                                // Auto-scroll navbar (Mobile)
                                 if (isMobile()) {
                                     const nav = document.getElementById('navbar');
                                     const navWidth = nav.offsetWidth;
@@ -809,6 +807,7 @@
     </script>
 </body>
 </html>
+
 
 
 
