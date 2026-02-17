@@ -33,9 +33,18 @@
             min-height: 100vh;
         }
 
+        /* CONFIGURAZIONE MOBILE SCROLL */
         @media (max-width: 768px) {
-            body { position: fixed; overflow: hidden; width: 100%; height: 100%; }
-        }
+            body { 
+                position: relative; 
+                overflow-y: auto; 
+                overflow-x: hidden; 
+                width: 100%; 
+                height: 100%; 
+                scroll-snap-type: y mandatory; 
+                scroll-behavior: smooth;
+            }
+        } /* <--- QUESTA PARENTESI ERA MANCANTE */
 
         /* --- MOBILE ARROWS --- */
         .mobile-nav-arrow {
@@ -171,15 +180,24 @@
         @media (min-width: 769px) { .hint-vertical { bottom: 5vh; } }
         @media (max-width: 768px) { .hint-vertical { bottom: 18vh; } }
 
-        .hint-horizontal { position: absolute; right: 5vw; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 20px; pointer-events: all; }
+        .hint-horizontal { 
+            position: absolute; 
+            right: 5vw; 
+            top: 50%; 
+            transform: translateY(-50%); /* PUNTO E VIRGOLA INSERITO CORRETTAMENTE */
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+            pointer-events: all; 
+        }
         @media (max-width: 768px) {
             .hint-horizontal { top: 70%; flex-direction: row; gap: 8px; right: 5vw; }
             .hint-horizontal span:first-child { display: block; opacity: 0.8; } 
         }
         .arrow { 
-    font-size: 1.2rem; 
-    margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dalla scritta */
-}
+            font-size: 1.2rem; 
+            margin-left: 20px; 
+        }
 
         /* --- PORTFOLIO CONTENT --- */
         .portfolio-content { position: absolute; z-index: 2; pointer-events: none; }
@@ -213,7 +231,12 @@
         .scene { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; perspective: 1500px; z-index: 5; pointer-events: none; }
         .cube-wrapper { width: 100%; height: 100%; transform-style: preserve-3d; }
         .scroll-container { position: relative; z-index: 10; pointer-events: none; }
-        .snap-point { height: 100vh; scroll-snap-align: start; scroll-snap-stop: always; pointer-events: none; }
+        .snap-point { 
+            height: 100vh; 
+            scroll-snap-align: start; 
+            scroll-snap-stop: always; 
+            pointer-events: none; 
+        }
         .cube-face { width: 100%; height: 100vh; display: flex; position: absolute; top: 0; left: 0; backface-visibility: hidden; opacity: 0; will-change: transform, opacity; pointer-events: none; }
         .cube-face.active-content { pointer-events: all; }
 
@@ -242,31 +265,27 @@
             .final-links { gap: 10px; }
             .box { width: 90px; height: 90px; font-size: 0.6rem; }
         }
-        /* --- NUOVE REGOLE PER I SOTTOTITOLI --- */
+        
+        /* Dimensione per PC */
+        .sub-title { font-size: 3.5rem !important; }
 
-/* Dimensione per PC */
-.sub-title {
-    font-size: 3.5rem !important; /* Era 5rem. Ora è molto più piccolo */
-}
-
-/* Dimensione per Mobile */
-@media (max-width: 768px) {
-    .sub-title {
-        font-size: 3rem !important; /* Era 3rem. Ora è più piccolo */
-    }
-}
-    /* --- DIDASCALIA SOTTO IMMAGINE --- */
-.img-caption {
-    position: absolute;
-    bottom: -25px;  /* Lo spinge fuori dal box, sotto */
-    right: 0;       /* Lo allinea a destra */
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.5;
-    white-space: nowrap; /* Evita che vada a capo */
-    color: var(--fg-color);
-}    
+        /* Dimensione per Mobile */
+        @media (max-width: 768px) {
+            .sub-title { font-size: 3rem !important; }
+        }
+        
+        /* --- DIDASCALIA SOTTO IMMAGINE --- */
+        .img-caption {
+            position: absolute;
+            bottom: -25px;  
+            right: 0;       
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+            white-space: nowrap; 
+            color: var(--fg-color);
+        }    
     </style>
 </head>
 <body>
@@ -280,6 +299,7 @@
 
     <div class="scene"><div class="cube-wrapper" id="cube-container"></div></div>
     <div class="scroll-container" id="ghost-scroll"></div>
+
 <script>
         const projects = [
             { 
@@ -321,7 +341,7 @@
             
             {   title: "Where's the Bus?", 
                 desc: "This project features a <b>lenticular poster</b> at public transport stops. As passersby move from side to side, they experience two contrasting visions of the city—one <b>congested with traffic</b> and the other completely <b>clear</b>.",
-             caption: "Codesigned with Dario Fiammetta, Ferrari Tommaso, Cerri Lorenzo.",   
+             caption: "Codesigned with Dario Fiammetta, Ferrari Tommaso, Cerri Lorenzo.",    
              sub: [
                     { title: "Concept", text: "<b>How can we improve road usage, reduce stress and increase productivity?</b> Our project aims to answer these questions, presenting public transport as a solid alternative to private mobility while <b>playing a fun and immediate game</b>!" },
                     { title: "Technology", text: "<b>Lenticular printing</b> reveals different images as viewing angles change. We chose this dynamic medium to visually <b>transform chaotic traffic into seamless public transport</b>, effectively demonstrating the shift from stress to productivity <b>in a single glance</b>." },
@@ -365,7 +385,7 @@
                 caption: proj.caption
             });
 
-            // 2. Sottosezioni (LOOP CORRETTO)
+            // 2. Sottosezioni
             proj.sub.forEach((subItem, sIdx) => {
                 let specificImg = proj.img; 
                 if (proj.subImages && proj.subImages[sIdx]) {
@@ -387,7 +407,6 @@
                     color: proj.color 
                 });
             }); 
-            // QUI C'ERA L'ERRORE: HO RIMOSSO IL CODICE DUPLICATO CHE ERA FINITO QUI
         });
         
         flatFaces.push({ type: 'final-call', title: "CHECK ME OUT HERE!", color: [10, 10, 10] });
@@ -417,7 +436,6 @@
                 sl.onclick = (e) => { e.preventDefault(); navigateTo(2 + i * 4 + si); };
                 sNav.appendChild(sl);
             });
-            // QUI C'ERA L'ERRORE 2: RIMOSSO CODICE DUPLICATO
 
             group.appendChild(mLink); group.appendChild(sNav); navbar.appendChild(group);
         });
@@ -481,7 +499,6 @@
                         </div>
                 </div>`;
             } else if (data.type === 'main') {
-                // Controlla se c'è una caption, se sì crea l'HTML, altrimenti lascia vuoto
                 const captionHTML = data.caption ? `<div class="img-caption">${data.caption}</div>` : '';
                 
                 face.innerHTML = `<div class="portfolio-content">
@@ -621,14 +638,9 @@
 
         function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
         
+        // --- FUNZIONE AGGIORNATA E PULITA ---
         function update() {
-            // --- UNICA RIGA NECESSARIA ---
-            currentScrollY = window.scrollY; 
-            // -----------------------------
-
-            const sY = currentScrollY;
-            // ... il resto ...
-            }
+            currentScrollY = window.scrollY; // UNICA RIGA DI LOGICA
 
             const sY = currentScrollY;
             const progress = sY / vh;
