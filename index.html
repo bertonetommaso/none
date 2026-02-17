@@ -35,40 +35,51 @@
 
        /* CONFIGURAZIONE MOBILE (Sostituisci il vecchio blocco con questo) */
         @media (max-width: 768px) {
-            /* FIX SNAP: Applicato a HTML per funzionare in entrambe le direzioni */
             html {
                 height: 100vh;
+                width: 100%;
+                /* Forza lo scroll e il magnetismo sul contenitore principale */
                 overflow-y: scroll;
-                scroll-snap-type: y mandatory; /* Magnetismo obbligatorio */
-                scroll-behavior: smooth;
+                scroll-snap-type: y mandatory;
             }
 
             body {
-                height: auto;
+                /* Il body deve solo seguire l'html */
                 min-height: 100vh;
+                height: auto;
                 overflow-x: hidden;
             }
 
-            /* FIX CIAO: Alzato solo leggermente (era -4vh, ora -1.5vh) */
-            .centered-container em.italic-script:first-child {
-                transform: translateY(-0.5vh); 
-                display: block;
-            }
-
-            /* FIX NAVBAR: Abilita scorrimento orizzontale col dito */
+            /* NAVBAR FLUIDA */
             nav {
                 pointer-events: auto !important;
                 z-index: 10001 !important;
-                overflow-x: auto !important;      /* Scroll orizzontale */
-                display: flex !important;         /* Assicura il layout */
+                
+                /* Layout orizzontale forzato */
+                display: flex !important;
+                flex-direction: row !important;
                 width: 100% !important;
-                touch-action: pan-x !important;   /* Sblocca il dito orizzontalmente */
-                -webkit-overflow-scrolling: touch; /* Inerzia fluida su iPhone */
-                padding-bottom: 30px; /* Spazio extra per il dito */
+                
+                /* Scroll Orizzontale */
+                overflow-x: auto !important;
+                white-space: nowrap !important; /* Impedisce ai link di andare a capo */
+                
+                /* Ottimizzazioni Touch */
+                -webkit-overflow-scrolling: touch; 
+                touch-action: pan-x; /* Dice al browser: qui si scorre orizzontalmente */
+                
+                padding-bottom: 30px; 
             }
             
             .main-link, .sub-link {
                 pointer-events: auto !important;
+                display: inline-flex !important; /* Mantiene i link in riga */
+            }
+
+            /* FIX CIAO (Posizione) */
+            .centered-container em.italic-script:first-child {
+                transform: translateY(-1.5vh); 
+                display: block;
             }
 
             /* Nasconde le frecce */
@@ -601,12 +612,16 @@
             }
         }, { passive: false });
 
-        // 2. PARTICELLE PER MOBILE: Genera le gocce quando scorri col dito
+        // 2. GESTIONE MOBILE: Genera le particelle MA IGNORA LA NAVBAR
         if (isMobile()) {
             document.addEventListener('touchmove', (e) => {
+                // SE STO TOCCANDO LA NAVBAR, ESCI SUBITO!
+                // Questo permette lo scroll orizzontale nativo senza lag
+                if (e.target.closest('nav')) return;
+
                 const touch = e.touches[0];
                 spawnDroplets(touch.clientX, touch.clientY);
-            }, { passive: true }); // passive: true permette lo scroll fluido
+            }, { passive: true }); 
         }
         slider.addEventListener('touchstart', (e) => {
             // Attiva lo slider orizzontale solo se siamo nella prima pagina (landing)
@@ -796,6 +811,7 @@
     </script>
 </body>
 </html>
+
 
 
 
