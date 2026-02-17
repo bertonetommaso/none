@@ -33,23 +33,34 @@
             min-height: 100vh;
         }
 
-       /* CONFIGURAZIONE MOBILE - FADE MODE */
+       /* CONFIGURAZIONE MOBILE - FADE + SNAP PULITO */
         @media (max-width: 768px) {
             html {
-                height: 100vh; /* Fallback */
-                height: 100dvh; /* Altezza dinamica reale */
-                overflow-y: scroll;
-                scroll-snap-type: y mandatory; /* Magnetismo attivo */
+                /* ALTEZZA FISSA OBBLIGATORIA PER LO SNAP */
+                height: 100dvh !important; 
+                width: 100%;
+                
+                /* FORZA LO SCROLL INTERNO AL CONTENITORE */
+                overflow-y: scroll !important; 
+                
+                /* MAGNETISMO FORTE */
+                scroll-snap-type: y mandatory !important;
                 scroll-behavior: smooth;
-            }
-
-            body {
-                min-height: 100dvh;
-                margin: 0;
+                
+                /* PREVIENE RIMBALZI ELASTICI SU IOS */
+                position: fixed;
                 overflow-x: hidden;
             }
 
-            /* NAVBAR */
+            body {
+                /* Il body si adatta esattamente al contenitore html */
+                height: 100dvh !important;
+                width: 100%;
+                margin: 0;
+                overflow: hidden; /* Il body non scrolla, scrolla html */
+            }
+
+            /* NAVBAR (Resta invariata) */
             nav {
                 pointer-events: auto !important;
                 z-index: 10001 !important;
@@ -65,6 +76,11 @@
             .main-link, .sub-link {
                 pointer-events: auto !important;
                 display: inline-flex !important;
+            }
+
+            /* Le facce devono essere alte esattamente come lo schermo */
+            .cube-face {
+                height: 100dvh !important;
             }
 
             /* Posizione Ciao */
@@ -828,6 +844,7 @@
     </script>
 </body>
 </html>
+
 
 
 
