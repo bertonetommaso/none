@@ -33,26 +33,22 @@
             min-height: 100vh;
         }
 
-       /* CONFIGURAZIONE MOBILE DEFINITIVA */
+       /* CONFIGURAZIONE MOBILE (Sostituisci il vecchio blocco con questo) */
         @media (max-width: 768px) {
             html {
-                height: 100vh; /* Altezza fissa finestra */
-                height: 100dvh; /* Fix per barre mobili browser */
-                width: 100%;
-                overflow-y: scroll; /* Scroll interno obbligatorio per snap */
-                scroll-snap-type: y mandatory; /* Magnetismo FORTE */
+                /* Snap applicato direttamente alla finestra del browser */
+                scroll-snap-type: y mandatory;
                 scroll-behavior: smooth;
             }
 
             body {
-                /* Il body si adatta all'html */
-                min-height: 100vh;
-                height: auto;
+                /* Rimuoviamo vincoli di altezza per lasciare lo scroll naturale */
                 overflow-x: hidden;
-                margin: 0;
+                width: 100%;
+                position: relative;
             }
 
-            /* NAVBAR SCROLLABILE */
+            /* NAVBAR FLUIDA SENZA VIBRAZIONI */
             nav {
                 pointer-events: auto !important;
                 z-index: 10001 !important;
@@ -61,13 +57,14 @@
                 flex-direction: row !important;
                 width: 100% !important;
                 
-                /* Scroll Orizzontale Nativo */
-                overflow-x: scroll !important; 
+                /* Scroll Orizzontale */
+                overflow-x: auto !important;
                 white-space: nowrap !important;
                 
-                /* Magia per fluidità su iOS/Android */
+                /* IL SEGRETO ANTIVIBRAZIONE: */
+                touch-action: pan-x; /* Blocca lo scroll verticale se tocchi la nav */
                 -webkit-overflow-scrolling: touch; 
-                overscroll-behavior-x: contain; /* Evita di muovere la pagina quando finisci la navbar */
+                overscroll-behavior-x: contain;
                 
                 padding-bottom: 30px; 
             }
@@ -75,10 +72,10 @@
             .main-link, .sub-link {
                 pointer-events: auto !important;
                 display: inline-flex !important;
-                flex-shrink: 0; /* Impedisce che si schiaccino */
+                flex-shrink: 0;
             }
 
-            /* FIX CIAO */
+            /* Posizione Ciao */
             .centered-container em.italic-script:first-child {
                 transform: translateY(-1.5vh); 
                 display: block;
@@ -602,26 +599,29 @@
             if (currentIdx < flatFaces.length - 1) navigateTo(currentIdx + 1);
         };
 
-       // --- SLIDER & TOUCH ---
+      // --- SLIDER & TOUCH ---
         const slider = document.getElementById('main-slider');
         
-        // GESTIONE UNIFICATA TOUCH (Mobile + PC)
+        // GESTIONE UNIFICATA TOUCH
         document.addEventListener('touchmove', (e) => {
-            // 1. SALVAVITA NAVBAR: Se tocchi la navbar, il JS si ferma qui.
-            // Questo garantisce lo scroll orizzontale nativo fluido al 100%.
-            if (e.target.closest('nav')) return;
+            // 1. BLOCCO ASSOLUTO: Se tocchi la navbar, FERMATI.
+            // Lascia che il CSS 'touch-action: pan-x' gestisca tutto.
+            if (e.target.closest('nav') || e.target.closest('.sub-nav') || e.target.closest('.nav-group')) {
+                return; // Non fare nulla, non prevenire default, non generare particelle.
+            }
 
-            // 2. LOGICA PC (Blocco elastico)
+            // 2. PC: Blocca scroll elastico
             if (!isMobile() && !isDragging) {
                 e.preventDefault();
             }
 
-            // 3. LOGICA MOBILE (Particelle)
+            // 3. MOBILE: Particelle (solo se NON sono sulla navbar)
             if (isMobile()) {
                 const touch = e.touches[0];
                 spawnDroplets(touch.clientX, touch.clientY);
             }
-        }, { passive: false }); // passive: false serve per il preventDefault del PC, ma il 'return' sopra salva la navbar
+        }, { passive: false });
+    
         slider.addEventListener('touchstart', (e) => {
             // Attiva lo slider orizzontale solo se siamo nella prima pagina (landing)
             if (window.scrollY < vh * 0.5) { 
@@ -810,6 +810,7 @@
     </script>
 </body>
 </html>
+
 
 
 
