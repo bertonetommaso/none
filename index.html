@@ -33,20 +33,18 @@
             min-height: 100vh;
         }
 
-       /* CONFIGURAZIONE MOBILE DEFINITIVA */
+       /* CONFIGURAZIONE MOBILE - FADE MODE */
         @media (max-width: 768px) {
             html {
-                /* Altezza automatica: lascia che il browser gestisca la dimensione */
-                height: auto;
-                min-height: 100%;
-                /* Snap obbligatorio sulla finestra principale */
-                scroll-snap-type: y mandatory;
+                height: 100vh; /* Fallback */
+                height: 100dvh; /* Altezza dinamica reale */
+                overflow-y: scroll;
+                scroll-snap-type: y mandatory; /* Magnetismo attivo */
                 scroll-behavior: smooth;
-                overflow-y: visible; /* Scroll nativo */
             }
 
             body {
-                min-height: 100vh;
+                min-height: 100dvh;
                 margin: 0;
                 overflow-x: hidden;
             }
@@ -707,9 +705,9 @@
 
         function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
         
-       // --- FUNZIONE UPDATE ---
+       // --- FUNZIONE UPDATE (IBRIDA: 3D SU PC / FADE SU MOBILE) ---
         function update() {
-            // Leggiamo sempre lo scroll della finestra (funziona ovunque ora)
+            // Leggiamo lo scroll
             currentScrollY = window.scrollY;
 
             const sY = currentScrollY;
@@ -732,7 +730,7 @@
                 signature.style.filter = `invert(${bright > 130 ? 0 : 1})`;
             }
 
-            // Navbar Auto-Hide (PC & Mobile)
+            // Navbar visibilità
             const isAtEnd = sY > (flatFaces.length - 1.2) * vh; 
             const isPCLanding = sY > vh * 0.4;
             if (isPCLanding && (!isAtEnd || isMobile())) {
@@ -741,26 +739,45 @@
                 navbar.classList.remove('visible');
             }
 
-            // Logica Cubo 3D
+            // --- CUORE DELL'ANIMAZIONE ---
             const fcs = document.querySelectorAll('.cube-face');
             fcs.forEach((face, i) => {
-                const dist = sY - (i * vh);
+                const dist = sY - (i * vh); // Distanza dal centro visuale
+                
+                // Se la pagina è vicina allo schermo
                 if (Math.abs(dist) < vh * 1.1) {
-                    const off = dist / vh;
                     face.style.display = 'flex';
-                    face.style.transform = `translate3d(0, ${-dist}px, ${Math.abs(off)*-1200}px) rotateX(${off*90}deg)`;
-                    face.style.opacity = Math.max(0, 1 - Math.pow(Math.abs(off), 2.2));
+                    const off = dist / vh; // Valore normalizzato (-1 a 1)
+
+                    if (isMobile()) {
+                        // *** LOGICA MOBILE: FADE ***
+                        // 1. Annulla lo scroll fisico per tenere l'elemento fermo al centro
+                        face.style.transform = `translate3d(0, ${-dist}px, 0)`;
+                        
+                        // 2. Calcola opacità in base alla distanza (Fade In/Out)
+                        // Più è vicino al centro (off=0), più è visibile.
+                        let opacity = 1 - Math.abs(off);
+                        face.style.opacity = Math.max(0, opacity);
+                        
+                        // Z-Index: la pagina corrente deve stare sopra
+                        face.style.zIndex = Math.round(10 - Math.abs(off) * 10);
+
+                    } else {
+                        // *** LOGICA PC: CUBO 3D ***
+                        face.style.transform = `translate3d(0, ${-dist}px, ${Math.abs(off)*-1200}px) rotateX(${off*90}deg)`;
+                        face.style.opacity = Math.max(0, 1 - Math.pow(Math.abs(off), 2.2));
+                        face.style.zIndex = 'auto';
+                    }
                     
+                    // Logica Contenuto Attivo (comune)
                     if (Math.abs(off) < 0.5) {
                         face.classList.add('active-content'); const d = flatFaces[i];
                         
-                        // Particelle (Mouse PC)
                         if (d.type === 'final-call' && window.matchMedia("(pointer: fine)").matches) {
                             cursor.classList.add('active');
                             if (!excitedInterval) excitedInterval = setInterval(() => spawnDroplets(mouseX, mouseY), 150);
                         } else { if (excitedInterval) { clearInterval(excitedInterval); excitedInterval = null; } }
 
-                        // Navbar Highlight
                         document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
                         let activeId = null;
                         if (d.type === 'final-call') activeId = 'group-contacts';
@@ -775,7 +792,6 @@
                                     const sl = document.getElementById(`sublink-${d.projectIdx}-${d.subIdx}`);
                                     if (sl) sl.classList.add('active');
                                 }
-                                // Auto-scroll navbar (Mobile)
                                 if (isMobile()) {
                                     const nav = document.getElementById('navbar');
                                     const navWidth = nav.offsetWidth;
@@ -803,6 +819,7 @@
     </script>
 </body>
 </html>
+
 
 
 
