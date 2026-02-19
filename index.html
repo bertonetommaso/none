@@ -389,6 +389,13 @@
                 position: relative !important;
                 z-index: 61 !important;
             }
+            
+            /* Porta le frecce/hint sopra lo scroll fantasma */
+            .hint-vertical, .hint-horizontal {
+                position: absolute !important;
+                z-index: 60 !important; /* Sopra a ghost-scroll (50) */
+                pointer-events: auto !important; /* Cliccabili */
+            } 
 }    
     </style>
 </head>
@@ -906,15 +913,24 @@
         update(); 
         window.addEventListener('resize', () => { vh = window.innerHeight; if(!isMobile()) targetScrollY = window.scrollY; });
         
+        // --- FUNZIONE PER LA FRECCIA DESTRA (Chi sono?) ---
         window.openPresentation = function() {
+            // 1. Assicurati di essere in cima alla pagina (Landing)
+            navigateTo(0);
+            
+            // 2. Imposta lo spostamento verso destra (Presentazione)
+            currentXOffset = -window.innerWidth;
+            
+            // 3. Applica l'animazione
             const slider = document.getElementById('main-slider');
-            currentXOffset = -window.innerWidth; 
             slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
             slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
+        
         };
     </script>
 </body>
 </html>
+
 
 
 
