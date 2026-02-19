@@ -696,7 +696,7 @@
                 const diffY = touch.clientY - startY;
 
                 // Se ci muoviamo più in orizzontale che in verticale, attiviamo lo slider
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                if (Math.abs(diffX) > (Math.abs(diffY) * 2) && Math.abs(diffX) > 15) {
                     isDragging = true;
                     e.preventDefault(); 
                     slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + diffX))}px, 0, 0)`;
@@ -915,6 +915,7 @@
     </script>
 </body>
 </html>
+
 
 
 
