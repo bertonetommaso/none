@@ -117,12 +117,42 @@
         #mob-down { bottom: 80px; } 
         @media (max-width: 768px) { .mobile-nav-arrow { display: block; } }
 
-        /* --- SIGNATURE --- */
+        /* --- SIGNATURE (Pulsante Organico) --- */
         #signature-btn {
-            position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 10005;
+            position: fixed; top: 30px; left: 50%; 
+            /* Nota: il transform qui è gestito dall'animazione ora */
+            z-index: 10005;
             font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; text-transform: uppercase;
-            pointer-events: all; white-space: nowrap; transition: filter 0.4s ease, transform 0.3s;
-            text-shadow: 0.5px 0px 0px currentColor; 
+            pointer-events: all; white-space: nowrap; 
+            transition: filter 0.4s ease, transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+            text-shadow: 0.5px 0px 0px currentColor;
+
+            /* NUOVO STILE PULSANTE */
+            padding: 10px 24px; /* Spazio interno */
+            border: 2px solid currentColor; /* Bordo che prende il colore del testo */
+            border-radius: 50px; /* Arrotondamento completo */
+            background-color: transparent; /* Sfondo trasparente di base */
+            
+            /* NUOVA ANIMAZIONE ORGANICA */
+            /* Dura 8 secondi, è infinita e molto morbida */
+            animation: organic-float 8s ease-in-out infinite;
+        }
+
+        /* L'animazione organica: si muove appena appena su e giù e ruota di pochissimo */
+        @keyframes organic-float {
+            0%   { transform: translate(-50%, 0px) rotate(0deg); }
+            33%  { transform: translate(-50%, -3px) rotate(0.8deg); } /* Sale e ruota a destra */
+            66%  { transform: translate(-50%, 2px) rotate(-0.8deg); } /* Scende e ruota a sinistra */
+            100% { transform: translate(-50%, 0px) rotate(0deg); }
+        }
+
+        /* Hover */
+        #signature-btn:hover { 
+            /* Quando ci passi sopra, ingrandisce e si ferma l'animazione organica */
+            transform: translate(-50%, 0) scale(1.1); 
+            background-color: var(--fg-color); /* Diventa pieno al passaggio */
+            color: var(--bg-color); /* Inverte il colore del testo */
+            animation-play-state: paused; /* Ferma il "respiro" mentre il mouse è sopra */
         }
         #signature-btn:hover { transform: translateX(-50%) scale(1.1); }
 
@@ -957,6 +987,7 @@
     </script>
 </body>
 </html>
+
 
 
 
