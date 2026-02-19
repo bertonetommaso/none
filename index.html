@@ -63,18 +63,26 @@
                 pointer-events: all !important;
             }
 
-            /* 3. NAVBAR */
+            /* 3. NAVBAR (Scroll Orizzontale Sbloccato) */
             nav {
                 pointer-events: auto !important;
                 z-index: 10001 !important;
                 display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important; /* Forza i link in una sola riga infinita */
                 width: 100% !important;
-                overflow-x: auto !important;
+                overflow-x: auto !important; /* Abilita lo scroll nativo */
+                overflow-y: hidden !important;
                 white-space: nowrap !important;
-                touch-action: pan-x; 
-                -webkit-overflow-scrolling: touch; 
+                touch-action: pan-x !important; /* Dice al telefono: qui scorri solo a destra/sinistra */
+                -webkit-overflow-scrolling: touch !important; 
                 padding-bottom: 30px; 
             }
+            
+            .nav-group {
+                flex-shrink: 0 !important; /* FONDAMENTALE: impedisce ai link di schiacciarsi */
+            }
+
             .main-link, .sub-link {
                 pointer-events: auto !important;
                 display: inline-flex !important;
@@ -155,7 +163,7 @@
             nav { 
                 bottom: 0; left: 0; width: 100%; display: flex; flex-direction: row; gap: 20px; 
                 overflow-x: auto; padding: 20px 20px 30px 20px; justify-content: flex-start;
-                background: linear-gradient(to top, var(--bg-color) 40%, transparent 100%);
+                background: transparent !important;
                 -ms-overflow-style: none; scrollbar-width: none; 
             }
             nav::-webkit-scrollbar { display: none; }
@@ -171,7 +179,7 @@
         }
 
         .main-link { 
-            color: var(--fg-color); text-decoration: none; font-size: 0.85rem; font-weight: 900; 
+            color: inherit !important; text-decoration: none; font-size: 0.85rem; font-weight: 900; 
             text-transform: uppercase; letter-spacing: 2px; opacity: 0.2; 
             display: flex; align-items: center; gap: 12px; transition: 0.4s; position: relative;
         }
@@ -183,7 +191,7 @@
         }
 
         .sub-link { 
-            color: var(--fg-color); text-decoration: none; font-size: 0.6rem; 
+            color: inherit !important; text-decoration: none; font-size: 0.6rem; 
             text-transform: uppercase; letter-spacing: 1px; opacity: 0.3; transition: 0.3s; font-weight: 500;
         }
         .sub-link:hover { opacity: 0.8 !important; transform: translateX(3px); }
@@ -788,7 +796,15 @@
         }
 
         function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
+
+    // --- SBLOCCO SCROLL ORIZZONTALE NAVBAR ---
+        navbar.addEventListener('touchmove', (e) => {
+            e.stopPropagation(); // Impedisce al tocco di "passare attraverso" e attivare altri script
+        }, { passive: true });
         
+        navbar.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+        }, { passive: true });
         // --- FUNZIONE UPDATE (CONTAINER SCROLL MODE) ---
         function update() {
             if (isMobile()) {
@@ -896,6 +912,7 @@
     </script>
 </body>
 </html>
+
 
 
 
