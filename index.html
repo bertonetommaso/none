@@ -885,7 +885,10 @@
                                     const sl = document.getElementById(`sublink-${d.projectIdx}-${d.subIdx}`);
                                     if (sl) sl.classList.add('active');
                                 }
-                                if (isMobile()) {
+                                // Auto-scroll navbar (Mobile) SOLO QUANDO CAMBIA SEZIONE
+                                if (isMobile() && currentActiveGroup !== activeId) {
+                                    currentActiveGroup = activeId; // Registra che la sezione è cambiata
+                                    
                                     const nav = document.getElementById('navbar');
                                     const navWidth = nav.offsetWidth;
                                     const elLeft = grp.offsetLeft;
@@ -912,6 +915,7 @@
     </script>
 </body>
 </html>
+
 
 
 
