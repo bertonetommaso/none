@@ -927,9 +927,37 @@
             slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
         
         };
+    // --- FIX CLICK PASSANTE (FRECCE E BOTTONI) ---
+        // Questo codice permette di cliccare le frecce anche se sono "sotto" lo scroll
+        const ghostLayer = document.getElementById('ghost-scroll');
+        
+        if (ghostLayer) {
+            ghostLayer.addEventListener('click', (e) => {
+                if (!isMobile()) return;
+
+                // 1. Nascondi temporaneamente il livello scroll per vedere cosa c'è sotto
+                ghostLayer.style.pointerEvents = 'none';
+                
+                // 2. Individua l'elemento nel punto esatto del tocco
+                const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+                
+                // 3. Riattiva immediatamente il livello scroll
+                ghostLayer.style.pointerEvents = 'all';
+
+                // 4. Se abbiamo beccato una freccia o un bottone, attiviamo il click
+                if (elementBelow) {
+                    // Cerca se l'elemento toccato è una freccia, un box o un link
+                    const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
+                    if (clickable) {
+                        clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
+
 
 
 
