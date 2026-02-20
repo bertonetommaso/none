@@ -258,8 +258,9 @@ em.italic-script { font-family: 'Georgia', serif; font-style: italic; display: b
 .presentation-text h2 { font-size: 4rem; margin-bottom: 25px; }
 }
 @media (max-width: 768px) {
-.presentation-content { flex-direction: column-reverse; gap: 30px; justify-content: center; text-align: center; }
-.presentation-rect { width: 35vw !important; height: 22vh !important; margin-top: -15vh !important; }
+/* Blocco alzato e foto rimpicciolita */
+.presentation-content { flex-direction: column-reverse; gap: 20px; justify-content: center; text-align: center; margin-top: -15vh !important; }
+.presentation-rect { width: 40vw !important; height: 25vh !important; margin-top: 0 !important; }
 .presentation-text { text-align: center; max-width: 90%; }
 .presentation-text h2 { font-size: 2.5rem; margin-bottom: 10px; }
 .presentation-text p { font-size: 0.9rem; }
@@ -1010,44 +1011,37 @@ slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
 slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 
 };
-// --- FIX CLICK PASSANTE (FRECCE E BOTTONI - MIGLIORATO PER MOBILE) ---
+// --- FIX CLICK PASSANTE (FRECCE E BOTTONI - INFALLIBILE) ---
         const ghostLayer = document.getElementById('ghost-scroll');
 
         if (ghostLayer) {
-            let startTx = 0, startTy = 0;
-            
-            ghostLayer.addEventListener('touchstart', (e) => {
-                startTx = e.touches[0].clientX;
-                startTy = e.touches[0].clientY;
-            }, { passive: true });
-
-            ghostLayer.addEventListener('touchend', (e) => {
+            ghostLayer.addEventListener('click', (e) => {
                 if (!isMobile()) return;
+
+                // 1. Spegni il vetro trasparente per 1 millisecondo
+                ghostLayer.style.pointerEvents = 'none';
                 
-                const endTx = e.changedTouches[0].clientX;
-                const endTy = e.changedTouches[0].clientY;
+                // 2. Guarda cosa c'è esattamente sotto il dito
+                const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
                 
-                // Aumentata la tolleranza a 25px per "capire" il tocco delle dita
-                if (Math.abs(endTx - startTx) < 25 && Math.abs(endTy - startTy) < 25) {
+                // 3. Riaccendi subito il vetro
+                ghostLayer.style.pointerEvents = 'all';
+
+                // 4. Se hai colpito un bottone, attivalo nel modo corretto per i telefoni
+                if (elementBelow) {
+                    const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
                     
-                    ghostLayer.style.pointerEvents = 'none';
-                    const elementBelow = document.elementFromPoint(endTx, endTy);
-                    ghostLayer.style.pointerEvents = 'all';
+                    if (clickable) {
+                        // Simula la "pressione" fisica per attivare le gocce d'acqua e la copia della Mail
+                        const mockEvent = new MouseEvent('mousedown', { clientX: e.clientX, clientY: e.clientY, bubbles: true });
+                        clickable.dispatchEvent(mockEvent);
 
-                    if (elementBelow) {
-                        const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
-                        
-                        if (clickable) {
-                            // Finto click per copiare la mail e fare le gocce
-                            const clickEvent = new MouseEvent('mousedown', { clientX: endTx, clientY: endTy, bubbles: true });
-                            clickable.dispatchEvent(clickEvent);
-
-                            // I telefoni odiano il "_blank" fatto da Javascript. Li apriamo direttamente per infallibilità.
-                            if (clickable.tagName.toLowerCase() === 'a' && clickable.href) {
-                                window.location.href = clickable.href; 
-                            } else {
-                                clickable.click(); 
-                            }
+                        // Forza l'apertura dei link (Instagram e LinkedIn) aggirando il blocco del telefono
+                        if (clickable.tagName.toUpperCase() === 'A' && clickable.href) {
+                            window.location.href = clickable.href;
+                        } else {
+                            // Frecce e altre funzioni
+                            clickable.click(); 
                         }
                     }
                 }
@@ -1056,6 +1050,7 @@ slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 </script>
 </body>
 </html>
+
 
 
 
