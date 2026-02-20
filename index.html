@@ -1,1049 +1,1002 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>B.T. | Industrial Design Journal</title>
-    <style>
-        :root {
-            --bg-color: rgb(240, 240, 240);
-            --fg-color: rgb(40, 40, 40);
-            --vh: 100vh;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>B.T. | Industrial Design Journal</title>
+    <style>
+        :root {
+            --bg-color: rgb(240, 240, 240);
+            --fg-color: rgb(40, 40, 40);
+            --vh: 100vh;
+        }
 
-        /* --- CORE SETUP --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; -webkit-tap-highform-color: transparent; }
-        
-        html { 
-            scroll-snap-type: y mandatory; 
-            scroll-behavior: smooth; 
-            touch-action: pan-y; 
-            overscroll-behavior: none; 
-            height: 100%;
-        }
-        
-        body { 
-            background-color: var(--bg-color); 
-            color: var(--fg-color); 
-            font-family: 'Inter', sans-serif; 
-            overflow-x: hidden; 
-            transition: background-color 0.4s ease; 
-            user-select: none; 
-            width: 100%; 
-            min-height: 100vh;
-        }
+        /* --- CORE SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; -webkit-tap-highform-color: transparent; }
+        
+        html { 
+            scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth; 
+            touch-action: pan-y; 
+            overscroll-behavior: none; 
+            height: 100%;
+        }
+        
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--fg-color); 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            transition: background-color 0.4s ease; 
+            user-select: none; 
+            width: 100%; 
+            min-height: 100vh;
+        }
 
-       /* CONFIGURAZIONE MOBILE - CONTAINER SCROLL */
-        @media (max-width: 768px) {
-            /* 1. BLOCCA LA FINESTRA PRINCIPALE (Fix Firefox/Safari) */
-            html, body {
-                height: 100% !important;
-                width: 100% !important;
-                margin: 0;
-                padding: 0;
-                overflow: hidden !important; /* Nessuno scroll sul body */
-                position: fixed !important;  /* Inchioda il sito */
-                overscroll-behavior: none;
-            }
+       /* CONFIGURAZIONE MOBILE - CONTAINER SCROLL */
+        @media (max-width: 768px) {
+            /* 1. BLOCCA LA FINESTRA PRINCIPALE (Fix Firefox/Safari) */
+            html, body {
+                height: 100% !important;
+                width: 100% !important;
+                margin: 0;
+                padding: 0;
+                overflow: hidden !important; /* Nessuno scroll sul body */
+                position: fixed !important;  /* Inchioda il sito */
+                overscroll-behavior: none;
+            }
 
-            /* 2. ATTIVA LO SCROLL SUL CONTENITORE FANTASMA */
-            #ghost-scroll {
-                display: block !important;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100dvh !important; /* Usa tutta l'altezza disponibile */
-                
-                overflow-y: scroll !important; /* Lo scroll avviene QUI */
-                scroll-snap-type: y mandatory !important; /* Magnetismo QUI */
-                scroll-behavior: smooth;
-                
-                z-index: 50 !important; /* Deve stare sopra a tutto per prendere il tocco */
-                pointer-events: all !important;
-            }
+            /* 2. ATTIVA LO SCROLL SUL CONTENITORE FANTASMA */
+            #ghost-scroll {
+                display: block !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100dvh !important; /* Usa tutta l'altezza disponibile */
+                
+                overflow-y: scroll !important; /* Lo scroll avviene QUI */
+                scroll-snap-type: y mandatory !important; /* Magnetismo QUI */
+                scroll-behavior: smooth;
+                
+                z-index: 50 !important; /* Deve stare sopra a tutto per prendere il tocco */
+                pointer-events: all !important;
+            }
 
-            /* 3. NAVBAR (Scroll Orizzontale Sbloccato) */
-            nav {
-                pointer-events: auto !important;
-                z-index: 10001 !important;
-                display: flex !important;
-                flex-direction: row !important;
-                flex-wrap: nowrap !important; /* Forza i link in una sola riga infinita */
-                width: 100% !important;
-                overflow-x: auto !important; /* Abilita lo scroll nativo */
-                overflow-y: hidden !important;
-                white-space: nowrap !important;
-                touch-action: pan-x !important; /* Dice al telefono: qui scorri solo a destra/sinistra */
-                -webkit-overflow-scrolling: touch !important; 
-                padding-bottom: 30px; 
-            }
-            
-            .nav-group {
-                flex-shrink: 0 !important; /* FONDAMENTALE: impedisce ai link di schiacciarsi */
-            }
+            /* 3. NAVBAR (Scroll Orizzontale Sbloccato) */
+            nav {
+                pointer-events: auto !important;
+                z-index: 10001 !important;
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important; /* Forza i link in una sola riga infinita */
+                width: 100% !important;
+                overflow-x: auto !important; /* Abilita lo scroll nativo */
+                overflow-y: hidden !important;
+                white-space: nowrap !important;
+                touch-action: pan-x !important; /* Dice al telefono: qui scorri solo a destra/sinistra */
+                -webkit-overflow-scrolling: touch !important; 
+                padding-bottom: 30px; 
+            }
+            
+            .nav-group {
+                flex-shrink: 0 !important; /* FONDAMENTALE: impedisce ai link di schiacciarsi */
+            }
 
-            .main-link, .sub-link {
-                pointer-events: auto !important;
-                display: inline-flex !important;
-            }
+            .main-link, .sub-link {
+                pointer-events: auto !important;
+                display: inline-flex !important;
+            }
 
-            /* 4. POSIZIONE CIAO */
-            .centered-container em.italic-script:first-child {
-                transform: translateY(-1.5vh); 
-                display: block;
-            }
+            /* 4. POSIZIONE CIAO */
+            .centered-container em.italic-script:first-child {
+                transform: translateY(-1.5vh); 
+                display: block;
+            }
 
-            #mob-up, #mob-down { display: none !important; }
-        }
+            #mob-up, #mob-down { display: none !important; }
+        }
 
-        /* AGGIORNA QUESTA CLASSE (Serve per l'altezza dinamica) */
-        .snap-point { 
-            height: 100vh;
-            /* Su mobile usa l'altezza dinamica per centrare perfetto */ 
-            height: 100dvh; 
-            scroll-snap-align: start; 
-            scroll-snap-stop: always; 
-            pointer-events: none; 
-        }
-        /* --- MOBILE ARROWS --- */
-        .mobile-nav-arrow {
-            position: fixed; left: 20px; z-index: 10020; font-size: 2.5rem;
-            color: var(--fg-color); opacity: 0.5; cursor: pointer; display: none;
-            transition: opacity 0.3s, transform 0.2s; pointer-events: all; padding: 10px;
-        }
-        .mobile-nav-arrow:active { transform: scale(1.2); opacity: 1; }
-        #mob-up { top: 20px; }
-        #mob-down { bottom: 80px; } 
-        @media (max-width: 768px) { .mobile-nav-arrow { display: block; } }
+        /* AGGIORNA QUESTA CLASSE (Serve per l'altezza dinamica) */
+        .snap-point { 
+            height: 100vh;
+            /* Su mobile usa l'altezza dinamica per centrare perfetto */ 
+            height: 100dvh; 
+            scroll-snap-align: start; 
+            scroll-snap-stop: always; 
+            pointer-events: none; 
+        }
+        /* --- MOBILE ARROWS --- */
+        .mobile-nav-arrow {
+            position: fixed; left: 20px; z-index: 10020; font-size: 2.5rem;
+            color: var(--fg-color); opacity: 0.5; cursor: pointer; display: none;
+            transition: opacity 0.3s, transform 0.2s; pointer-events: all; padding: 10px;
+        }
+        .mobile-nav-arrow:active { transform: scale(1.2); opacity: 1; }
+        #mob-up { top: 20px; }
+        #mob-down { bottom: 80px; } 
+        @media (max-width: 768px) { .mobile-nav-arrow { display: block; } }
 
-        /* --- SIGNATURE (Pulsante Organico) --- */
-        #signature-btn {
-            position: fixed; top: 30px; left: 50%; 
-            /* Nota: il transform qui è gestito dall'animazione ora */
-            z-index: 10005;
-            font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; text-transform: uppercase;
-            pointer-events: all; white-space: nowrap; 
-            transition: filter 0.4s ease, transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-            text-shadow: 0.5px 0px 0px currentColor;
+        /* --- SIGNATURE (Pulsante Organico) --- */
+        #signature-btn {
+            position: fixed; top: 30px; left: 50%; 
+            /* Nota: il transform qui è gestito dall'animazione ora */
+            z-index: 10005;
+            font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; text-transform: uppercase;
+            pointer-events: all; white-space: nowrap; 
+            transition: filter 0.4s ease, transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+            text-shadow: 0.5px 0px 0px currentColor;
 
-            /* NUOVO STILE PULSANTE */
-            padding: 10px 24px; /* Spazio interno */
-            border: 2px solid currentColor; /* Bordo che prende il colore del testo */
-            border-radius: 50px; /* Arrotondamento completo */
-            background-color: transparent; /* Sfondo trasparente di base */
-            
-            /* NUOVA ANIMAZIONE ORGANICA */
-            /* Dura 8 secondi, è infinita e molto morbida */
-            animation: organic-float 8s ease-in-out infinite;
-        }
+            /* NUOVO STILE PULSANTE */
+            padding: 10px 24px; /* Spazio interno */
+            border: 2px solid currentColor; /* Bordo che prende il colore del testo */
+            border-radius: 50px; /* Arrotondamento completo */
+            background-color: transparent; /* Sfondo trasparente di base */
+            
+            /* NUOVA ANIMAZIONE ORGANICA */
+            /* Dura 8 secondi, è infinita e molto morbida */
+            animation: organic-float 8s ease-in-out infinite;
+        }
 
-        /* L'animazione organica: si muove appena appena su e giù e ruota di pochissimo */
-        @keyframes organic-float {
-            0%   { transform: translate(-50%, 0px) rotate(0deg); }
-            33%  { transform: translate(-50%, -3px) rotate(0.8deg); } /* Sale e ruota a destra */
-            66%  { transform: translate(-50%, 2px) rotate(-0.8deg); } /* Scende e ruota a sinistra */
-            100% { transform: translate(-50%, 0px) rotate(0deg); }
-        }
+        /* L'animazione organica: si muove appena appena su e giù e ruota di pochissimo */
+        @keyframes organic-float {
+            0%   { transform: translate(-50%, 0px) rotate(0deg); }
+            33%  { transform: translate(-50%, -3px) rotate(0.8deg); } /* Sale e ruota a destra */
+            66%  { transform: translate(-50%, 2px) rotate(-0.8deg); } /* Scende e ruota a sinistra */
+            100% { transform: translate(-50%, 0px) rotate(0deg); }
+        }
 
-        /* Hover */
-        #signature-btn:hover { 
-            /* Quando ci passi sopra, ingrandisce e si ferma l'animazione organica */
-            transform: translate(-50%, 0) scale(1.1); 
-            background-color: var(--fg-color); /* Diventa pieno al passaggio */
-            color: var(--bg-color); /* Inverte il colore del testo */
-            animation-play-state: paused; /* Ferma il "respiro" mentre il mouse è sopra */
-        }
-        #signature-btn:hover { transform: translateX(-50%) scale(1.1); }
+        /* Hover */
+        #signature-btn:hover { 
+            /* Quando ci passi sopra, ingrandisce e si ferma l'animazione organica */
+            transform: translate(-50%, 0) scale(1.1); 
+            background-color: var(--fg-color); /* Diventa pieno al passaggio */
+            color: var(--bg-color); /* Inverte il colore del testo */
+            animation-play-state: paused; /* Ferma il "respiro" mentre il mouse è sopra */
+        }
+        #signature-btn:hover { transform: translateX(-50%) scale(1.1); }
 
-        /* --- CURSORE --- */
-        #custom-cursor {
-            position: fixed; width: 18px; height: 18px; background-color: white; border-radius: 50%;
-            pointer-events: none; z-index: 10006; mix-blend-mode: difference;
-            transition: width 0.3s ease, height 0.3s ease, transform 0.1s linear; 
-            transform: translate3d(-50%, -50%, 0); left: 0; top: 0;
-        }
-        #custom-cursor.active { width: 22px; height: 22px; animation: wave 0.6s infinite ease-in-out; }
-        @media (pointer: coarse), (hover: none) { #custom-cursor { display: none !important; } }
+        /* --- CURSORE --- */
+        #custom-cursor {
+            position: fixed; width: 18px; height: 18px; background-color: white; border-radius: 50%;
+            pointer-events: none; z-index: 10006; mix-blend-mode: difference;
+            transition: width 0.3s ease, height 0.3s ease, transform 0.1s linear; 
+            transform: translate3d(-50%, -50%, 0); left: 0; top: 0;
+        }
+        #custom-cursor.active { width: 22px; height: 22px; animation: wave 0.6s infinite ease-in-out; }
+        @media (pointer: coarse), (hover: none) { #custom-cursor { display: none !important; } }
 
-        @keyframes wave {
-            0%, 100% { border-radius: 50%; transform: translate3d(-50%, -50%, 0) scale(1); }
-            50% { border-radius: 35% 65% 50% 50%; transform: translate3d(-51%, -49%, 0) scale(1.05); }
-        }
+        @keyframes wave {
+            0%, 100% { border-radius: 50%; transform: translate3d(-50%, -50%, 0) scale(1); }
+            50% { border-radius: 35% 65% 50% 50%; transform: translate3d(-51%, -49%, 0) scale(1.05); }
+        }
 
-        .droplet {
-            position: fixed; width: 8px; height: 8px; background-color: white; border-radius: 50%; 
-            pointer-events: none; z-index: 10004; mix-blend-mode: difference; transform: translate3d(-50%, -50%, 0);
-        }
+        .droplet {
+            position: fixed; width: 8px; height: 8px; background-color: white; border-radius: 50%; 
+            pointer-events: none; z-index: 10004; mix-blend-mode: difference; transform: translate3d(-50%, -50%, 0);
+        }
 
-        /* --- NAVBAR --- */
-        nav { position: fixed; z-index: 10000; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
-        nav.visible { opacity: 1; pointer-events: all; }
+        /* --- NAVBAR --- */
+        nav { position: fixed; z-index: 10000; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
+        nav.visible { opacity: 1; pointer-events: all; }
 
-        /* PC Style */
-        @media (min-width: 769px) {
-            nav { left: 20%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; gap: 15px; }
-            .nav-group { display: flex; flex-direction: column; gap: 8px; }
-            .sub-nav { max-height: 0; overflow: hidden; padding-left: 37px; display: flex; flex-direction: column; gap: 6px; transition: max-height 0.5s ease; }
-            .nav-group.active .sub-nav { max-height: 150px; margin-top: 5px; }
-        }
+        /* PC Style */
+        @media (min-width: 769px) {
+            nav { left: 20%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; gap: 15px; }
+            .nav-group { display: flex; flex-direction: column; gap: 8px; }
+            .sub-nav { max-height: 0; overflow: hidden; padding-left: 37px; display: flex; flex-direction: column; gap: 6px; transition: max-height 0.5s ease; }
+            .nav-group.active .sub-nav { max-height: 150px; margin-top: 5px; }
+        }
 
-        /* Mobile Style */
-        @media (max-width: 768px) {
-            nav { 
-                bottom: 0; left: 0; width: 100%; display: flex; flex-direction: row; gap: 20px; 
-                overflow-x: auto; padding: 20px 20px 30px 20px; justify-content: flex-start;
-                background: transparent !important;
-                -ms-overflow-style: none; scrollbar-width: none; 
-            }
-            nav::-webkit-scrollbar { display: none; }
-            .nav-group { display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-            .sub-nav { display: none; }
-            .main-link { opacity: 0.4 !important; white-space: nowrap; font-size: 0.85rem !important; }
-            .nav-group.active .main-link { opacity: 1 !important; transform: scale(1.1); font-weight: 900; }
-            .nav-group.active .main-link::after { 
-                content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 2px; 
-                background: var(--fg-color); 
-            }
-            .main-link::before { display: none; } 
-        }
+        /* Mobile Style */
+        @media (max-width: 768px) {
+            nav { 
+                bottom: 0; left: 0; width: 100%; display: flex; flex-direction: row; gap: 20px; 
+                overflow-x: auto; padding: 20px 20px 30px 20px; justify-content: flex-start;
+                background: transparent !important;
+                -ms-overflow-style: none; scrollbar-width: none; 
+            }
+            nav::-webkit-scrollbar { display: none; }
+            .nav-group { display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+            .sub-nav { display: none; }
+            .main-link { opacity: 0.4 !important; white-space: nowrap; font-size: 0.85rem !important; }
+            .nav-group.active .main-link { opacity: 1 !important; transform: scale(1.1); font-weight: 900; }
+            .nav-group.active .main-link::after { 
+                content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 2px; 
+                background: var(--fg-color); 
+            }
+            .main-link::before { display: none; } 
+        }
 
-        .main-link { 
-            color: inherit !important; text-decoration: none; font-size: 0.85rem; font-weight: 900; 
-            text-transform: uppercase; letter-spacing: 2px; opacity: 0.2; 
-            display: flex; align-items: center; gap: 12px; transition: 0.4s; position: relative;
-        }
-        @media (min-width: 769px) {
-            .main-link::before { content: ''; width: 12px; height: 2px; background: var(--fg-color); transition: 0.4s; }
-            .main-link:hover { opacity: 0.7 !important; }
-            .nav-group.active .main-link { opacity: 1 !important; transform: translateX(5px); }
-            .nav-group.active .main-link::before { width: 25px; }
-        }
+        .main-link { 
+            color: inherit !important; text-decoration: none; font-size: 0.85rem; font-weight: 900; 
+            text-transform: uppercase; letter-spacing: 2px; opacity: 0.2; 
+            display: flex; align-items: center; gap: 12px; transition: 0.4s; position: relative;
+        }
+        @media (min-width: 769px) {
+            .main-link::before { content: ''; width: 12px; height: 2px; background: var(--fg-color); transition: 0.4s; }
+            .main-link:hover { opacity: 0.7 !important; }
+            .nav-group.active .main-link { opacity: 1 !important; transform: translateX(5px); }
+            .nav-group.active .main-link::before { width: 25px; }
+        }
 
-        .sub-link { 
-            color: inherit !important; text-decoration: none; font-size: 0.6rem; 
-            text-transform: uppercase; letter-spacing: 1px; opacity: 0.3; transition: 0.3s; font-weight: 500;
-        }
-        .sub-link:hover { opacity: 0.8 !important; transform: translateX(3px); }
-        .sub-link.active { opacity: 1 !important; font-weight: 700; }
+        .sub-link { 
+            color: inherit !important; text-decoration: none; font-size: 0.6rem; 
+            text-transform: uppercase; letter-spacing: 1px; opacity: 0.3; transition: 0.3s; font-weight: 500;
+        }
+        .sub-link:hover { opacity: 0.8 !important; transform: translateX(3px); }
+        .sub-link.active { opacity: 1 !important; font-weight: 700; }
 
-        /* --- TYPOGRAPHY --- */
-        .char { display: inline-block; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .char:hover { transform: translateY(-4px) rotate(2deg); color: inherit; }
+        /* --- TYPOGRAPHY --- */
+        .char { display: inline-block; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .char:hover { transform: translateY(-4px) rotate(2deg); color: inherit; }
 
-        h1.monumental { font-weight: 900; line-height: 0.9; text-transform: uppercase; letter-spacing: -3px; margin: 15px 0; width: 100%; }
-        h1.monumental div { white-space: nowrap; }
-        @media (min-width: 769px) { h1.monumental { font-size: 7.5rem; letter-spacing: -5px; } }
-        @media (max-width: 768px) { h1.monumental { font-size: 10vw; letter-spacing: -1px; margin: 10px 0; width: 95vw; margin-left: auto; margin-right: auto; } }
+        h1.monumental { font-weight: 900; line-height: 0.9; text-transform: uppercase; letter-spacing: -3px; margin: 15px 0; width: 100%; }
+        h1.monumental div { white-space: nowrap; }
+        @media (min-width: 769px) { h1.monumental { font-size: 7.5rem; letter-spacing: -5px; } }
+        @media (max-width: 768px) { h1.monumental { font-size: 10vw; letter-spacing: -1px; margin: 10px 0; width: 95vw; margin-left: auto; margin-right: auto; } }
 
-        em.italic-script { font-family: 'Georgia', serif; font-style: italic; display: block; }
-        @media (min-width: 769px) { em.italic-script { font-size: 2rem; } }
-        @media (max-width: 768px) { em.italic-script { font-size: 1.2rem; } }
+        em.italic-script { font-family: 'Georgia', serif; font-style: italic; display: block; }
+        @media (min-width: 769px) { em.italic-script { font-size: 2rem; } }
+        @media (max-width: 768px) { em.italic-script { font-size: 1.2rem; } }
 
-        .italic-script-small { font-family: 'Georgia', serif; font-style: italic; font-size: 1rem; }
-        @media (max-width: 768px) { .italic-script-small { font-size: 0.9rem; } }
+        .italic-script-small { font-family: 'Georgia', serif; font-style: italic; font-size: 1rem; }
+        @media (max-width: 768px) { .italic-script-small { font-size: 0.9rem; } }
 
-        /* --- SLIDER --- */
-        .horizontal-slider { display: flex; width: 200vw; height: 100vh; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); will-change: transform; }
-        .panel { width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; flex-shrink: 0; position: relative; }
-        .centered-container { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; width: 100vw; height: 100vh; padding: 20px; }
+        /* --- SLIDER --- */
+        .horizontal-slider { display: flex; width: 200vw; height: 100vh; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); will-change: transform; }
+        .panel { width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; flex-shrink: 0; position: relative; }
+        .centered-container { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; width: 100vw; height: 100vh; padding: 20px; }
 
-        .presentation-content { display: flex; align-items: center; justify-content: center; width: 100vw; height: 100%; padding: 0 10%; }
-        .presentation-rect { border: 2px solid var(--fg-color); flex-shrink: 0; position: relative; }
-        .presentation-text { text-align: left; }
+        .presentation-content { display: flex; align-items: center; justify-content: center; width: 100vw; height: 100%; padding: 0 10%; }
+        .presentation-rect { border: 2px solid var(--fg-color); flex-shrink: 0; position: relative; }
+        .presentation-text { text-align: left; }
 
-        @media (min-width: 769px) {
-            .presentation-content { gap: 100px; }
-            .presentation-rect { width: 380px; height: 520px; }
-            .presentation-text h2 { font-size: 4rem; margin-bottom: 25px; }
-        }
-        @media (max-width: 768px) {
-            .presentation-content { flex-direction: column-reverse; gap: 30px; justify-content: center; text-align: center; }
-            .presentation-rect { width: 60vw; height: 40vh; margin-top: 20px; }
-            .presentation-text { text-align: center; max-width: 90%; }
-            .presentation-text h2 { font-size: 2.5rem; margin-bottom: 10px; }
-            .presentation-text p { font-size: 0.9rem; }
-        }
+        @media (min-width: 769px) {
+            .presentation-content { gap: 100px; }
+            .presentation-rect { width: 380px; height: 520px; }
+            .presentation-text h2 { font-size: 4rem; margin-bottom: 25px; }
+        }
+        @media (max-width: 768px) {
+            .presentation-content { flex-direction: column-reverse; gap: 30px; justify-content: center; text-align: center; }
+            .presentation-rect { width: 60vw; height: 40vh; margin-top: 20px; }
+            .presentation-text { text-align: center; max-width: 90%; }
+            .presentation-text h2 { font-size: 2.5rem; margin-bottom: 10px; }
+            .presentation-text p { font-size: 0.9rem; }
+        }
 
-        /* --- HINTS --- */
-        .hint-vertical { position: absolute; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: all; cursor: pointer; z-index: 10010; }
-        @media (min-width: 769px) { .hint-vertical { bottom: 5vh; } }
-        @media (max-width: 768px) { .hint-vertical { bottom: 18vh; } }
+        /* --- HINTS --- */
+        .hint-vertical { position: absolute; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: all; cursor: pointer; z-index: 10010; }
+        @media (min-width: 769px) { .hint-vertical { bottom: 5vh; } }
+        @media (max-width: 768px) { .hint-vertical { bottom: 18vh; } }
 
-        .hint-horizontal { position: absolute; right: 5vw; top: 50%; transform: translateY(-50%) display: flex; align-items: center; gap: 20px; pointer-events: all; }
-        @media (max-width: 768px) {
-            .hint-horizontal { top: 70%; flex-direction: row; gap: 8px; right: 5vw; }
-            .hint-horizontal span:first-child { display: block; opacity: 0.8; } 
-        }
-        .arrow { 
-    font-size: 1.2rem; 
-    margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dalla scritta */
+        .hint-horizontal { position: absolute; right: 5vw; top: 50%; transform: translateY(-50%) display: flex; align-items: center; gap: 20px; pointer-events: all; }
+        @media (max-width: 768px) {
+            .hint-horizontal { top: 70%; flex-direction: row; gap: 8px; right: 5vw; }
+            .hint-horizontal span:first-child { display: block; opacity: 0.8; } 
+        }
+        .arrow { 
+    font-size: 1.2rem; 
+    margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dalla scritta */
 }
 
-        /* --- PORTFOLIO CONTENT --- */
-        .portfolio-content { position: absolute; z-index: 2; pointer-events: none; }
-        .image-container { position: absolute; background: #ddd; box-shadow: 0 40px 80px rgba(0,0,0,0.1); z-index: 1; will-change: transform; }
-        .image-container img { width: 100%; height: auto; display: block; }
+        /* --- PORTFOLIO CONTENT --- */
+        .portfolio-content { position: absolute; z-index: 2; pointer-events: none; }
+        .image-container { position: absolute; background: #ddd; box-shadow: 0 40px 80px rgba(0,0,0,0.1); z-index: 1; will-change: transform; }
+        .image-container img { width: 100%; height: auto; display: block; }
 
-        @media (min-width: 769px) {
-            .portfolio-content { left: 33vw; top: 50%; transform: translateY(-50%); max-width: 310px; text-align: left; }
-            .image-container { right: 10vw; top: 50%; transform: translateY(-50%); width: 420px; height: auto; }
-            .portfolio-content h3 { font-size: 0.9rem; margin-bottom: 1rem; opacity: 0.6; }
-            .portfolio-content h2 { font-size: 5rem; margin-bottom: 1.5rem; line-height: 0.9}
-        }
-        @media (max-width: 768px) {
-            /* Testo fermo in alto */
-            .portfolio-content { 
-                position: absolute !important; 
-                top: 10% !important; 
-                left: 50% !important; 
-                transform: translateX(-50%) !important; 
-                width: 85% !important; 
-                text-align: center !important; 
-                pointer-events: none !important; 
-                z-index: 10 !important;
-            }
-            
-            /* Contenitore Immagine: posizionato al centro dello spazio sotto il testo */
-            .image-container { 
-                position: absolute !important; 
-                top: 55% !important; /* Centro esatto tra testo e navbar */
-                left: 50% !important; 
-                transform: translate(-50%, -50%) !important; 
-                
-                width: 65vw !important; 
-                max-height: 45vh !important; /* L'immagine non supererà mai questa altezza */
-                
-                display: flex !important;
-                align-items: center !important; 
-                justify-content: center !important;
-                
-                background: transparent !important;
-                box-shadow: none !important;
-            }
-            
-            /* L'immagine si adatta al contenitore senza deformarsi */
-            .image-container img {
-                max-width: 100% !important;
-                max-height: 100% !important;
-                object-fit: contain !important; /* Scala l'immagine in modo sicuro */
-                box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
-            }
-            
-            .portfolio-content h3 { font-size: 0.7rem; margin-bottom: 0.5rem; opacity: 0.6; font-weight: 500; }
-            .portfolio-content h2 { font-size: 3rem; margin-bottom: 1rem; line-height: 1; }
-            .portfolio-content p { font-size: 0.9rem; max-width: 100%; }
+        @media (min-width: 769px) {
+            .portfolio-content { left: 33vw; top: 50%; transform: translateY(-50%); max-width: 310px; text-align: left; }
+            .image-container { right: 10vw; top: 50%; transform: translateY(-50%); width: 420px; height: auto; }
+            .portfolio-content h3 { font-size: 0.9rem; margin-bottom: 1rem; opacity: 0.6; }
+            .portfolio-content h2 { font-size: 5rem; margin-bottom: 1.5rem; line-height: 0.9}
+        }
+        @media (max-width: 768px) {
+            .portfolio-content { 
+                top: 12% !important; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                width: 85%; 
+                text-align: center; 
+                pointer-events: none; /* Lascia passare i click */
+            }
+            
+            /* IMMAGINE: Posizionata nella metà inferiore, con altezza limitata */
+            .image-container { 
+                top: 60% !important; /* Spinge il centro dell'immagine verso il basso */
+                left: 50%; 
+                transform: translate(-50%, -50%); 
+                
+                width: 60vw !important; /* Larghezza fissa */
+                height: auto !important; 
+                max-height: 40vh !important; /* <--- FONDAMENTALE: Impedisce che tocchi il testo o il fondo */
+                object-fit: contain;
+                
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            }
+            
+            .portfolio-content h3 { font-size: 0.7rem; margin-bottom: 0.5rem; opacity: 0.6; font-weight: 500; }
+            .portfolio-content h2 { font-size: 3rem; margin-bottom: 1rem; line-height: 1; }
+            .portfolio-content p { font-size: 0.9rem; max-width: 100%; }
+        }
 
-        /* --- ENGINE 3D --- */
-        .scene { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; perspective: 1500px; z-index: 5; pointer-events: none; }
-        .cube-wrapper { width: 100%; height: 100%; transform-style: preserve-3d; }
-        .scroll-container { position: relative; z-index: 10; pointer-events: none; }
-        .snap-point { 
-            height: 100vh; /* PC */
-            
-            /* MOBILE: Altezza identica al contenitore scrollabile */
-            height: 100dvh !important; 
-            
-            /* Se contenitore e figlio sono alti uguali, START = CENTRO PERFETTO */
-            scroll-snap-align: start !important; 
-            
-            scroll-snap-stop: always !important; /* Obbliga a fermarsi */
-            pointer-events: none; 
-        }
-        
-        .cube-face.active-content { pointer-events: all; }
+        /* --- ENGINE 3D --- */
+        .scene { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; perspective: 1500px; z-index: 5; pointer-events: none; }
+        .cube-wrapper { width: 100%; height: 100%; transform-style: preserve-3d; }
+        .scroll-container { position: relative; z-index: 10; pointer-events: none; }
+        .snap-point { 
+            height: 100vh; /* PC */
+            
+            /* MOBILE: Altezza identica al contenitore scrollabile */
+            height: 100dvh !important; 
+            
+            /* Se contenitore e figlio sono alti uguali, START = CENTRO PERFETTO */
+            scroll-snap-align: start !important; 
+            
+            scroll-snap-stop: always !important; /* Obbliga a fermarsi */
+            pointer-events: none; 
+        }
+        .cube-face { width: 100%; height: 100vh; display: flex; position: absolute; top: 0; left: 0; backface-visibility: hidden; opacity: 0; will-change: transform, opacity; pointer-events: none; }
+        .cube-face.active-content { pointer-events: all; }
 
-        /* --- FINAL BOXES --- */
-        .final-links { display: flex; gap: 20px; margin-top: 40px; justify-content: center; align-items: center; flex-wrap: wrap; }
-        .box { 
-            width: 110px; height: 110px; border: 2px solid var(--fg-color); 
-            display: flex; align-items: center; justify-content: center; 
-            transition: 0.4s ease-out; 
-            font-size: 0.7rem; font-weight: 900; text-transform: uppercase; 
-            letter-spacing: 1px; color: inherit; text-decoration: none; 
-            overflow: hidden; white-space: nowrap; position: relative; 
-        }
-        
-        .box:hover { transform: scale(1.05); background: white !important; color: black !important; border-color: white !important; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); z-index: 10; }
-        .box.copied { width: 300px !important; background: white !important; color: black !important; border-color: white !important; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+        /* --- FINAL BOXES --- */
+        .final-links { display: flex; gap: 20px; margin-top: 40px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .box { 
+            width: 110px; height: 110px; border: 2px solid var(--fg-color); 
+            display: flex; align-items: center; justify-content: center; 
+            transition: 0.4s ease-out; 
+            font-size: 0.7rem; font-weight: 900; text-transform: uppercase; 
+            letter-spacing: 1px; color: inherit; text-decoration: none; 
+            overflow: hidden; white-space: nowrap; position: relative; 
+        }
+        
+        .box:hover { transform: scale(1.05); background: white !important; color: black !important; border-color: white !important; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); z-index: 10; }
+        .box.copied { width: 300px !important; background: white !important; color: black !important; border-color: white !important; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
 
-        .mail-box { width: 110px; }
-        @media (min-width: 769px) { .mail-box:hover { width: 360px; } .mail-box:hover .mail-text { opacity: 0; } .mail-box:hover .mail-address { opacity: 1; } }
-        
-        .mail-box .mail-address { position: absolute; opacity: 0; font-size: 0.65rem; transition: 0.4s; pointer-events: none; text-transform: lowercase; }
-        .mail-box.copied .mail-address { opacity: 1; }
-        .mail-box.copied .mail-text { opacity: 0; }
+        .mail-box { width: 110px; }
+        @media (min-width: 769px) { .mail-box:hover { width: 360px; } .mail-box:hover .mail-text { opacity: 0; } .mail-box:hover .mail-address { opacity: 1; } }
+        
+        .mail-box .mail-address { position: absolute; opacity: 0; font-size: 0.65rem; transition: 0.4s; pointer-events: none; text-transform: lowercase; }
+        .mail-box.copied .mail-address { opacity: 1; }
+        .mail-box.copied .mail-text { opacity: 0; }
 
-        @media (max-width: 768px) {
-            .final-links { gap: 10px; }
-            .box { width: 90px; height: 90px; font-size: 0.6rem; }
-        }
-        /* --- NUOVE REGOLE PER I SOTTOTITOLI --- */
+        @media (max-width: 768px) {
+            .final-links { gap: 10px; }
+            .box { width: 90px; height: 90px; font-size: 0.6rem; }
+        }
+        /* --- NUOVE REGOLE PER I SOTTOTITOLI --- */
 
 /* Dimensione per PC */
 .sub-title {
-    font-size: 3.5rem !important; /* Era 5rem. Ora è molto più piccolo */
+    font-size: 3.5rem !important; /* Era 5rem. Ora è molto più piccolo */
 }
 
 /* Dimensione per Mobile */
 @media (max-width: 768px) {
-    .sub-title {
-        font-size: 3rem !important; /* Era 3rem. Ora è più piccolo */
-    }
+    .sub-title {
+        font-size: 3rem !important; /* Era 3rem. Ora è più piccolo */
+    }
 }
-    /* --- DIDASCALIA SOTTO IMMAGINE --- */
+    /* --- DIDASCALIA SOTTO IMMAGINE --- */
 .img-caption {
-    position: absolute;
-    bottom: -25px;  /* Lo spinge fuori dal box, sotto */
-    right: 0;       /* Lo allinea a destra */
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.5;
-    white-space: nowrap; /* Evita che vada a capo */
-    color: var(--fg-color);
-}    
-    /* Incolla questo nel CSS */
+    position: absolute;
+    bottom: -25px;  /* Lo spinge fuori dal box, sotto */
+    right: 0;       /* Lo allinea a destra */
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.5;
+    white-space: nowrap; /* Evita che vada a capo */
+    color: var(--fg-color);
+}    
+    /* Incolla questo nel CSS */
 @media (max-width: 768px) {
-    nav {
-        pointer-events: auto !important; /* RENDE I LINK CLICCABILI */
-        z-index: 10001 !important;       /* LA PORTA SOPRA OGNI COSA */
-    }
-    .main-link, .sub-link {
-        pointer-events: auto !important;
-    }
+    nav {
+        pointer-events: auto !important; /* RENDE I LINK CLICCABILI */
+        z-index: 10001 !important;       /* LA PORTA SOPRA OGNI COSA */
+    }
+    .main-link, .sub-link {
+        pointer-events: auto !important;
+    }
 
-            /* 1. DIDASCALIE CENTRATE */
-            .img-caption {
-                left: 50% !important;
-                right: auto !important;
-                transform: translateX(-50%) !important;
-                text-align: center !important;
-                white-space: normal !important;
-                bottom: -40px !important;
-                width: 100%;
-            }
+            /* 1. DIDASCALIE CENTRATE */
+            .img-caption {
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) !important;
+                text-align: center !important;
+                white-space: normal !important;
+                bottom: -40px !important;
+                width: 100%;
+            }
 
-            /* 2. RIPARA TASTI ULTIMA PAGINA E SLIDER ORIZZONTALE */
-            /* Li portiamo sopra il ghost-scroll (z-index 50) */
-            .final-links, .horizontal-slider {
-                position: relative;
-                z-index: 60 !important; 
-                pointer-events: auto !important;
-            }
-    /* --- INCOLLA QUESTO DENTRO @media (max-width: 768px) --- */
-            
-            /* Porta i link finali SOPRA lo scroll fantasma */
-            .final-links {
-                position: relative !important;
-                z-index: 60 !important; /* 60 è maggiore di 50 */
-                pointer-events: auto !important;
-                width: 100%;
-            }
-            
-            .box, .mail-box {
-                pointer-events: auto !important;
-                position: relative !important;
-                z-index: 61 !important;
-            }
-            
-            /* Porta le frecce/hint sopra lo scroll fantasma */
-            .hint-vertical, .hint-horizontal {
-                position: absolute !important;
-                z-index: 60 !important; /* Sopra a ghost-scroll (50) */
-                pointer-events: auto !important; /* Cliccabili */
-            } 
-}    
-    </style>
+            /* 2. RIPARA TASTI ULTIMA PAGINA E SLIDER ORIZZONTALE */
+            /* Li portiamo sopra il ghost-scroll (z-index 50) */
+            .final-links, .horizontal-slider {
+                position: relative;
+                z-index: 60 !important; 
+                pointer-events: auto !important;
+            }
+    /* --- INCOLLA QUESTO DENTRO @media (max-width: 768px) --- */
+            
+            /* Porta i link finali SOPRA lo scroll fantasma */
+            .final-links {
+                position: relative !important;
+                z-index: 60 !important; /* 60 è maggiore di 50 */
+                pointer-events: auto !important;
+                width: 100%;
+            }
+            
+            .box, .mail-box {
+                pointer-events: auto !important;
+                position: relative !important;
+                z-index: 61 !important;
+            }
+            
+            /* Porta le frecce/hint sopra lo scroll fantasma */
+            .hint-vertical, .hint-horizontal {
+                position: absolute !important;
+                z-index: 60 !important; /* Sopra a ghost-scroll (50) */
+                pointer-events: auto !important; /* Cliccabili */
+            } 
+}    
+    </style>
 </head>
 <body>
 
-    <div id="signature-btn">B.T.</div>
-    <div id="custom-cursor"></div>
-    <nav id="navbar"></nav>
+    <div id="signature-btn">B.T.</div>
+    <div id="custom-cursor"></div>
+    <nav id="navbar"></nav>
 
-    <div id="mob-up" class="mobile-nav-arrow">↑</div>
-    <div id="mob-down" class="mobile-nav-arrow">↓</div>
+    <div id="mob-up" class="mobile-nav-arrow">↑</div>
+    <div id="mob-down" class="mobile-nav-arrow">↓</div>
 
-    <div class="scene"><div class="cube-wrapper" id="cube-container"></div></div>
-    <div class="scroll-container" id="ghost-scroll"></div>
+    <div class="scene"><div class="cube-wrapper" id="cube-container"></div></div>
+    <div class="scroll-container" id="ghost-scroll"></div>
 <script>
-        const projects = [
-            { 
-                title: "Viote", 
-                desc: "Viote it's a <b>polifunctional object</b>, serving both as an engaging <b>toy</b>, and as a <b>photo holder</b>.", 
-                sub: [
-                    { title: "Concept", text: "Its seemingly complicated profile derives from the <b>hexasphericon</b>, a solid obtained by revolving an hexagon around its central axis. Half of it is then rotated bey 60°, finally obtaining <b>a solid built by a continuous surface</b>." },
-                    { title: "Texture", text: "Viote is entirely made of <b>maple wood</b>, choses for its low density, which makes it relatevely easy to <b>lathe</b> it. The two halves preserve the <b>original wooden texture</b>, to furthermore engage the user on a <b>tactile level</b>." },
-                    { title: "Process", text: "The result is a useful gadget, proud of its birthplace: <b>Val But</b>. Enjoyable by children, as <b>a toy</b>, and by adults, as it holds in place, thanks to its narrow slit, <b>a special postcard</b>." }
-                ], 
-                img: "in-mano.jpg", 
-                subImages: ["geometria-viote.jpg", "su-pavimento2.jpg", "render-viote2.jpg"], 
-                color: [221, 194, 161] 
-            },
-            { 
-                title: "Clīvio", 
-                desc: "The Clīvio chair is conceived with the meaningful ambition of bringing a fragment of the <b>natural world into everyday life</b>. The <b>cotton rope</b> and its <b>fastener</b> turn a functional element into a distinctive mark.",
-                caption: "Codesigned with Marocco Francesco.", 
-                sub: [
-                    { title: "Concept", text: "Clīvio brings nature into living spaces through <b>fir wood</b>, a material that recalls the strength and continuity of the <b>KoCevsko forest</b>." },
-                    { title: "Detail", text: "Its essential geometry allows it to be <b>stacked with ease</b> when disassembled, embodying a vision of <b>practical and sustainable design</b>. The orange <b>heat shrink tubing</b> gives the system a refined and contemporary accent, whereas the <b>rope stoppers</b> make the <b>assembly and disassembly easy</b>." },
-                    { title: "Output", text: "As a result, Clīvio's <b>essential lines</b> and the essence of the wood itself contribute to create <b>a serene space</b>, welcoming the user in the environment it belongs to." }
-                ], 
-                img: "clivio-intera.png", 
-                subImages: ["foresta.jpg", "clivio-smontato2.jpg", "clivio-ambiente.jpeg"], 
-                color: [233, 187, 135] 
-            },
-            {   title: "Toori", 
-                desc: "A reflection on <b>simplicity and modularity</b>. Simple cylindrical forms are connected to one another, creating a <b>functional</b>, <b>customizable</b>, and <b>modular</b> object. Only two wooden elements, an elastic band, and two screws give <b>more than six ends</b>.",
-             caption: "Codesigned with Salomone Arianna.",    
-             sub: [
-                    { title: "Concept", text: "This project delivers <b>a dynamic coat rack</b>, able to shift its geometries to satisfy the user's needs. <b>Easely assemblable</b>, it uses primitive geometries and accessible materials to deliver an <b>useful and accessible product</b>." },
-                    { title: "Technology", text: "Accessories and hangers can be hung on <b>the unthreaded section of the shank</b> between the wall and the wooden element. The <b>elastic band</b> differs from the rest of the geometries in both shape and material, offering the user a contemporary and pleasing contrast." },
-                    { title: "Impact", text: "Toori offers in its <b>semplicity and modularity</b> a contemporary approach on coat racks. Every part of it it's optimized for maximizing <b>space and confort</b>, offering the user a variety of ways to hang clothes and accessories." }
-                ], 
-                img: "preview-toori.jpg", 
-                subImages: ["schema-toori.jpg", "toori-bianco-dietro.jpg", "scomposto-toori2.jpg"],
-                color: [245, 180, 109] },
-            
-            {   title: "Where's the Bus?", 
-                desc: "This project features a <b>lenticular poster</b> at public transport stops. As passersby move from side to side, they experience two contrasting visions of the city—one <b>congested with traffic</b> and the other completely <b>clear</b>.",
-             caption: "Codesigned with Dario Fiammetta, Ferrari Tommaso, Cerri Lorenzo.",   
-             sub: [
-                    { title: "Concept", text: "<b>How can we improve road usage, reduce stress and increase productivity?</b> Our project aims to answer these questions, presenting public transport as a solid alternative to private mobility while <b>playing a fun and immediate game</b>!" },
-                    { title: "Technology", text: "<b>Lenticular printing</b> reveals different images as viewing angles change. We chose this dynamic medium to visually <b>transform chaotic traffic into seamless public transport</b>, effectively demonstrating the shift from stress to productivity <b>in a single glance</b>." },
-                    { title: "Impact", text: "The user, when passing by a bus stop or directely waiting for the bus to pass, is relieved by <b>a simple game</b>, playable by just looking at the poster and <b>moving side to side</b>." }
-                ], 
-                img: "cornice-poster.jpg", 
-                subImages: ["bus-problema.jpg", "dettaglio.jpg", "utente-poster2.jpg"],
-                color: [244, 220, 0] }
-        ];
+        const projects = [
+            { 
+                title: "Viote", 
+                desc: "Viote it's a <b>polifunctional object</b>, serving both as an engaging <b>toy</b>, and as a <b>photo holder</b>.", 
+                sub: [
+                    { title: "Concept", text: "Its seemingly complicated profile derives from the <b>hexasphericon</b>, a solid obtained by revolving an hexagon around its central axis. Half of it is then rotated bey 60°, finally obtaining <b>a solid built by a continuous surface</b>." },
+                    { title: "Texture", text: "Viote is entirely made of <b>maple wood</b>, choses for its low density, which makes it relatevely easy to <b>lathe</b> it. The two halves preserve the <b>original wooden texture</b>, to furthermore engage the user on a <b>tactile level</b>." },
+                    { title: "Process", text: "The result is a useful gadget, proud of its birthplace: <b>Val But</b>. Enjoyable by children, as <b>a toy</b>, and by adults, as it holds in place, thanks to its narrow slit, <b>a special postcard</b>." }
+                ], 
+                img: "in-mano.jpg", 
+                subImages: ["geometria-viote.jpg", "su-pavimento2.jpg", "render-viote2.jpg"], 
+                color: [221, 194, 161] 
+            },
+            { 
+                title: "Clīvio", 
+                desc: "The Clīvio chair is conceived with the meaningful ambition of bringing a fragment of the <b>natural world into everyday life</b>. The <b>cotton rope</b> and its <b>fastener</b> turn a functional element into a distinctive mark.",
+                caption: "Codesigned with Marocco Francesco.", 
+                sub: [
+                    { title: "Concept", text: "Clīvio brings nature into living spaces through <b>fir wood</b>, a material that recalls the strength and continuity of the <b>KoCevsko forest</b>." },
+                    { title: "Detail", text: "Its essential geometry allows it to be <b>stacked with ease</b> when disassembled, embodying a vision of <b>practical and sustainable design</b>. The orange <b>heat shrink tubing</b> gives the system a refined and contemporary accent, whereas the <b>rope stoppers</b> make the <b>assembly and disassembly easy</b>." },
+                    { title: "Output", text: "As a result, Clīvio's <b>essential lines</b> and the essence of the wood itself contribute to create <b>a serene space</b>, welcoming the user in the environment it belongs to." }
+                ], 
+                img: "clivio-intera.png", 
+                subImages: ["foresta.jpg", "clivio-smontato2.jpg", "clivio-ambiente.jpeg"], 
+                color: [233, 187, 135] 
+            },
+            {   title: "Toori", 
+                desc: "A reflection on <b>simplicity and modularity</b>. Simple cylindrical forms are connected to one another, creating a <b>functional</b>, <b>customizable</b>, and <b>modular</b> object. Only two wooden elements, an elastic band, and two screws give <b>more than six ends</b>.",
+             caption: "Codesigned with Salomone Arianna.",    
+             sub: [
+                    { title: "Concept", text: "This project delivers <b>a dynamic coat rack</b>, able to shift its geometries to satisfy the user's needs. <b>Easely assemblable</b>, it uses primitive geometries and accessible materials to deliver an <b>useful and accessible product</b>." },
+                    { title: "Technology", text: "Accessories and hangers can be hung on <b>the unthreaded section of the shank</b> between the wall and the wooden element. The <b>elastic band</b> differs from the rest of the geometries in both shape and material, offering the user a contemporary and pleasing contrast." },
+                    { title: "Impact", text: "Toori offers in its <b>semplicity and modularity</b> a contemporary approach on coat racks. Every part of it it's optimized for maximizing <b>space and confort</b>, offering the user a variety of ways to hang clothes and accessories." }
+                ], 
+                img: "preview-toori.jpg", 
+                subImages: ["schema-toori.jpg", "toori-bianco-dietro.jpg", "scomposto-toori2.jpg"],
+                color: [245, 180, 109] },
+            
+            {   title: "Where's the Bus?", 
+                desc: "This project features a <b>lenticular poster</b> at public transport stops. As passersby move from side to side, they experience two contrasting visions of the city—one <b>congested with traffic</b> and the other completely <b>clear</b>.",
+             caption: "Codesigned with Dario Fiammetta, Ferrari Tommaso, Cerri Lorenzo.",   
+             sub: [
+                    { title: "Concept", text: "<b>How can we improve road usage, reduce stress and increase productivity?</b> Our project aims to answer these questions, presenting public transport as a solid alternative to private mobility while <b>playing a fun and immediate game</b>!" },
+                    { title: "Technology", text: "<b>Lenticular printing</b> reveals different images as viewing angles change. We chose this dynamic medium to visually <b>transform chaotic traffic into seamless public transport</b>, effectively demonstrating the shift from stress to productivity <b>in a single glance</b>." },
+                    { title: "Impact", text: "The user, when passing by a bus stop or directely waiting for the bus to pass, is relieved by <b>a simple game</b>, playable by just looking at the poster and <b>moving side to side</b>." }
+                ], 
+                img: "cornice-poster.jpg", 
+                subImages: ["bus-problema.jpg", "dettaglio.jpg", "utente-poster2.jpg"],
+                color: [244, 220, 0] }
+        ];
 
-        const cursor = document.getElementById('custom-cursor');
-        const signature = document.getElementById('signature-btn');
-        const cube = document.getElementById('cube-container');
-        const ghost = document.getElementById('ghost-scroll');
-        const navbar = document.getElementById('navbar');
-        const mobUp = document.getElementById('mob-up');
-        const mobDown = document.getElementById('mob-down');
-        
-        let vh = window.innerHeight;
-        let mouseX = 0, mouseY = 0, excitedInterval = null;
-        let startX = 0, startY = 0, isDragging = false, currentXOffset = 0;
-        let currentActiveGroup = null;
-        
-        // Mobile Physics
-        let targetScrollY = 0;
-        let currentScrollY = 0;
-        const isMobile = () => window.innerWidth <= 768;
+        const cursor = document.getElementById('custom-cursor');
+        const signature = document.getElementById('signature-btn');
+        const cube = document.getElementById('cube-container');
+        const ghost = document.getElementById('ghost-scroll');
+        const navbar = document.getElementById('navbar');
+        const mobUp = document.getElementById('mob-up');
+        const mobDown = document.getElementById('mob-down');
+        
+        let vh = window.innerHeight;
+        let mouseX = 0, mouseY = 0, excitedInterval = null;
+        let startX = 0, startY = 0, isDragging = false, currentXOffset = 0;
+        let currentActiveGroup = null;
+        
+        // Mobile Physics
+        let targetScrollY = 0;
+        let currentScrollY = 0;
+        const isMobile = () => window.innerWidth <= 768;
 
-        // --- MOTORE CHE GENERA LE PAGINE ---
-        let flatFaces = [{ type: 'landing', color: [240, 240, 240] }];
-        
-        projects.forEach((proj, pIdx) => {
-            // 1. Pagina Principale
-            flatFaces.push({ 
-                type: 'main', 
-                title: proj.title,
-                desc: proj.desc,
-                projectIdx: pIdx, 
-                img: proj.img, 
-                color: proj.color,
-                caption: proj.caption
-            });
+        // --- MOTORE CHE GENERA LE PAGINE ---
+        let flatFaces = [{ type: 'landing', color: [240, 240, 240] }];
+        
+        projects.forEach((proj, pIdx) => {
+            // 1. Pagina Principale
+            flatFaces.push({ 
+                type: 'main', 
+                title: proj.title,
+                desc: proj.desc,
+                projectIdx: pIdx, 
+                img: proj.img, 
+                color: proj.color,
+                caption: proj.caption
+            });
 
-            // 2. Sottosezioni (LOOP CORRETTO)
-            proj.sub.forEach((subItem, sIdx) => {
-                let specificImg = proj.img; 
-                if (proj.subImages && proj.subImages[sIdx]) {
-                    specificImg = proj.subImages[sIdx];
-                }
+            // 2. Sottosezioni (LOOP CORRETTO)
+            proj.sub.forEach((subItem, sIdx) => {
+                let specificImg = proj.img; 
+                if (proj.subImages && proj.subImages[sIdx]) {
+                    specificImg = proj.subImages[sIdx];
+                }
 
-                // Gestisce sia il nuovo formato (Oggetto) che il vecchio (Stringa)
-                let sTitle = subItem.title ? subItem.title : subItem; 
-                let sDesc = subItem.text ? subItem.text : "";         
+                // Gestisce sia il nuovo formato (Oggetto) che il vecchio (Stringa)
+                let sTitle = subItem.title ? subItem.title : subItem; 
+                let sDesc = subItem.text ? subItem.text : "";         
 
-                flatFaces.push({ 
-                    type: 'sub', 
-                    title: proj.title, 
-                    subTitle: sTitle, 
-                    desc: sDesc, 
-                    projectIdx: pIdx, 
-                    img: specificImg, 
-                    subIdx: sIdx, 
-                    color: proj.color 
-                });
-            }); 
-            // QUI C'ERA L'ERRORE: HO RIMOSSO IL CODICE DUPLICATO CHE ERA FINITO QUI
-        });
-        
-        flatFaces.push({ type: 'final-call', title: "CHECK ME OUT HERE!", color: [10, 10, 10] });
+                flatFaces.push({ 
+                    type: 'sub', 
+                    title: proj.title, 
+                    subTitle: sTitle, 
+                    desc: sDesc, 
+                    projectIdx: pIdx, 
+                    img: specificImg, 
+                    subIdx: sIdx, 
+                    color: proj.color 
+                });
+            }); 
+            // QUI C'ERA L'ERRORE: HO RIMOSSO IL CODICE DUPLICATO CHE ERA FINITO QUI
+        });
+        
+        flatFaces.push({ type: 'final-call', title: "CHECK ME OUT HERE!", color: [10, 10, 10] });
 
-        // --- SIDEBAR GENERATION ---
-        projects.forEach((proj, i) => {
-            const group = document.createElement('div');
-            group.className = 'nav-group'; group.id = `group-${i}`;
-            const mainIdx = 1 + (i * 4);
-            const mLink = document.createElement('a');
-            mLink.className = 'main-link'; mLink.href = "#"; mLink.innerHTML = `0${i+1} — ${proj.title}`;
-            mLink.onclick = (e) => { e.preventDefault(); navigateTo(1 + i * 4); };
-            
-            const sNav = document.createElement('div');
-            sNav.className = 'sub-nav';
-            
-            // Loop Sottosezioni Sidebar Corretto
-            proj.sub.forEach((subItem, si) => {
-                const sl = document.createElement('a');
-                sl.className = 'sub-link'; 
-                sl.id = `sublink-${i}-${si}`; 
-                sl.href = "#"; 
-                
-                let label = subItem.title ? subItem.title : subItem;
-                
-                sl.innerHTML = label; 
-                sl.onclick = (e) => { e.preventDefault(); navigateTo(2 + i * 4 + si); };
-                sNav.appendChild(sl);
-            });
-            // QUI C'ERA L'ERRORE 2: RIMOSSO CODICE DUPLICATO
+        // --- SIDEBAR GENERATION ---
+        projects.forEach((proj, i) => {
+            const group = document.createElement('div');
+            group.className = 'nav-group'; group.id = `group-${i}`;
+            const mainIdx = 1 + (i * 4);
+            const mLink = document.createElement('a');
+            mLink.className = 'main-link'; mLink.href = "#"; mLink.innerHTML = `0${i+1} — ${proj.title}`;
+            mLink.onclick = (e) => { e.preventDefault(); navigateTo(1 + i * 4); };
+            
+            const sNav = document.createElement('div');
+            sNav.className = 'sub-nav';
+            
+            // Loop Sottosezioni Sidebar Corretto
+            proj.sub.forEach((subItem, si) => {
+                const sl = document.createElement('a');
+                sl.className = 'sub-link'; 
+                sl.id = `sublink-${i}-${si}`; 
+                sl.href = "#"; 
+                
+                let label = subItem.title ? subItem.title : subItem;
+                
+                sl.innerHTML = label; 
+                sl.onclick = (e) => { e.preventDefault(); navigateTo(2 + i * 4 + si); };
+                sNav.appendChild(sl);
+            });
+            // QUI C'ERA L'ERRORE 2: RIMOSSO CODICE DUPLICATO
 
-            group.appendChild(mLink); group.appendChild(sNav); navbar.appendChild(group);
-        });
+            group.appendChild(mLink); group.appendChild(sNav); navbar.appendChild(group);
+        });
 
-        // 5th Section: CONTACTS
-        const contactGroup = document.createElement('div');
-        contactGroup.className = 'nav-group';
-        contactGroup.id = 'group-contacts';
-        const cLink = document.createElement('a');
-        cLink.className = 'main-link'; cLink.href = "#"; cLink.innerHTML = "05 — CONTACTS";
-        const finalPageIdx = flatFaces.length - 1;
-        cLink.onclick = (e) => { e.preventDefault(); navigateTo(finalPageIdx); };
-        contactGroup.appendChild(cLink);
-        navbar.appendChild(contactGroup);
+        // 5th Section: CONTACTS
+        const contactGroup = document.createElement('div');
+        contactGroup.className = 'nav-group';
+        contactGroup.id = 'group-contacts';
+        const cLink = document.createElement('a');
+        cLink.className = 'main-link'; cLink.href = "#"; cLink.innerHTML = "05 — CONTACTS";
+        const finalPageIdx = flatFaces.length - 1;
+        cLink.onclick = (e) => { e.preventDefault(); navigateTo(finalPageIdx); };
+        contactGroup.appendChild(cLink);
+        navbar.appendChild(contactGroup);
 
-        // Generate Faces HTML
-        flatFaces.forEach((data, i) => {
-            const snap = document.createElement('div'); snap.className = 'snap-point'; ghost.appendChild(snap);
-            const face = document.createElement('div'); face.className = 'cube-face';
-            
-           if (data.type === 'landing') {
-                face.innerHTML = `
-                <div class="horizontal-slider" id="main-slider">
-                    <div class="panel">
-                        <div class="centered-container">
-   
-                            <em class="italic-script" style="margin-bottom: -5px; display: block;">ciao!</em>
+        // Generate Faces HTML
+        flatFaces.forEach((data, i) => {
+            const snap = document.createElement('div'); snap.className = 'snap-point'; ghost.appendChild(snap);
+            const face = document.createElement('div'); face.className = 'cube-face';
+            
+           if (data.type === 'landing') {
+                face.innerHTML = `
+                <div class="horizontal-slider" id="main-slider">
+                    <div class="panel">
+                        <div class="centered-container">
+   
+                            <em class="italic-script" style="margin-bottom: -5px; display: block;">ciao!</em>
 
-                            <h1 class="split-title monumental" style="margin: 0;">
-                                <div>HERE'S MY</div>
-                                <div>INDUSTRIAL</div>
-                                <div>DESIGN</div>
-                                <div>JOURNAL.</div>
-                            </h1>
+                            <h1 class="split-title monumental" style="margin: 0;">
+                                <div>HERE'S MY</div>
+                                <div>INDUSTRIAL</div>
+                                <div>DESIGN</div>
+                                <div>JOURNAL.</div>
+                            </h1>
 
-                            <em class="italic-script" style="margin-top: -5px; display: block;">enjoy!</em>
+                            <em class="italic-script" style="margin-top: -5px; display: block;">enjoy!</em>
 
-                        </div>
-                    
-                        <div class="hint-vertical" onclick="navigateTo(1)">
-                            <span class="italic-script-small">some of what i've done</span>
-                            <span class="arrow">↓</span>
-                        </div>
+                        </div>
+                    
+                        <div class="hint-vertical" onclick="navigateTo(1)">
+                            <span class="italic-script-small">some of what i've done</span>
+                            <span class="arrow">↓</span>
+                        </div>
 
-                        <div class="hint-horizontal" onclick="openPresentation()"><span class="italic-script-small">who am i?</span><span class="arrow">→</span></div>
-                    </div>
+                        <div class="hint-horizontal" onclick="openPresentation()"><span class="italic-script-small">who am i?</span><span class="arrow">→</span></div>
+                    </div>
 
-                    <div class="panel">
-                        <div class="presentation-content">
-                            <img src="foto-meno.jpg" class="presentation-rect" style="object-fit: cover;">
-                            <div class="presentation-text">
-                                <h2>Hi there!</h2>
-                                <p>I’m Tommaso - 21 year old , studying Product Design at Politecnico di Torino. Keen to upgrade my software and practical skills, I’ve always been open to innovations and challenges to better myself. Through my projects I aim to convey functionality and a balanced aestethics.</p>
-                            </div>
-                        </div>
+                    <div class="panel">
+                        <div class="presentation-content">
+                            <img src="foto-meno.jpg" class="presentation-rect" style="object-fit: cover;">
+                            <div class="presentation-text">
+                                <h2>Hi there!</h2>
+                                <p>I’m Tommaso - 21 year old , studying Product Design at Politecnico di Torino. Keen to upgrade my software and practical skills, I’ve always been open to innovations and challenges to better myself. Through my projects I aim to convey functionality and a balanced aestethics.</p>
+                            </div>
+                        </div>
 
-                        <div class="hint-vertical" onclick="navigateTo(1)">
-                            <span class="italic-script-small">some of what i've done</span>
-                            <span class="arrow">↓</span>
-                        </div>
-                        </div>
-                </div>`;
-            } else if (data.type === 'main') {
-                // Controlla se c'è una caption, se sì crea l'HTML, altrimenti lascia vuoto
-                const captionHTML = data.caption ? `<div class="img-caption">${data.caption}</div>` : '';
-                
-                face.innerHTML = `<div class="portfolio-content">
-                    <h3>Project Overview</h3>
-                    <h2>${data.title}</h2>
-                    <p>${data.desc}</p></div>
-                <div class="image-container">
-                    <img src="${data.img}">
-                    ${captionHTML} </div>`;
-            } else if (data.type === 'sub') {
-                face.innerHTML = `<div class="portfolio-content">
-                    <h3>${data.title} / Study</h3>
-                    <h2 class="sub-title">${data.subTitle}</h2>
-                    <p>${data.desc || ""}</p> </div>
-                <div class="image-container"><img src="${data.img}"></div>`;
-            } else if (data.type === 'final-call') {
-                face.innerHTML = `
-                <div class="centered-container">
-                    <em class="italic-script">did something intrigue you?</em>
-                    
-                    <h1 class="split-title monumental">
-                        <div>${data.title}</div>
-                    </h1>
-                    
-                    <div class="final-links">
-                        <a href="https://www.instagram.com/bertone_des/" target="_blank" class="box">Instagram</a>
-                        <a href="https://www.linkedin.com/in/tommaso-bertone-465542286" target="_blank" class="box">LinkedIn</a>
-                        <div class="box mail-box"><span class="mail-text">Mail</span><span class="mail-address">bertonetommaso2@gmail.com</span></div>
-                    </div>
-                </div>`;
-            }
-            cube.appendChild(face);
-        });
+                        <div class="hint-vertical" onclick="navigateTo(1)">
+                            <span class="italic-script-small">some of what i've done</span>
+                            <span class="arrow">↓</span>
+                        </div>
+                        </div>
+                </div>`;
+            } else if (data.type === 'main') {
+                // Controlla se c'è una caption, se sì crea l'HTML, altrimenti lascia vuoto
+                const captionHTML = data.caption ? `<div class="img-caption">${data.caption}</div>` : '';
+                
+                face.innerHTML = `<div class="portfolio-content">
+                    <h3>Project Overview</h3>
+                    <h2>${data.title}</h2>
+                    <p>${data.desc}</p></div>
+                <div class="image-container">
+                    <img src="${data.img}">
+                    ${captionHTML} </div>`;
+            } else if (data.type === 'sub') {
+                face.innerHTML = `<div class="portfolio-content">
+                    <h3>${data.title} / Study</h3>
+                    <h2 class="sub-title">${data.subTitle}</h2>
+                    <p>${data.desc || ""}</p> </div>
+                <div class="image-container"><img src="${data.img}"></div>`;
+            } else if (data.type === 'final-call') {
+                face.innerHTML = `
+                <div class="centered-container">
+                    <em class="italic-script">did something intrigue you?</em>
+                    
+                    <h1 class="split-title monumental">
+                        <div>${data.title}</div>
+                    </h1>
+                    
+                    <div class="final-links">
+                        <a href="https://www.instagram.com/bertone_des/" target="_blank" class="box">Instagram</a>
+                        <a href="https://www.linkedin.com/in/tommaso-bertone-465542286" target="_blank" class="box">LinkedIn</a>
+                        <div class="box mail-box"><span class="mail-text">Mail</span><span class="mail-address">bertonetommaso2@gmail.com</span></div>
+                    </div>
+                </div>`;
+            }
+            cube.appendChild(face);
+        });
 
-        document.querySelectorAll('.split-title div').forEach(div => {
-            const text = div.innerText; div.innerHTML = '';
-            text.split('').forEach(c => {
-                const s = document.createElement('span'); s.className = 'char';
-                s.innerHTML = c === ' ' ? '&nbsp;' : c; div.appendChild(s);
-            });
-        });
+        document.querySelectorAll('.split-title div').forEach(div => {
+            const text = div.innerText; div.innerHTML = '';
+            text.split('').forEach(c => {
+                const s = document.createElement('span'); s.className = 'char';
+                s.innerHTML = c === ' ' ? '&nbsp;' : c; div.appendChild(s);
+            });
+        });
 
-        // --- NAVIGATION ENGINE CORRETTO ---
-        function navigateTo(index) {
-            const target = index * window.innerHeight;
-            
-            if (isMobile()) {
-                // SU MOBILE: Dobbiamo scrollare il contenitore interno, non la finestra
-                const scroller = document.getElementById('ghost-scroll');
-                if (scroller) {
-                    scroller.scrollTo({ top: target, behavior: 'smooth' });
-                }
-            } else {
-                // SU PC: Scrolla la finestra normalmente
-                window.scrollTo({ top: target, behavior: 'smooth' });
-            }
-        }
+        // --- NAVIGATION ENGINE CORRETTO ---
+        function navigateTo(index) {
+            const target = index * window.innerHeight;
+            
+            if (isMobile()) {
+                // SU MOBILE: Dobbiamo scrollare il contenitore interno, non la finestra
+                const scroller = document.getElementById('ghost-scroll');
+                if (scroller) {
+                    scroller.scrollTo({ top: target, behavior: 'smooth' });
+                }
+            } else {
+                // SU PC: Scrolla la finestra normalmente
+                window.scrollTo({ top: target, behavior: 'smooth' });
+            }
+        }
 
-        // Tasti freccia mobile (se visibili)
-        mobUp.onclick = () => {
-            // Calcola a che pagina siamo basandosi sullo scroll reale
-            let currentIdx = Math.round(window.scrollY / window.innerHeight);
-            if (currentIdx > 0) navigateTo(currentIdx - 1);
-        };
-        mobDown.onclick = () => {
-            let currentIdx = Math.round(window.scrollY / window.innerHeight);
-            if (currentIdx < flatFaces.length - 1) navigateTo(currentIdx + 1);
-        };
+        // Tasti freccia mobile (se visibili)
+        mobUp.onclick = () => {
+            // Calcola a che pagina siamo basandosi sullo scroll reale
+            let currentIdx = Math.round(window.scrollY / window.innerHeight);
+            if (currentIdx > 0) navigateTo(currentIdx - 1);
+        };
+        mobDown.onclick = () => {
+            let currentIdx = Math.round(window.scrollY / window.innerHeight);
+            if (currentIdx < flatFaces.length - 1) navigateTo(currentIdx + 1);
+        };
 
-      // --- SLIDER & TOUCH ---
-        const slider = document.getElementById('main-slider');
-        
-        // GESTIONE UNIFICATA TOUCH (Mobile + PC)
-        document.addEventListener('touchmove', (e) => {
-            // 1. SALVAVITA NAVBAR: Se tocchi la navbar, FERMATI.
-            if (e.target.closest('nav') || e.target.closest('.sub-nav') || e.target.closest('.nav-group')) {
-                return; 
-            }
+      // --- SLIDER & TOUCH ---
+        const slider = document.getElementById('main-slider');
+        
+        // GESTIONE UNIFICATA TOUCH (Mobile + PC)
+        document.addEventListener('touchmove', (e) => {
+            // 1. SALVAVITA NAVBAR: Se tocchi la navbar, FERMATI.
+            if (e.target.closest('nav') || e.target.closest('.sub-nav') || e.target.closest('.nav-group')) {
+                return; 
+            }
 
-            // 2. PC: Blocca scroll elastico
-            if (!isMobile() && !isDragging) {
-                e.preventDefault();
-            }
+            // 2. PC: Blocca scroll elastico
+            if (!isMobile() && !isDragging) {
+                e.preventDefault();
+            }
 
-            // 3. LOGICA SLIDER ORIZZONTALE (PRIMA PAGINA)
-            if (isMobile() && currentScrollY < vh * 0.5) {
-                const touch = e.touches[0];
-                const diffX = touch.clientX - startX;
-                const diffY = touch.clientY - startY;
+            // 3. LOGICA SLIDER ORIZZONTALE (PRIMA PAGINA)
+            if (isMobile() && currentScrollY < vh * 0.5) {
+                const touch = e.touches[0];
+                const diffX = touch.clientX - startX;
+                const diffY = touch.clientY - startY;
 
-                // Se ci muoviamo più in orizzontale che in verticale, attiviamo lo slider
-                if (Math.abs(diffX) > (Math.abs(diffY) * 2) && Math.abs(diffX) > 15) {
-                    isDragging = true;
-                    e.preventDefault(); 
-                    slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + diffX))}px, 0, 0)`;
-                }
-            }
+                // Se ci muoviamo più in orizzontale che in verticale, attiviamo lo slider
+                if (Math.abs(diffX) > (Math.abs(diffY) * 2) && Math.abs(diffX) > 15) {
+                    isDragging = true;
+                    e.preventDefault(); 
+                    slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + diffX))}px, 0, 0)`;
+                }
+            }
 
-            // 4. PARTICELLE (solo se non sto trascinando lo slider)
-            if (isMobile() && !isDragging) {
-                const touch = e.touches[0];
-                spawnDroplets(touch.clientX, touch.clientY);
-            }
-        }, { passive: false });
+            // 4. PARTICELLE (solo se non sto trascinando lo slider)
+            if (isMobile() && !isDragging) {
+                const touch = e.touches[0];
+                spawnDroplets(touch.clientX, touch.clientY);
+            }
+        }, { passive: false });
 
-        // LISTENER GLOBALI PER IL TOCCO
-        document.addEventListener('touchstart', (e) => {
-            if (currentScrollY < vh * 0.5) { 
-                isDragging = false; 
-                startX = e.touches[0].clientX; 
-                startY = e.touches[0].clientY; 
-                slider.style.transition = 'none'; 
-            }
-        }, { passive: true });
+        // LISTENER GLOBALI PER IL TOCCO
+        document.addEventListener('touchstart', (e) => {
+            if (currentScrollY < vh * 0.5) { 
+                isDragging = false; 
+                startX = e.touches[0].clientX; 
+                startY = e.touches[0].clientY; 
+                slider.style.transition = 'none'; 
+            }
+        }, { passive: true });
 
-        document.addEventListener('touchend', (e) => {
-            if (isDragging) { 
-                isDragging = false; 
-                finishSlide(e.changedTouches[0].clientX); 
-            }
-        });
+        document.addEventListener('touchend', (e) => {
+            if (isDragging) { 
+                isDragging = false; 
+                finishSlide(e.changedTouches[0].clientX); 
+            }
+        });
 
-        // Mouse (PC)
-        document.addEventListener('mousedown', (e) => { if (window.scrollY < vh * 0.5) { isDragging = true; startX = e.clientX; slider.style.transition = 'none'; } });
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX; mouseY = e.clientY;
-            cursor.style.left = mouseX + 'px'; cursor.style.top = mouseY + 'px';
-            if (isDragging) { const deltaX = e.clientX - startX; slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + deltaX))}px, 0, 0)`; }
-        });
-        document.addEventListener('mouseup', (e) => {
-            if (!isDragging) return; isDragging = false; finishSlide(e.clientX);
-        });
+        // Mouse (PC)
+        document.addEventListener('mousedown', (e) => { if (window.scrollY < vh * 0.5) { isDragging = true; startX = e.clientX; slider.style.transition = 'none'; } });
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px'; cursor.style.top = mouseY + 'px';
+            if (isDragging) { const deltaX = e.clientX - startX; slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + deltaX))}px, 0, 0)`; }
+        });
+        document.addEventListener('mouseup', (e) => {
+            if (!isDragging) return; isDragging = false; finishSlide(e.clientX);
+        });
 
-        function finishSlide(endX) {
-            slider.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
-            if (Math.abs(endX - startX) > 100) {
-                currentXOffset = (endX - startX < 0) ? -window.innerWidth : 0;
-            } else {
-                currentXOffset = currentXOffset === 0 ? 0 : -window.innerWidth;
-            }
-            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
-        }
+        function finishSlide(endX) {
+            slider.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+            if (Math.abs(endX - startX) > 100) {
+                currentXOffset = (endX - startX < 0) ? -window.innerWidth : 0;
+            } else {
+                currentXOffset = currentXOffset === 0 ? 0 : -window.innerWidth;
+            }
+            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
+        }
 
-        // FIX TASTO B.T. -> APRE LA PRESENTAZIONE
-        signature.onclick = () => { 
-            navigateTo(0); // 1. Torna alla prima pagina verticale
-            
-            // 2. Forza lo slider orizzontale ad aprirsi sulla presentazione
-            currentXOffset = -window.innerWidth; 
-            
-            // Applica l'animazione
-            slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'; 
-            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`; 
-        };
+        // FIX TASTO B.T. -> APRE LA PRESENTAZIONE
+        signature.onclick = () => { 
+            navigateTo(0); // 1. Torna alla prima pagina verticale
+            
+            // 2. Forza lo slider orizzontale ad aprirsi sulla presentazione
+            currentXOffset = -window.innerWidth; 
+            
+            // Applica l'animazione
+            slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'; 
+            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`; 
+        };
 
-        // --- INTERACTIONS ---
-        document.addEventListener('mouseover', (e) => {
-            if (e.target.closest('a, #signature-btn, .char, .box, .presentation-rect, .mobile-nav-arrow, .monumental')) cursor.classList.add('active');
-        });
-        document.addEventListener('mouseout', (e) => cursor.classList.remove('active'));
+        // --- INTERACTIONS ---
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('a, #signature-btn, .char, .box, .presentation-rect, .mobile-nav-arrow, .monumental')) cursor.classList.add('active');
+        });
+        document.addEventListener('mouseout', (e) => cursor.classList.remove('active'));
 
-        document.addEventListener('mousedown', (e) => {
-            const isClickable = e.target.closest('a, #signature-btn, .box, .mail-box, .final-links, .mobile-nav-arrow, .monumental, .hint-vertical');
-            const isLastPage = (currentScrollY / vh) > (flatFaces.length - 1.5);
-            if (isClickable || isLastPage) spawnDroplets(e.clientX, e.clientY);
-        });
-        
-        function spawnDroplets(x, y) {
-            const count = isMobile() ? 1 : 4; 
-            for (let i = 0; i < count; i++) {
-                const d = document.createElement('div'); d.className = 'droplet'; document.body.appendChild(d);
-                d.style.left = x + 'px'; d.style.top = y + 'px';
-                const angle = Math.random() * Math.PI * 2; const dist = isMobile() ? 15 : 30;
-                d.animate([{ opacity: 1 }, { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) scale(0)`, opacity: 0 }], { duration: 500 }).onfinish = () => d.remove();
-            }
-            
-            const mailBox = document.elementFromPoint(x, y)?.closest('.mail-box');
-            if (mailBox) {
-                navigator.clipboard.writeText('bertonetommaso2@gmail.com').then(() => {
-                    const addr = mailBox.querySelector('.mail-address');
-                    addr.innerText = 'copied to clipboard!';
-                    mailBox.classList.add('copied');
-                    setTimeout(() => { 
-                        addr.innerText = 'bertonetommaso2@gmail.com'; 
-                        mailBox.classList.remove('copied');
-                    }, 2000);
-                });
-            }
-        }
+        document.addEventListener('mousedown', (e) => {
+            const isClickable = e.target.closest('a, #signature-btn, .box, .mail-box, .final-links, .mobile-nav-arrow, .monumental, .hint-vertical');
+            const isLastPage = (currentScrollY / vh) > (flatFaces.length - 1.5);
+            if (isClickable || isLastPage) spawnDroplets(e.clientX, e.clientY);
+        });
+        
+        function spawnDroplets(x, y) {
+            const count = isMobile() ? 1 : 4; 
+            for (let i = 0; i < count; i++) {
+                const d = document.createElement('div'); d.className = 'droplet'; document.body.appendChild(d);
+                d.style.left = x + 'px'; d.style.top = y + 'px';
+                const angle = Math.random() * Math.PI * 2; const dist = isMobile() ? 15 : 30;
+                d.animate([{ opacity: 1 }, { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) scale(0)`, opacity: 0 }], { duration: 500 }).onfinish = () => d.remove();
+            }
+            
+            const mailBox = document.elementFromPoint(x, y)?.closest('.mail-box');
+            if (mailBox) {
+                navigator.clipboard.writeText('bertonetommaso2@gmail.com').then(() => {
+                    const addr = mailBox.querySelector('.mail-address');
+                    addr.innerText = 'copied to clipboard!';
+                    mailBox.classList.add('copied');
+                    setTimeout(() => { 
+                        addr.innerText = 'bertonetommaso2@gmail.com'; 
+                        mailBox.classList.remove('copied');
+                    }, 2000);
+                });
+            }
+        }
 
-        function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
+        function lerp(c1, c2, f) { return c1.map((v, i) => Math.round(v + (c2[i] - v) * f)); }
 
-    // --- SBLOCCO SCROLL ORIZZONTALE NAVBAR ---
-        navbar.addEventListener('touchmove', (e) => {
-            e.stopPropagation(); // Impedisce al tocco di "passare attraverso" e attivare altri script
-        }, { passive: true });
-        
-        navbar.addEventListener('touchstart', (e) => {
-            e.stopPropagation();
-        }, { passive: true });
-        // --- FUNZIONE UPDATE (CONTAINER SCROLL MODE) ---
-        function update() {
-            if (isMobile()) {
-                const scroller = document.getElementById('ghost-scroll');
-                currentScrollY = scroller.scrollTop;
-            } else {
-                currentScrollY = window.scrollY;
-            }
+    // --- SBLOCCO SCROLL ORIZZONTALE NAVBAR ---
+        navbar.addEventListener('touchmove', (e) => {
+            e.stopPropagation(); // Impedisce al tocco di "passare attraverso" e attivare altri script
+        }, { passive: true });
+        
+        navbar.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+        }, { passive: true });
+        // --- FUNZIONE UPDATE (CONTAINER SCROLL MODE) ---
+        function update() {
+            if (isMobile()) {
+                const scroller = document.getElementById('ghost-scroll');
+                currentScrollY = scroller.scrollTop;
+            } else {
+                currentScrollY = window.scrollY;
+            }
 
-            const sY = currentScrollY;
-            const progress = sY / vh;
-            const idx = Math.floor(progress);
-            const f = progress - idx;
-            
-            // Logica Colori
-            if (idx < flatFaces.length) {
-                let rgb;
-                if (idx < flatFaces.length - 1) {
-                    rgb = lerp(flatFaces[idx].color, flatFaces[idx + 1].color, f);
-                } else {
-                    rgb = flatFaces[flatFaces.length - 1].color;
-                }
-                const bright = (rgb[0]*299 + rgb[1]*587 + rgb[2]*114)/1000;
-                document.body.style.backgroundColor = `rgb(${rgb.join(',')})`;
-                document.body.style.color = bright > 130 ? 'rgb(40,40,40)' : 'rgb(245,245,245)';
-                signature.style.filter = `invert(${bright > 130 ? 0 : 1})`;
-            }
+            const sY = currentScrollY;
+            const progress = sY / vh;
+            const idx = Math.floor(progress);
+            const f = progress - idx;
+            
+            // Logica Colori
+            if (idx < flatFaces.length) {
+                let rgb;
+                if (idx < flatFaces.length - 1) {
+                    rgb = lerp(flatFaces[idx].color, flatFaces[idx + 1].color, f);
+                } else {
+                    rgb = flatFaces[flatFaces.length - 1].color;
+                }
+                const bright = (rgb[0]*299 + rgb[1]*587 + rgb[2]*114)/1000;
+                document.body.style.backgroundColor = `rgb(${rgb.join(',')})`;
+                document.body.style.color = bright > 130 ? 'rgb(40,40,40)' : 'rgb(245,245,245)';
+                signature.style.filter = `invert(${bright > 130 ? 0 : 1})`;
+            }
 
-            // Navbar visibilità
-            const isAtEnd = sY > (flatFaces.length - 1.2) * vh; 
-            const isPCLanding = sY > vh * 0.4;
-            if (isPCLanding && (!isAtEnd || isMobile())) {
-                navbar.classList.add('visible');
-            } else {
-                navbar.classList.remove('visible');
-            }
+            // Navbar visibilità
+            const isAtEnd = sY > (flatFaces.length - 1.2) * vh; 
+            const isPCLanding = sY > vh * 0.4;
+            if (isPCLanding && (!isAtEnd || isMobile())) {
+                navbar.classList.add('visible');
+            } else {
+                navbar.classList.remove('visible');
+            }
 
-            const fcs = document.querySelectorAll('.cube-face');
-            fcs.forEach((face, i) => {
-                const dist = sY - (i * vh); 
-                const off = dist / vh; 
+            const fcs = document.querySelectorAll('.cube-face');
+            fcs.forEach((face, i) => {
+                const dist = sY - (i * vh); 
+                const off = dist / vh; 
 
-                if (Math.abs(off) < 1.5) {
-                    face.style.display = 'flex';
+                if (Math.abs(off) < 1.5) {
+                    face.style.display = 'flex';
 
-                    if (isMobile()) {
-                        // *** FADE MOBILE ***
-                        face.style.transform = `translate3d(0, 0, 0)`; 
-                        let opacity = 1 - Math.abs(off);
-                        face.style.opacity = Math.max(0, Math.pow(opacity, 1.5)); 
-                        face.style.zIndex = 100 - Math.round(Math.abs(off) * 100); 
-                    } else {
-                        // *** PC 3D ***
-                        face.style.transform = `translate3d(0, ${-dist}px, ${Math.abs(off)*-1200}px) rotateX(${off*90}deg)`;
-                        face.style.opacity = Math.max(0, 1 - Math.pow(Math.abs(off), 2.2));
-                        face.style.zIndex = 'auto';
-                    }
-                    
-                    if (Math.abs(off) < 0.5) {
-                        face.classList.add('active-content'); const d = flatFaces[i];
-                        
-                        if (d.type === 'final-call' && window.matchMedia("(pointer: fine)").matches) {
-                            cursor.classList.add('active');
-                            if (!excitedInterval) excitedInterval = setInterval(() => spawnDroplets(mouseX, mouseY), 150);
-                        } else { if (excitedInterval) { clearInterval(excitedInterval); excitedInterval = null; } }
+                    if (isMobile()) {
+                        // *** FADE MOBILE ***
+                        face.style.transform = `translate3d(0, 0, 0)`; 
+                        let opacity = 1 - Math.abs(off);
+                        face.style.opacity = Math.max(0, Math.pow(opacity, 1.5)); 
+                        face.style.zIndex = 100 - Math.round(Math.abs(off) * 100); 
+                    } else {
+                        // *** PC 3D ***
+                        face.style.transform = `translate3d(0, ${-dist}px, ${Math.abs(off)*-1200}px) rotateX(${off*90}deg)`;
+                        face.style.opacity = Math.max(0, 1 - Math.pow(Math.abs(off), 2.2));
+                        face.style.zIndex = 'auto';
+                    }
+                    
+                    if (Math.abs(off) < 0.5) {
+                        face.classList.add('active-content'); const d = flatFaces[i];
+                        
+                        if (d.type === 'final-call' && window.matchMedia("(pointer: fine)").matches) {
+                            cursor.classList.add('active');
+                            if (!excitedInterval) excitedInterval = setInterval(() => spawnDroplets(mouseX, mouseY), 150);
+                        } else { if (excitedInterval) { clearInterval(excitedInterval); excitedInterval = null; } }
 
-                        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
-                        let activeId = null;
-                        if (d.type === 'final-call') activeId = 'group-contacts';
-                        else if (d.projectIdx !== undefined) activeId = `group-${d.projectIdx}`;
+                        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('active'));
+                        let activeId = null;
+                        if (d.type === 'final-call') activeId = 'group-contacts';
+                        else if (d.projectIdx !== undefined) activeId = `group-${d.projectIdx}`;
 
-                        if (activeId) {
-                            const grp = document.getElementById(activeId);
-                            if (grp) {
-                                grp.classList.add('active');
-                                if (d.type === 'sub') {
-                                    document.querySelectorAll('.sub-link').forEach(l => l.classList.remove('active'));
-                                    const sl = document.getElementById(`sublink-${d.projectIdx}-${d.subIdx}`);
-                                    if (sl) sl.classList.add('active');
-                                }
-                                // Auto-scroll navbar (Mobile) SOLO QUANDO CAMBIA SEZIONE
-                                if (isMobile() && currentActiveGroup !== activeId) {
-                                    currentActiveGroup = activeId; // Registra che la sezione è cambiata
-                                    
-                                    const nav = document.getElementById('navbar');
-                                    const navWidth = nav.offsetWidth;
-                                    const elLeft = grp.offsetLeft;
-                                    const elWidth = grp.offsetWidth;
-                                    const scrollPos = elLeft - (navWidth / 2) + (elWidth / 2);
-                                    nav.scrollTo({ left: scrollPos, behavior: 'smooth' });
-                                }
-                            }
-                        }
-                    } else { face.classList.remove('active-content'); }
-                } else { face.style.display = 'none'; face.style.opacity = 0; }
-            });
-            requestAnimationFrame(update);
-        }
-        update(); 
-        window.addEventListener('resize', () => { vh = window.innerHeight; if(!isMobile()) targetScrollY = window.scrollY; });
-        
-        // --- FUNZIONE PER LA FRECCIA DESTRA (Chi sono?) ---
-        window.openPresentation = function() {
-            // 1. Assicurati di essere in cima alla pagina (Landing)
-            navigateTo(0);
-            
-            // 2. Imposta lo spostamento verso destra (Presentazione)
-            currentXOffset = -window.innerWidth;
-            
-            // 3. Applica l'animazione
-            const slider = document.getElementById('main-slider');
-            slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
-            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
-        
-        };
-    // --- FIX CLICK PASSANTE (FRECCE E BOTTONI) ---
-        // Questo codice permette di cliccare le frecce anche se sono "sotto" lo scroll
-        const ghostLayer = document.getElementById('ghost-scroll');
-        
-        if (ghostLayer) {
-            ghostLayer.addEventListener('click', (e) => {
-                if (!isMobile()) return;
+                        if (activeId) {
+                            const grp = document.getElementById(activeId);
+                            if (grp) {
+                                grp.classList.add('active');
+                                if (d.type === 'sub') {
+                                    document.querySelectorAll('.sub-link').forEach(l => l.classList.remove('active'));
+                                    const sl = document.getElementById(`sublink-${d.projectIdx}-${d.subIdx}`);
+                                    if (sl) sl.classList.add('active');
+                                }
+                                // Auto-scroll navbar (Mobile) SOLO QUANDO CAMBIA SEZIONE
+                                if (isMobile() && currentActiveGroup !== activeId) {
+                                    currentActiveGroup = activeId; // Registra che la sezione è cambiata
+                                    
+                                    const nav = document.getElementById('navbar');
+                                    const navWidth = nav.offsetWidth;
+                                    const elLeft = grp.offsetLeft;
+                                    const elWidth = grp.offsetWidth;
+                                    const scrollPos = elLeft - (navWidth / 2) + (elWidth / 2);
+                                    nav.scrollTo({ left: scrollPos, behavior: 'smooth' });
+                                }
+                            }
+                        }
+                    } else { face.classList.remove('active-content'); }
+                } else { face.style.display = 'none'; face.style.opacity = 0; }
+            });
+            requestAnimationFrame(update);
+        }
+        update(); 
+        window.addEventListener('resize', () => { vh = window.innerHeight; if(!isMobile()) targetScrollY = window.scrollY; });
+        
+        // --- FUNZIONE PER LA FRECCIA DESTRA (Chi sono?) ---
+        window.openPresentation = function() {
+            // 1. Assicurati di essere in cima alla pagina (Landing)
+            navigateTo(0);
+            
+            // 2. Imposta lo spostamento verso destra (Presentazione)
+            currentXOffset = -window.innerWidth;
+            
+            // 3. Applica l'animazione
+            const slider = document.getElementById('main-slider');
+            slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
+        
+        };
+    // --- FIX CLICK PASSANTE (FRECCE E BOTTONI) ---
+        // Questo codice permette di cliccare le frecce anche se sono "sotto" lo scroll
+        const ghostLayer = document.getElementById('ghost-scroll');
+        
+        if (ghostLayer) {
+            ghostLayer.addEventListener('click', (e) => {
+                if (!isMobile()) return;
 
-                // 1. Nascondi temporaneamente il livello scroll per vedere cosa c'è sotto
-                ghostLayer.style.pointerEvents = 'none';
-                
-                // 2. Individua l'elemento nel punto esatto del tocco
-                const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
-                
-                // 3. Riattiva immediatamente il livello scroll
-                ghostLayer.style.pointerEvents = 'all';
+                // 1. Nascondi temporaneamente il livello scroll per vedere cosa c'è sotto
+                ghostLayer.style.pointerEvents = 'none';
+                
+                // 2. Individua l'elemento nel punto esatto del tocco
+                const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+                
+                // 3. Riattiva immediatamente il livello scroll
+                ghostLayer.style.pointerEvents = 'all';
 
-                // 4. Se abbiamo beccato una freccia o un bottone, attiviamo il click
-                if (elementBelow) {
-                    // Cerca se l'elemento toccato è una freccia, un box o un link
-                    const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
-                    if (clickable) {
-                        clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
-                    }
-                }
-            });
-        }
-    </script>
+                // 4. Se abbiamo beccato una freccia o un bottone, attiviamo il click
+                if (elementBelow) {
+                    // Cerca se l'elemento toccato è una freccia, un box o un link
+                    const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
+                    if (clickable) {
+                        clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
