@@ -316,31 +316,32 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
                 flex-shrink: 0; /* Il testo non si deve schiacciare */
                 margin-bottom: 20px; /* Un po' di aria sotto il testo */
                 pointer-events: none;
-            /* --- IMMAGINI ADATTIVE E LIMITATE IN ALTEZZA --- */
-            .image-container { 
-                top: 55% !important; /* La posiziona al centro dello spazio disponibile */
-                left: 50% !important; 
-                transform: translate(-50%, -50%) !important; 
-                
-                width: 80vw !important;  /* Limite di larghezza */
-                height: 40vh !important; /* IL RECINTO: altezza fissa massima (40% dello schermo) */
-                
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-                
-                background: transparent !important;
-                box-shadow: none !important; /* Spostiamo l'ombra sull'immagine vera */
             }
-            
-            /* Diciamo all'immagine di rimpicciolirsi per restare sempre nel recinto */
+
+            /* --- IMMAGINI ADATTIVE (Schiaccia quelle verticali) --- */
+            .image-container { 
+                top: 55% !important; /* Si posiziona nello spazio libero */
+                left: 50%; 
+                transform: translate(-50%, -50%); 
+                
+                /* Togliamo la larghezza fissa */
+                width: auto !important; 
+                height: auto !important;
+                
+                /* LIMITI MAGICI */
+                max-width: 80vw !important;  /* Le orizzontali si fermano qui */
+                max-height: 40vh !important; /* LE VERTICALI SI FERMANO QUI, salvando la navbar! */
+                
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            }
+
+            /* Diciamo all'immagine vera di rispettare questi limiti rigorosamente */
             .image-container img {
-                max-width: 100% !important;
-                max-height: 100% !important;
                 width: auto !important;
                 height: auto !important;
-                object-fit: contain !important; /* È la magia che adatta le proporzioni senza tagliare */
-                box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important; /* Rimettiamo l'ombra */
+                max-width: 80vw !important;
+                max-height: 40vh !important;
+                display: block;
             }
 
 .portfolio-content h3 { font-size: 0.7rem; margin-bottom: 0.5rem; opacity: 0.6; font-weight: 500; }
@@ -1029,30 +1030,3 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
