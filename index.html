@@ -88,11 +88,13 @@ pointer-events: auto !important;
 display: inline-flex !important;
 }
 
-/* 4. POSIZIONE CIAO */
-.centered-container em.italic-script:first-child {
-transform: translateY(-1.5vh); 
-display: block;
-}
+/* 4. POSIZIONAMENTO TESTI CENTRALI (Atterraggio e Contatti) */
+            .centered-container {
+                margin-top: -10vh !important; /* <--- QUESTO TIRA SU TUTTO IL BLOCCO. Se lo vuoi ancora più in alto, prova -12vh o -15vh */
+            }
+            .centered-container em.italic-script:first-child {
+                display: block;
+            }
 
 #mob-up, #mob-down { display: none !important; }
 }
@@ -1081,6 +1083,7 @@ slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 </script>
 </body>
 </html>
+
 
 
 
