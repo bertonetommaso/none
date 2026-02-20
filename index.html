@@ -436,19 +436,19 @@ z-index: 10001 !important;       /* LA PORTA SOPRA OGNI COSA */
 pointer-events: auto !important;
 }
 
-/* 1. DIDASCALIE CENTRATE (ORA SOPRA L'IMMAGINE) */
-            .img-caption {
-                left: 50% !important;
-                right: auto !important;
-                transform: translateX(-50%) !important;
-                text-align: center !important;
-                white-space: normal !important;
-                width: 80vw !important; 
-                
-                /* IL TRUCCO È QUI: */
-                bottom: auto !important; /* Disattiva l'ancoraggio in basso */
-                top: -40px !important;   /* Spinge il testo 40px SOPRA il bordo superiore della foto */
-            }
+/* 1. DIDASCALIE CENTRATE (SOPRA LA FOTO) */
+.img-caption {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    text-align: center !important;
+    white-space: normal !important;
+    width: 100% !important;
+
+    /* Questi due comandi la spostano sopra: */
+    bottom: auto !important; /* 1. Sgancia il testo dal fondo */
+    top: -30px !important;   /* 2. Lo aggancia e lo spinge 30 pixel SOPRA l'immagine */
+}
 
 /* 2. RIPARA TASTI ULTIMA PAGINA E SLIDER ORIZZONTALE */
 /* Li portiamo sopra il ghost-scroll (z-index 50) */
@@ -1040,6 +1040,7 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
+
 
 
 
