@@ -1011,45 +1011,64 @@ slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
 slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 
 };
-// --- FIX CLICK PASSANTE (FRECCE E BOTTONI - INFALLIBILE) ---
+// --- FIX CLICK PASSANTE (FRECCE E BOTTONI - INFALLIBILE PER MOBILE) ---
         const ghostLayer = document.getElementById('ghost-scroll');
 
         if (ghostLayer) {
-            ghostLayer.addEventListener('click', (e) => {
+            let startTx = 0, startTy = 0;
+            
+            // 1. Registra l'inizio del tocco
+            ghostLayer.addEventListener('touchstart', (e) => {
+                startTx = e.touches[0].clientX;
+                startTy = e.touches[0].clientY;
+            }, { passive: true });
+
+            // 2. Quando il dito si alza, valutiamo cosa fare
+            ghostLayer.addEventListener('touchend', (e) => {
                 if (!isMobile()) return;
-
-                // 1. Spegni il vetro trasparente per 1 millisecondo
-                ghostLayer.style.pointerEvents = 'none';
                 
-                // 2. Guarda cosa c'è esattamente sotto il dito
-                const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+                const endTx = e.changedTouches[0].clientX;
+                const endTy = e.changedTouches[0].clientY;
                 
-                // 3. Riaccendi subito il vetro
-                ghostLayer.style.pointerEvents = 'all';
-
-                // 4. Se hai colpito un bottone, attivalo nel modo corretto per i telefoni
-                if (elementBelow) {
-                    const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
+                // Se il tocco è stato fermo (un vero tap, non uno scroll)
+                if (Math.abs(endTx - startTx) < 15 && Math.abs(endTy - startTy) < 15) {
                     
-                    if (clickable) {
-                        // Simula la "pressione" fisica per attivare le gocce d'acqua e la copia della Mail
-                        const mockEvent = new MouseEvent('mousedown', { clientX: e.clientX, clientY: e.clientY, bubbles: true });
-                        clickable.dispatchEvent(mockEvent);
+                    // A. Spegni il vetro trasparente temporaneamente
+                    ghostLayer.style.pointerEvents = 'none';
+                    
+                    // B. Guarda cosa c'è esattamente sotto al dito
+                    const elementBelow = document.elementFromPoint(endTx, endTy);
+                    
+                    if (elementBelow) {
+                        const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
+                        
+                        if (clickable) {
+                            // Manda un finto click al sistema per innescare le animazioni e la copia della Mail
+                            const mockEvent = new MouseEvent('mousedown', { clientX: endTx, clientY: endTy, bubbles: true });
+                            document.dispatchEvent(mockEvent); 
 
-                        // Forza l'apertura dei link (Instagram e LinkedIn) aggirando il blocco del telefono
-                        if (clickable.tagName.toUpperCase() === 'A' && clickable.href) {
-                            window.location.href = clickable.href;
+                            // Apri i link di Instagram e LinkedIn aggirando il blocco popup del telefono
+                            if (clickable.tagName === 'A' && clickable.href) {
+                                window.open(clickable.href, '_blank'); 
+                            } else {
+                                clickable.click(); 
+                            }
                         } else {
-                            // Frecce e altre funzioni
-                            clickable.click(); 
+                            // Se clicchi nel vuoto (es. per far apparire solo le particelle d'acqua)
+                            const mockEvent = new MouseEvent('mousedown', { clientX: endTx, clientY: endTy, bubbles: true });
+                            document.dispatchEvent(mockEvent);
                         }
                     }
+                    
+                    // C. Riaccendi il vetro trasparente per continuare a scrollare
+                    ghostLayer.style.pointerEvents = 'all';
                 }
             });
         }
 </script>
 </body>
 </html>
+
 
 
 
