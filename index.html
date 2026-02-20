@@ -714,8 +714,7 @@ if (data.type === 'landing') {
                 </div>
             </div>
 
-        </div>`;
-    
+        </div>`;    
 } else if (data.type === 'main') {
 // Controlla se c'è una caption, se sì crea l'HTML, altrimenti lascia vuoto
 const captionHTML = data.caption ? `<div class="img-caption">${data.caption}</div>` : '';
@@ -1017,21 +1016,27 @@ nav.scrollTo({ left: scrollPos, behavior: 'smooth' });
 requestAnimationFrame(update);
 }
 update(); 
-window.addEventListener('resize', () => { vh = window.innerHeight; if(!isMobile()) targetScrollY = window.scrollY; });
+wwindow.addEventListener('resize', () => { vh = window.innerHeight; if(!isMobile()) targetScrollY = window.scrollY; });
 
-FUNZIONE PER LA FRECCIA DESTRA
-            // 1. Assicurati di essere in cima alla pagina (Landing)
-navigateTo(0);
-
-// 2. Imposta lo spostamento verso destra (Presentazione)
-currentXOffset = -window.innerWidth;
-
-// 3. Applica l'animazione
-const slider = document.getElementById('main-slider');
-slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
-slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
-
+// --- FUNZIONE PER LA FRECCIA DESTRA (Chi sono?) ---
+window.openPresentation = function() {
+    navigateTo(0);
+    currentXOffset = -window.innerWidth;
+    const slider = document.getElementById('main-slider');
+    slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+    slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 };
+
+// --- FUNZIONE PER LA FRECCIA SINISTRA (Torna al titolo) ---
+window.backToTitle = function() {
+    navigateTo(0);
+    currentXOffset = 0;
+    const slider = document.getElementById('main-slider');
+    slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+    slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
+};
+
+// --- FIX CLICK PASSANTE (METODO MATEMATICO INFALLIBILE PER MOBILE) ---
 // --- FIX CLICK PASSANTE (METODO MATEMATICO INFALLIBILE PER MOBILE) ---
         const ghostLayer = document.getElementById('ghost-scroll');
 
@@ -1102,6 +1107,7 @@ slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 </script>
 </body>
 </html>
+
 
 
 
