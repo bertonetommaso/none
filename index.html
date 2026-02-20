@@ -218,6 +218,24 @@ display: flex; align-items: center; gap: 12px; transition: 0.4s; position: relat
 @media (min-width: 769px) {
 .main-link::before { content: ''; width: 12px; height: 2px; background: var(--fg-color); transition: 0.4s; }
 .main-link:hover { opacity: 0.7 !important; }
+/* NUOVO PULSANTE "BACK TO TITLE" (SOLO PC) */
+.hint-horizontal-left {
+    position: absolute;
+    left: 5vw; /* Posizionato a sinistra, speculare a quello di destra */
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    pointer-events: all;
+    cursor: pointer;
+    z-index: 20;
+}
+/* Corregge il margine della freccia per quando è a sinistra */
+.hint-horizontal-left .arrow {
+    margin-left: 0 !important;
+    margin-right: 20px !important;
+    font-size: 1.2rem;
+}
 .nav-group.active .main-link { opacity: 1 !important; transform: translateX(5px); }
 .nav-group.active .main-link::before { width: 25px; }
 }
@@ -295,6 +313,7 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
 .portfolio-content h2 { font-size: 5rem; margin-bottom: 1.5rem; line-height: 0.9}
 }
 @media (max-width: 768px) {
+            .hint-horizontal-left { display: none !important; }
 /* --- INCOLLA QUESTO dentro @media (max-width: 768px) --- */
             
             /* Attiva il layout flessibile SOLO per le pagine con contenuti (progetti) */
@@ -681,8 +700,12 @@ face.innerHTML = `
                        <div class="hint-horizontal" onclick="openPresentation()"><span class="italic-script-small">who am i?</span><span class="arrow">→</span></div>
                    </div>
 
-                   <div class="panel">
-                       <div class="presentation-content">
+                   <div class="hint-horizontal" onclick="openPresentation()"><span class="italic-script-small">who am i?</span><span class="arrow">→</span></div>
+            </div>
+
+            <div class="panel">
+                <div class="hint-horizontal-left" onclick="backToTitle()"><span class="arrow">←</span><span class="italic-script-small">back to title</span></div>
+                <div class="presentation-content">
                            <img src="foto-meno.jpg" class="presentation-rect" style="object-fit: cover;">
                            <div class="presentation-text">
                                <h2>Hi there!</h2>
@@ -1001,7 +1024,20 @@ window.addEventListener('resize', () => { vh = window.innerHeight; if(!isMobile(
 
 // --- FUNZIONE PER LA FRECCIA DESTRA (Chi sono?) ---
 window.openPresentation = function() {
-// 1. Assicurati di essere in cima alla pagina (Landing)
+// --- FUNZIONE PER LA FRECCIA SINISTRA (Torna al titolo) ---
+window.backToTitle = function() {
+    // 1. Assicurati di essere alla pagina verticale 0
+    navigateTo(0);
+
+    // 2. Imposta lo spostamento orizzontale a 0 (Landing Page)
+    currentXOffset = 0;
+
+    // 3. Applica l'animazione
+    const slider = document.getElementById('main-slider');
+    slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+    slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
+};
+            // 1. Assicurati di essere in cima alla pagina (Landing)
 navigateTo(0);
 
 // 2. Imposta lo spostamento verso destra (Presentazione)
@@ -1083,6 +1119,7 @@ slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 </script>
 </body>
 </html>
+
 
 
 
