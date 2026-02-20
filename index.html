@@ -1011,73 +1011,77 @@ slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
 slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 
 };
-// --- FIX CLICK PASSANTE (FRECCE E BOTTONI - INFALLIBILE PER MOBILE) ---
+// --- FIX CLICK PASSANTE (METODO MATEMATICO INFALLIBILE PER MOBILE) ---
         const ghostLayer = document.getElementById('ghost-scroll');
 
         if (ghostLayer) {
             let startTx = 0, startTy = 0;
             
-            // 1. Registra l'inizio del tocco
+            // 1. Salva dove appoggi il dito
             ghostLayer.addEventListener('touchstart', (e) => {
                 startTx = e.touches[0].clientX;
                 startTy = e.touches[0].clientY;
             }, { passive: true });
 
-            // 2. Quando il dito si alza, agiamo
+            // 2. Quando alzi il dito, controlla se hai fatto un "Tap" fermo
             ghostLayer.addEventListener('touchend', (e) => {
                 if (!isMobile()) return;
                 
                 const endTx = e.changedTouches[0].clientX;
                 const endTy = e.changedTouches[0].clientY;
                 
-                // Se il tocco è stato fermo (un vero tap, non uno scroll)
+                // Se non hai strusciato il dito (è un vero tap)
                 if (Math.abs(endTx - startTx) < 15 && Math.abs(endTy - startTy) < 15) {
                     
-                    // A. Nascondiamo totalmente il vetro per ingannare la cache di Safari/Chrome
-                    ghostLayer.style.display = 'none';
-                    
-                    // B. Troviamo l'elemento esatto sotto il dito
-                    const elementBelow = document.elementFromPoint(endTx, endTy);
-                    
-                    // C. Riaccendiamo subito il vetro
-                    ghostLayer.style.display = 'block';
+                    // Prendi tutti i bottoni intrappolati sotto al vetro
+                    const clickables = document.querySelectorAll('.box, .hint-vertical, .hint-horizontal');
+                    let targetHit = false;
 
-                    if (elementBelow) {
-                        const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
+                    // Controlliamo matematicamente se le coordinate del dito cadono dentro uno dei bottoni
+                    clickables.forEach(el => {
+                        if (targetHit) return;
                         
-                        if (clickable) {
-                            // 1. AZIONE MAIL (Eseguita direttamente per bypassare il blocco di sicurezza)
-                            if (clickable.classList.contains('mail-box')) {
-                                navigator.clipboard.writeText('bertonetommaso2@gmail.com').then(() => {
-                                    const addr = clickable.querySelector('.mail-address');
-                                    if(addr) addr.innerText = 'copied to clipboard!';
-                                    clickable.classList.add('copied');
-                                    setTimeout(() => { 
-                                        if(addr) addr.innerText = 'bertonetommaso2@gmail.com'; 
-                                        clickable.classList.remove('copied');
-                                    }, 2000);
-                                });
-                                spawnDroplets(endTx, endTy);
+                        const rect = el.getBoundingClientRect(); // Ottiene la posizione esatta 2D del bottone
+                        
+                        // Il dito è atterrato dentro i bordi del bottone?
+                        if (endTx >= rect.left && endTx <= rect.right && endTy >= rect.top && endTy <= rect.bottom) {
+                            targetHit = true;
+                            
+                            // 1. SE HAI TOCCATO LA MAIL:
+                            if (el.classList.contains('mail-box')) {
+                                // Apri direttamente l'app della mail del telefono (funziona al 100%)
+                                window.location.href = "mailto:bertonetommaso2@gmail.com";
+                                
+                                // Mostra l'effetto visivo
+                                const addr = el.querySelector('.mail-address');
+                                if(addr) addr.innerText = 'apertura mail...';
+                                el.classList.add('copied');
+                                setTimeout(() => { 
+                                    if(addr) addr.innerText = 'bertonetommaso2@gmail.com'; 
+                                    el.classList.remove('copied');
+                                }, 2000);
                             }
-                            // 2. AZIONE LINK ESTERNI (Instagram e LinkedIn aperti in modo nativo)
-                            else if (clickable.tagName.toUpperCase() === 'A' && clickable.href && !clickable.href.includes('#')) {
-                                window.open(clickable.href, '_blank');
+                            // 2. SE HAI TOCCATO INSTAGRAM O LINKEDIN:
+                            else if (el.tagName.toUpperCase() === 'A' && el.href) {
+                                // Apri il link nella stessa pagina per bypassare i blocchi popup di Safari
+                                window.location.href = el.href; 
                             }
-                            // 3. ALTRI PULSANTI (Frecce, Menu, Chi sono)
+                            // 3. SE HAI TOCCATO LE FRECCE (CHI SONO / SCORRI GIU):
                             else {
-                                clickable.click(); 
+                                el.click();
                             }
-                        } else {
-                            // Tocco a vuoto (crea solo le goccioline)
-                            spawnDroplets(endTx, endTy);
                         }
-                    }
+                    });
+
+                    // Crea le goccioline d'acqua dove hai toccato
+                    spawnDroplets(endTx, endTy);
                 }
             });
         }
 </script>
 </body>
 </html>
+
 
 
 
