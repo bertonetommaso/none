@@ -320,31 +320,38 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
             
            /* --- FIXED: MOBILE IMAGE SIZE --- */
             .image-container { 
-                position: absolute !important; /* Forza il posizionamento assoluto */
-                top: 65% !important; /* <--- ORA QUESTO VALORE FUNZIONERA'. Prova 60%, 65% o 70% */
+                position: absolute !important;
+                
+                /* POSIZIONAMENTO (Sposta questo per alzare/abbassare) */
+                top: 60% !important; 
+                
                 left: 50% !important; 
                 transform: translate(-50%, -50%) !important; 
                 
-                width: 75vw !important;  /* Usa una larghezza definita invece di auto */
-                height: 25vh !important; /* Usa un'altezza definita invece di auto */
+                /* DIMENSIONI GABBIA */
+                width: 80vw !important;  
+                height: 35vh !important; 
                 
-                /* Questo serve a centrare l'immagine vera all'interno del suo "recinto" */
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
+                /* TRUCCO ANTI-FLEXBOX: togliamo flex e usiamo un block normale */
+                display: block !important;
                 
                 background: transparent !important;
-                box-shadow: none !important; /* Sposta l'ombra sull'immagine */
+                box-shadow: none !important; 
             }
 
-            /* L'immagine si adatterà al recinto che le hai dato sopra */
+            /* L'immagine ora è obbligata a stare dentro la gabbia e centrarsi da sola */
             .image-container img {
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                
                 max-width: 100% !important;
                 max-height: 100% !important;
                 width: auto !important;
                 height: auto !important;
-                object-fit: contain !important; /* Non deforma la foto */
-                display: block !important;
+                
+                object-fit: contain !important; 
                 box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
             }
 
@@ -1035,6 +1042,7 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
+
 
 
 
