@@ -259,7 +259,7 @@ em.italic-script { font-family: 'Georgia', serif; font-style: italic; display: b
 }
 @media (max-width: 768px) {
 .presentation-content { flex-direction: column-reverse; gap: 30px; justify-content: center; text-align: center; }
-.presentation-rect { width: 60vw; height: 40vh; margin-top: 20px; }
+.presentation-rect { width: 45vw !important; height: 30vh !important; margin-top: -8vh !important; }
 .presentation-text { text-align: center; max-width: 90%; }
 .presentation-text h2 { font-size: 2.5rem; margin-bottom: 10px; }
 .presentation-text p { font-size: 0.9rem; }
@@ -680,7 +680,7 @@ face.innerHTML = `
 
                    <div class="panel">
                        <div class="presentation-content">
-                           <img src="me-foto.jpg" class="presentation-rect" style="object-fit: cover;">
+                           <img src="foto-meno.jpg" class="presentation-rect" style="object-fit: cover;">
                            <div class="presentation-text">
                                <h2>Hi there!</h2>
                                <p>I’m Tommaso - 21 year old , studying Product Design at Politecnico di Torino. Keen to upgrade my software and practical skills, I’ve always been open to innovations and challenges to better myself. Through my projects I aim to convey functionality and a balanced aestethics.</p>
@@ -1010,36 +1010,61 @@ slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
 slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 
 };
-// --- FIX CLICK PASSANTE (FRECCE E BOTTONI) ---
-// Questo codice permette di cliccare le frecce anche se sono "sotto" lo scroll
-const ghostLayer = document.getElementById('ghost-scroll');
+// --- FIX CLICK PASSANTE (FRECCE E BOTTONI - MIGLIORATO PER MOBILE) ---
+        const ghostLayer = document.getElementById('ghost-scroll');
 
-if (ghostLayer) {
-ghostLayer.addEventListener('click', (e) => {
-if (!isMobile()) return;
+        if (ghostLayer) {
+            let startTx = 0, startTy = 0;
+            
+            // 1. Registra dove metti il dito
+            ghostLayer.addEventListener('touchstart', (e) => {
+                startTx = e.touches[0].clientX;
+                startTy = e.touches[0].clientY;
+            }, { passive: true });
 
-// 1. Nascondi temporaneamente il livello scroll per vedere cosa c'è sotto
-ghostLayer.style.pointerEvents = 'none';
+            // 2. Quando alzi il dito, calcola se hai fatto un "Tap"
+            ghostLayer.addEventListener('touchend', (e) => {
+                if (!isMobile()) return;
+                
+                const endTx = e.changedTouches[0].clientX;
+                const endTy = e.changedTouches[0].clientY;
+                
+                // Se il dito si è mosso di pochissimo, è un click, non uno scroll
+                if (Math.abs(endTx - startTx) < 10 && Math.abs(endTy - startTy) < 10) {
+                    
+                    // Nascondi temporaneamente lo scroll per "vedere" sotto
+                    ghostLayer.style.pointerEvents = 'none';
+                    const elementBelow = document.elementFromPoint(endTx, endTy);
+                    ghostLayer.style.pointerEvents = 'all'; // Riattiva subito
 
-// 2. Individua l'elemento nel punto esatto del tocco
-const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+                    if (elementBelow) {
+                        const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
+                        
+                        if (clickable) {
+                            // Crea un "finto click del mouse" per innescare le animazioni (gocce) e la copia della mail
+                            const clickEvent = new MouseEvent('mousedown', {
+                                clientX: endTx,
+                                clientY: endTy,
+                                bubbles: true
+                            });
+                            clickable.dispatchEvent(clickEvent);
 
-// 3. Riattiva immediatamente il livello scroll
-ghostLayer.style.pointerEvents = 'all';
-
-// 4. Se abbiamo beccato una freccia o un bottone, attiviamo il click
-if (elementBelow) {
-// Cerca se l'elemento toccato è una freccia, un box o un link
-const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
-if (clickable) {
-clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
-}
-}
-});
-}
+                            // Se è Instagram o LinkedIn, forza l'apertura in una nuova scheda
+                            if (clickable.href && clickable.href.startsWith('http')) {
+                                window.open(clickable.href, '_blank');
+                            } else {
+                                // Per le frecce, navbar e firma
+                                clickable.click(); 
+                            }
+                        }
+                    }
+                }
+            });
+        }
 </script>
 </body>
 </html>
+
 
 
 
