@@ -318,29 +318,27 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
                 pointer-events: none;
             }
 
-            /* --- IMMAGINI ADATTIVE (Schiaccia quelle verticali) --- */
+            /* --- FIXED: MOBILE IMAGE SIZE --- */
             .image-container { 
-                top: 55% !important; /* Si posiziona nello spazio libero */
+                top: 52% !important; /* Alziamo leggermente il centro dell'immagine */
                 left: 50%; 
                 transform: translate(-50%, -50%); 
                 
-                /* Togliamo la larghezza fissa */
-                width: auto !important; 
+                width: auto !important;  /* Togliamo la larghezza fissa */
                 height: auto !important;
-                
-                /* LIMITI MAGICI */
-                max-width: 80vw !important;  /* Le orizzontali si fermano qui */
-                max-height: 40vh !important; /* LE VERTICALI SI FERMANO QUI, salvando la navbar! */
+                max-width: 75vw !important;  /* Limite per le foto orizzontali */
+                max-height: 42vh !important; /* FONDAMENTALE: La foto non supererà mai questa altezza! */
                 
                 box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             }
 
-            /* Diciamo all'immagine vera di rispettare questi limiti rigorosamente */
+            /* Assicuriamoci che l'immagine vera rispetti i nuovi limiti */
             .image-container img {
                 width: auto !important;
                 height: auto !important;
-                max-width: 80vw !important;
-                max-height: 40vh !important;
+                max-width: 75vw !important;
+                max-height: 42vh !important;
+                object-fit: contain;
                 display: block;
             }
 
@@ -429,16 +427,17 @@ pointer-events: auto !important;
 }
 
 /* 1. DIDASCALIE CENTRATE */
-.img-caption {
-left: 50% !important;
-right: auto !important;
-transform: translateX(-50%) !important;
-text-align: center !important;
-                bottom: -30px !important;
+            .img-caption {
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) !important;
+                text-align: center !important;
                 white-space: normal !important;
-                bottom: -40px !important;
-width: 100%;
-}
+                bottom: -45px !important; /* Più spazio sotto la foto */
+                
+                /* Usa la larghezza dello schermo, così il testo non si schiaccia se l'immagine è molto stretta */
+                width: 80vw !important; 
+            }
 
 /* 2. RIPARA TASTI ULTIMA PAGINA E SLIDER ORIZZONTALE */
 /* Li portiamo sopra il ghost-scroll (z-index 50) */
@@ -1030,3 +1029,4 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
+
