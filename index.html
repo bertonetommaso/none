@@ -674,51 +674,48 @@ const snap = document.createElement('div'); snap.className = 'snap-point'; ghost
 const face = document.createElement('div'); face.className = 'cube-face';
 
 if (data.type === 'landing') {
-face.innerHTML = `
-               <div class="horizontal-slider" id="main-slider">
-                   <div class="panel">
-                       <div class="centered-container">
-  
-                           <em class="italic-script" style="margin-bottom: -5px; display: block;">ciao!</em>
+        face.innerHTML = `
+        <div class="horizontal-slider" id="main-slider">
+            
+            <div class="panel">
+                <div class="centered-container">
+                    <em class="italic-script" style="margin-bottom: -5px; display: block;">ciao!</em>
+                    <h1 class="split-title monumental" style="margin: 0;">
+                        <div>HERE'S MY</div>
+                        <div>INDUSTRIAL</div>
+                        <div>DESIGN</div>
+                        <div>JOURNAL.</div>
+                    </h1>
+                    <em class="italic-script" style="margin-top: -5px; display: block;">enjoy!</em>
+                </div>
+            
+                <div class="hint-vertical" onclick="navigateTo(1)">
+                    <span class="italic-script-small">some of what i've done</span>
+                    <span class="arrow">↓</span>
+                </div>
 
-                           <h1 class="split-title monumental" style="margin: 0;">
-                               <div>HERE'S MY</div>
-                               <div>INDUSTRIAL</div>
-                               <div>DESIGN</div>
-                               <div>JOURNAL.</div>
-                           </h1>
-
-                           <em class="italic-script" style="margin-top: -5px; display: block;">enjoy!</em>
-
-                       </div>
-                   
-                       <div class="hint-vertical" onclick="navigateTo(1)">
-                           <span class="italic-script-small">some of what i've done</span>
-                           <span class="arrow">↓</span>
-                       </div>
-
-                       <div class="hint-horizontal" onclick="openPresentation()"><span class="italic-script-small">who am i?</span><span class="arrow">→</span></div>
-                   </div>
-
-                   <div class="hint-horizontal" onclick="openPresentation()"><span class="italic-script-small">who am i?</span><span class="arrow">→</span></div>
+                <div class="hint-horizontal" onclick="openPresentation()"><span class="italic-script-small">who am i?</span><span class="arrow">→</span></div>
             </div>
 
             <div class="panel">
                 <div class="hint-horizontal-left" onclick="backToTitle()"><span class="arrow">←</span><span class="italic-script-small">back to title</span></div>
+                
                 <div class="presentation-content">
-                           <img src="foto-meno.jpg" class="presentation-rect" style="object-fit: cover;">
-                           <div class="presentation-text">
-                               <h2>Hi there!</h2>
-                               <p>I’m Tommaso - 21 year old , studying Product Design at Politecnico di Torino. Keen to upgrade my software and practical skills, I’ve always been open to innovations and challenges to better myself. Through my projects I aim to convey functionality and a balanced aestethics.</p>
-                           </div>
-                       </div>
+                    <img src="foto-meno.jpg" class="presentation-rect" style="object-fit: cover;">
+                    <div class="presentation-text">
+                        <h2>Hi there!</h2>
+                        <p>I’m Tommaso - 21 year old , studying Product Design at Politecnico di Torino. Keen to upgrade my software and practical skills, I’ve always been open to innovations and challenges to better myself. Through my projects I aim to convey functionality and a balanced aestethics.</p>
+                    </div>
+                </div>
 
-                       <div class="hint-vertical" onclick="navigateTo(1)">
-                           <span class="italic-script-small">some of what i've done</span>
-                           <span class="arrow">↓</span>
-                       </div>
-                       </div>
-               </div>`;
+                <div class="hint-vertical" onclick="navigateTo(1)">
+                    <span class="italic-script-small">some of what i've done</span>
+                    <span class="arrow">↓</span>
+                </div>
+            </div>
+
+        </div>`;
+    
 } else if (data.type === 'main') {
 // Controlla se c'è una caption, se sì crea l'HTML, altrimenti lascia vuoto
 const captionHTML = data.caption ? `<div class="img-caption">${data.caption}</div>` : '';
@@ -1022,21 +1019,7 @@ requestAnimationFrame(update);
 update(); 
 window.addEventListener('resize', () => { vh = window.innerHeight; if(!isMobile()) targetScrollY = window.scrollY; });
 
-// --- FUNZIONE PER LA FRECCIA DESTRA (Chi sono?) ---
-window.openPresentation = function() {
-// --- FUNZIONE PER LA FRECCIA SINISTRA (Torna al titolo) ---
-window.backToTitle = function() {
-    // 1. Assicurati di essere alla pagina verticale 0
-    navigateTo(0);
-
-    // 2. Imposta lo spostamento orizzontale a 0 (Landing Page)
-    currentXOffset = 0;
-
-    // 3. Applica l'animazione
-    const slider = document.getElementById('main-slider');
-    slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
-    slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
-};
+FUNZIONE PER LA FRECCIA DESTRA
             // 1. Assicurati di essere in cima alla pagina (Landing)
 navigateTo(0);
 
@@ -1119,6 +1102,7 @@ slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 </script>
 </body>
 </html>
+
 
 
 
