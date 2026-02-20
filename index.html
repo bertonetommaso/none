@@ -339,19 +339,11 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
                 box-shadow: none !important; 
             }
 
-            /* L'immagine ora è obbligata a stare dentro la gabbia e centrarsi da sola */
-            .image-container img {
-                position: absolute !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                
-                max-width: 100% !important;
-                max-height: 100% !important;
-                width: auto !important;
-                height: auto !important;
-                
+           .image-container img {
+                width: 100% !important;
+                height: 100% !important;
                 object-fit: contain !important; 
+                display: block !important;
                 box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
             }
 
@@ -1042,6 +1034,7 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
+
 
 
 
