@@ -237,18 +237,24 @@ display: flex; align-items: center; gap: 12px; transition: 0.4s; position: relat
 .nav-group.active .main-link::before { width: 25px; }
 }
 
+/* --- RESET SICUREZZA PER TUTTI I LINK --- */
+a { text-decoration: none !important; color: inherit; }
+
+/* --- STILE BLINDATO SOTTOTITOLI --- */
 .sub-link { 
-    color: var(--fg-color) !important; 
-    text-decoration: none !important; 
-    font-size: 0.65rem; 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    opacity: 0.4; 
-    transition: 0.3s; 
-    font-weight: 500; 
+    color: var(--fg-color) !important; /* Prende dinamicamente il nero o il bianco */
+    text-decoration: none !important;  /* Niente più sottolineatura blu */
+    font-family: 'Inter', sans-serif !important; /* Forza il font moderno del sito */
+    font-size: 0.7rem !important; 
+    text-transform: uppercase !important; 
+    letter-spacing: 1px !important; 
+    opacity: 0.4 !important; 
+    transition: all 0.3s ease !important; 
+    font-weight: 600 !important; 
+    display: block !important;
 }
-.sub-link:hover { opacity: 0.8 !important; transform: translateX(3px); }
-.sub-link.active { opacity: 1 !important; font-weight: 700 !important; }
+.sub-link:hover { opacity: 0.9 !important; transform: translateX(4px) !important; }
+.sub-link.active { opacity: 1 !important; font-weight: 900 !important; }
 
 /* --- TYPOGRAPHY --- */
 .char { display: inline-block; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -1138,6 +1144,7 @@ if (ghostLayer) {
 </script>
 </body>
 </html>
+
 
 
 
