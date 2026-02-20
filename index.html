@@ -259,7 +259,7 @@ em.italic-script { font-family: 'Georgia', serif; font-style: italic; display: b
 }
 @media (max-width: 768px) {
 .presentation-content { flex-direction: column-reverse; gap: 30px; justify-content: center; text-align: center; }
-.presentation-rect { width: 45vw !important; height: 30vh !important; margin-top: -8vh !important; }
+.presentation-rect { width: 35vw !important; height: 22vh !important; margin-top: -15vh !important; }
 .presentation-text { text-align: center; max-width: 90%; }
 .presentation-text h2 { font-size: 2.5rem; margin-bottom: 10px; }
 .presentation-text p { font-size: 0.9rem; }
@@ -1016,44 +1016,36 @@ slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
         if (ghostLayer) {
             let startTx = 0, startTy = 0;
             
-            // 1. Registra dove metti il dito
             ghostLayer.addEventListener('touchstart', (e) => {
                 startTx = e.touches[0].clientX;
                 startTy = e.touches[0].clientY;
             }, { passive: true });
 
-            // 2. Quando alzi il dito, calcola se hai fatto un "Tap"
             ghostLayer.addEventListener('touchend', (e) => {
                 if (!isMobile()) return;
                 
                 const endTx = e.changedTouches[0].clientX;
                 const endTy = e.changedTouches[0].clientY;
                 
-                // Se il dito si è mosso di pochissimo, è un click, non uno scroll
-                if (Math.abs(endTx - startTx) < 10 && Math.abs(endTy - startTy) < 10) {
+                // Aumentata la tolleranza a 25px per "capire" il tocco delle dita
+                if (Math.abs(endTx - startTx) < 25 && Math.abs(endTy - startTy) < 25) {
                     
-                    // Nascondi temporaneamente lo scroll per "vedere" sotto
                     ghostLayer.style.pointerEvents = 'none';
                     const elementBelow = document.elementFromPoint(endTx, endTy);
-                    ghostLayer.style.pointerEvents = 'all'; // Riattiva subito
+                    ghostLayer.style.pointerEvents = 'all';
 
                     if (elementBelow) {
                         const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
                         
                         if (clickable) {
-                            // Crea un "finto click del mouse" per innescare le animazioni (gocce) e la copia della mail
-                            const clickEvent = new MouseEvent('mousedown', {
-                                clientX: endTx,
-                                clientY: endTy,
-                                bubbles: true
-                            });
+                            // Finto click per copiare la mail e fare le gocce
+                            const clickEvent = new MouseEvent('mousedown', { clientX: endTx, clientY: endTy, bubbles: true });
                             clickable.dispatchEvent(clickEvent);
 
-                            // Se è Instagram o LinkedIn, forza l'apertura in una nuova scheda
-                            if (clickable.href && clickable.href.startsWith('http')) {
-                                window.open(clickable.href, '_blank');
+                            // I telefoni odiano il "_blank" fatto da Javascript. Li apriamo direttamente per infallibilità.
+                            if (clickable.tagName.toLowerCase() === 'a' && clickable.href) {
+                                window.location.href = clickable.href; 
                             } else {
-                                // Per le frecce, navbar e firma
                                 clickable.click(); 
                             }
                         }
@@ -1064,6 +1056,7 @@ slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 </script>
 </body>
 </html>
+
 
 
 
