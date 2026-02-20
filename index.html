@@ -292,14 +292,26 @@
             .portfolio-content h2 { font-size: 5rem; margin-bottom: 1.5rem; line-height: 0.9}
         }
         @media (max-width: 768px) {
-            .portfolio-content { top: 15%; left: 50%; transform: translateX(-50%); width: 85%; text-align: center; }
+            .portfolio-content { 
+                top: 12% !important; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                width: 85%; 
+                text-align: center; 
+                pointer-events: none; /* Lascia passare i click */
+            }
             
-            /* --- FIXED: MOBILE IMAGE SIZE (40% SMALLER) --- */
+            /* IMMAGINE: Posizionata nella metà inferiore, con altezza limitata */
             .image-container { 
-                top: 60%; /* Modificato da 65% a 55% per alzare l'immagine */
-                left: 50%; transform: translate(-50%, -50%); 
-                width: 60vw; 
-                height: auto; 
+                top: 60% !important; /* Spinge il centro dell'immagine verso il basso */
+                left: 50%; 
+                transform: translate(-50%, -50%); 
+                
+                width: 60vw !important; /* Larghezza fissa */
+                height: auto !important; 
+                max-height: 40vh !important; /* <--- FONDAMENTALE: Impedisce che tocchi il testo o il fondo */
+                object-fit: contain;
+                
                 box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             }
             
@@ -628,7 +640,7 @@
 
                     <div class="panel">
                         <div class="presentation-content">
-                            <img src="me-foto.jpg" class="presentation-rect" style="object-fit: cover;">
+                            <img src="foto-meno.jpg" class="presentation-rect" style="object-fit: cover;">
                             <div class="presentation-text">
                                 <h2>Hi there!</h2>
                                 <p>I’m Tommaso - 21 year old , studying Product Design at Politecnico di Torino. Keen to upgrade my software and practical skills, I’ve always been open to innovations and challenges to better myself. Through my projects I aim to convey functionality and a balanced aestethics.</p>
@@ -988,6 +1000,7 @@
     </script>
 </body>
 </html>
+
 
 
 
