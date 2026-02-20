@@ -281,9 +281,45 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
 }
 
 /* --- PORTFOLIO CONTENT --- */
-.portfolio-content { position: absolute; z-index: 2; pointer-events: none; }
-.image-container { position: absolute; background: #ddd; box-shadow: 0 40px 80px rgba(0,0,0,0.1); z-index: 1; will-change: transform; }
-.image-container img { width: 100%; height: auto; display: block; }
+/* --- SOSTITUISCI LE REGOLE .portfolio-content e .image-container CON QUESTE --- */
+
+            .portfolio-content { 
+                position: relative !important; /* Non più assoluto */
+                width: 90% !important; 
+                text-align: center !important; 
+                flex-shrink: 0; /* Il testo non si deve schiacciare */
+                margin-bottom: 20px; /* Un po' di aria sotto il testo */
+                pointer-events: none;
+            }
+
+            .image-container { 
+                position: relative !important; /* Non più assoluto */
+                transform: none !important; 
+                top: auto !important; 
+                left: auto !important;
+                
+                width: 80vw !important; /* Larghezza comoda */
+                
+                /* MAGIA: Occupa tutto lo spazio disponibile in altezza, ma non troppo */
+                flex-grow: 1; 
+                max-height: 50vh !important; 
+                
+                display: flex;
+                align-items: center; 
+                justify-content: center;
+                
+                background: transparent !important;
+                box-shadow: none !important; /* Togli l'ombra al box contenitore */
+            }
+
+            .image-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain !important; /* Scala l'immagine senza tagliarla */
+                /* L'ombra va sull'immagine vera, non sul box vuoto */
+                filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); 
+                box-shadow: none !important;
+            }
 
 @media (min-width: 769px) {
 .portfolio-content { left: 33vw; top: 50%; transform: translateY(-50%); max-width: 310px; text-align: left; }
@@ -349,7 +385,21 @@ overflow: hidden; white-space: nowrap; position: relative;
 .mail-box.copied .mail-address { opacity: 1; }
 .mail-box.copied .mail-text { opacity: 0; }
 
-@media (max-width: 768px) {
+@media (max-width: 768px) {            
+            /* Attiva il layout flessibile SOLO per le pagine con contenuti (progetti) */
+            .cube-face:has(.portfolio-content) {
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important; /* Spinge gli elementi agli estremi */
+                align-items: center !important;
+                
+                /* Spazio vitale */
+                padding-top: 15vh !important; /* Spazio per il testo in alto */
+                padding-bottom: 130px !important; /* Spazio per la navbar in basso */
+                
+                height: 100dvh !important;
+                box-sizing: border-box !important;
+            }
 .final-links { gap: 10px; }
 .box { width: 90px; height: 90px; font-size: 0.6rem; }
 }
@@ -990,6 +1040,7 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
+
 
 
 
