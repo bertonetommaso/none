@@ -318,33 +318,30 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
                 pointer-events: none;
             }
 
+            /* --- IMMAGINI ADATTIVE (Schiaccia quelle verticali) --- */
             .image-container { 
-                position: relative !important; /* Non più assoluto */
-                transform: none !important; 
-                top: auto !important; 
-                left: auto !important;
+                top: 55% !important; /* Si posiziona nello spazio libero */
+                left: 50%; 
+                transform: translate(-50%, -50%); 
                 
-                width: 80vw !important; /* Larghezza comoda */
+                /* Togliamo la larghezza fissa */
+                width: auto !important; 
+                height: auto !important;
                 
-                /* MAGIA: Occupa tutto lo spazio disponibile in altezza, ma non troppo */
-                flex-grow: 1; 
-                max-height: 50vh !important; 
+                /* LIMITI MAGICI */
+                max-width: 80vw !important;  /* Le orizzontali si fermano qui */
+                max-height: 40vh !important; /* LE VERTICALI SI FERMANO QUI, salvando la navbar! */
                 
-                display: flex;
-                align-items: center; 
-                justify-content: center;
-                
-                background: transparent !important;
-                box-shadow: none !important; /* Togli l'ombra al box contenitore */
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             }
 
+            /* Diciamo all'immagine vera di rispettare questi limiti rigorosamente */
             .image-container img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain !important; /* Scala l'immagine senza tagliarla */
-                /* L'ombra va sull'immagine vera, non sul box vuoto */
-                filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); 
-                box-shadow: none !important;
+                width: auto !important;
+                height: auto !important;
+                max-width: 80vw !important;
+                max-height: 40vh !important;
+                display: block;
             }
 
 .portfolio-content h3 { font-size: 0.7rem; margin-bottom: 0.5rem; opacity: 0.6; font-weight: 500; }
@@ -1033,6 +1030,7 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
+
 
 
 
