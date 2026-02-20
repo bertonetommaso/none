@@ -1023,7 +1023,7 @@ slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
                 startTy = e.touches[0].clientY;
             }, { passive: true });
 
-            // 2. Quando il dito si alza, valutiamo cosa fare
+            // 2. Quando il dito si alza, agiamo
             ghostLayer.addEventListener('touchend', (e) => {
                 if (!isMobile()) return;
                 
@@ -1033,41 +1033,52 @@ slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
                 // Se il tocco è stato fermo (un vero tap, non uno scroll)
                 if (Math.abs(endTx - startTx) < 15 && Math.abs(endTy - startTy) < 15) {
                     
-                    // A. Spegni il vetro trasparente temporaneamente
-                    ghostLayer.style.pointerEvents = 'none';
+                    // A. Nascondiamo totalmente il vetro per ingannare la cache di Safari/Chrome
+                    ghostLayer.style.display = 'none';
                     
-                    // B. Guarda cosa c'è esattamente sotto al dito
+                    // B. Troviamo l'elemento esatto sotto il dito
                     const elementBelow = document.elementFromPoint(endTx, endTy);
                     
+                    // C. Riaccendiamo subito il vetro
+                    ghostLayer.style.display = 'block';
+
                     if (elementBelow) {
                         const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .box, a, #signature-btn');
                         
                         if (clickable) {
-                            // Manda un finto click al sistema per innescare le animazioni e la copia della Mail
-                            const mockEvent = new MouseEvent('mousedown', { clientX: endTx, clientY: endTy, bubbles: true });
-                            document.dispatchEvent(mockEvent); 
-
-                            // Apri i link di Instagram e LinkedIn aggirando il blocco popup del telefono
-                            if (clickable.tagName === 'A' && clickable.href) {
-                                window.open(clickable.href, '_blank'); 
-                            } else {
+                            // 1. AZIONE MAIL (Eseguita direttamente per bypassare il blocco di sicurezza)
+                            if (clickable.classList.contains('mail-box')) {
+                                navigator.clipboard.writeText('bertonetommaso2@gmail.com').then(() => {
+                                    const addr = clickable.querySelector('.mail-address');
+                                    if(addr) addr.innerText = 'copied to clipboard!';
+                                    clickable.classList.add('copied');
+                                    setTimeout(() => { 
+                                        if(addr) addr.innerText = 'bertonetommaso2@gmail.com'; 
+                                        clickable.classList.remove('copied');
+                                    }, 2000);
+                                });
+                                spawnDroplets(endTx, endTy);
+                            }
+                            // 2. AZIONE LINK ESTERNI (Instagram e LinkedIn aperti in modo nativo)
+                            else if (clickable.tagName.toUpperCase() === 'A' && clickable.href && !clickable.href.includes('#')) {
+                                window.open(clickable.href, '_blank');
+                            }
+                            // 3. ALTRI PULSANTI (Frecce, Menu, Chi sono)
+                            else {
                                 clickable.click(); 
                             }
                         } else {
-                            // Se clicchi nel vuoto (es. per far apparire solo le particelle d'acqua)
-                            const mockEvent = new MouseEvent('mousedown', { clientX: endTx, clientY: endTy, bubbles: true });
-                            document.dispatchEvent(mockEvent);
+                            // Tocco a vuoto (crea solo le goccioline)
+                            spawnDroplets(endTx, endTy);
                         }
                     }
-                    
-                    // C. Riaccendi il vetro trasparente per continuare a scrollare
-                    ghostLayer.style.pointerEvents = 'all';
                 }
             });
         }
 </script>
 </body>
 </html>
+
 
 
 
