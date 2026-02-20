@@ -238,11 +238,17 @@ display: flex; align-items: center; gap: 12px; transition: 0.4s; position: relat
 }
 
 .sub-link { 
-color: inherit !important; text-decoration: none; font-size: 0.6rem; 
-text-transform: uppercase; letter-spacing: 1px; opacity: 0.3; transition: 0.3s; font-weight: 500;
+    color: var(--fg-color) !important; 
+    text-decoration: none !important; 
+    font-size: 0.65rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    opacity: 0.4; 
+    transition: 0.3s; 
+    font-weight: 500; 
 }
 .sub-link:hover { opacity: 0.8 !important; transform: translateX(3px); }
-.sub-link.active { opacity: 1 !important; font-weight: 700; }
+.sub-link.active { opacity: 1 !important; font-weight: 700 !important; }
 
 /* --- TYPOGRAPHY --- */
 .char { display: inline-block; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -1019,104 +1025,120 @@ nav.scrollTo({ left: scrollPos, behavior: 'smooth' });
 requestAnimationFrame(update);
 }
 update(); 
-wwindow.addEventListener('resize', () => { vh = window.innerHeight; if(!isMobile()) targetScrollY = window.scrollY; });
+window.addEventListener('resize', () => { vh = window.innerHeight; if(!isMobile()) targetScrollY = window.scrollY; });
 
-// --- GESTIONE BOTTONI FRECCE ORIZZONTALI (PC E MOBILE) ---
-document.addEventListener('click', (e) => {
-    // Se clicchi la freccia DESTRA (Who am I?)
-    if (e.target.closest('.hint-horizontal')) {
-        navigateTo(0);
-        currentXOffset = -window.innerWidth;
-        const slider = document.getElementById('main-slider');
-        if (slider) {
-            slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
-            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
-        }
+// --- FUNZIONI PER LE FRECCE ORIZZONTALI ---
+window.openPresentation = function() {
+    navigateTo(0);
+    currentXOffset = -window.innerWidth;
+    const slider = document.getElementById('main-slider');
+    if(slider) {
+        slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+        slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
     }
+};
+
+window.backToTitle = function() {
+    navigateTo(0);
+    currentXOffset = 0;
+    const slider = document.getElementById('main-slider');
+    if(slider) {
+        slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+        slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
+    }
+};
+
+// --- FIX CLICK PASSANTE (PC E MOBILE) ---
+const ghostLayer = document.getElementById('ghost-scroll');
+
+if (ghostLayer) {
+    // 1. MOTORE DEI CLICK PER PC (Mouse)
+    ghostLayer.addEventListener('click', (e) => {
+        if (isMobile()) return; // Su telefono usa l'altro sistema
+        
+        ghostLayer.style.pointerEvents = 'none'; // Spegni il vetro
+        const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+        ghostLayer.style.pointerEvents = 'all';  // Riaccendi il vetro
+
+        if (elementBelow) {
+            const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .hint-horizontal-left, .box, a, #signature-btn');
+            if (clickable) {
+                // Se è la mail, copiala
+                if (clickable.classList.contains('mail-box')) {
+                    navigator.clipboard.writeText('bertonetommaso2@gmail.com');
+                    const addr = clickable.querySelector('.mail-address');
+                    if(addr) addr.innerText = 'copied to clipboard!';
+                    clickable.classList.add('copied');
+                    setTimeout(() => { 
+                        if(addr) addr.innerText = 'bertonetommaso2@gmail.com'; 
+                        clickable.classList.remove('copied');
+                    }, 2000);
+                    spawnDroplets(e.clientX, e.clientY);
+                }
+                // Se è una freccia (ha onclick nativo)
+                else if (clickable.onclick) {
+                    clickable.onclick(e);
+                }
+                // Se è un link (Instagram/Linkedin)
+                else if (clickable.href && !clickable.href.includes('#')) {
+                    window.open(clickable.href, '_blank');
+                }
+                else {
+                    clickable.click();
+                }
+            }
+        }
+    });
+
+    // 2. MOTORE DEI TOCCHI PER MOBILE (Dita)
+    let startTx = 0, startTy = 0;
     
-    // Se clicchi la freccia SINISTRA (Back to title)
-    if (e.target.closest('.hint-horizontal-left')) {
-        navigateTo(0);
-        currentXOffset = 0;
-        const slider = document.getElementById('main-slider');
-        if (slider) {
-            slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
-            slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
-        }
-    }
-});
+    ghostLayer.addEventListener('touchstart', (e) => {
+        startTx = e.touches[0].clientX;
+        startTy = e.touches[0].clientY;
+    }, { passive: true });
 
-// --- FIX CLICK PASSANTE (METODO MATEMATICO INFALLIBILE PER MOBILE) ---
-// --- FIX CLICK PASSANTE (METODO MATEMATICO INFALLIBILE PER MOBILE) ---
-        const ghostLayer = document.getElementById('ghost-scroll');
+    ghostLayer.addEventListener('touchend', (e) => {
+        if (!isMobile()) return;
+        
+        const endTx = e.changedTouches[0].clientX;
+        const endTy = e.changedTouches[0].clientY;
+        
+        if (Math.abs(endTx - startTx) < 15 && Math.abs(endTy - startTy) < 15) {
+            const clickables = document.querySelectorAll('.box, .hint-vertical, .hint-horizontal, .hint-horizontal-left');
+            let targetHit = false;
 
-        if (ghostLayer) {
-            let startTx = 0, startTy = 0;
-            
-            // 1. Salva dove appoggi il dito
-            ghostLayer.addEventListener('touchstart', (e) => {
-                startTx = e.touches[0].clientX;
-                startTy = e.touches[0].clientY;
-            }, { passive: true });
-
-            // 2. Quando alzi il dito, controlla se hai fatto un "Tap" fermo
-            ghostLayer.addEventListener('touchend', (e) => {
-                if (!isMobile()) return;
-                
-                const endTx = e.changedTouches[0].clientX;
-                const endTy = e.changedTouches[0].clientY;
-                
-                // Se non hai strusciato il dito (è un vero tap)
-                if (Math.abs(endTx - startTx) < 15 && Math.abs(endTy - startTy) < 15) {
-                    
-                    // Prendi tutti i bottoni intrappolati sotto al vetro
-                    const clickables = document.querySelectorAll('.box, .hint-vertical, .hint-horizontal');
-                    let targetHit = false;
-
-                    // Controlliamo matematicamente se le coordinate del dito cadono dentro uno dei bottoni
-                    clickables.forEach(el => {
-                        if (targetHit) return;
-                        
-                        const rect = el.getBoundingClientRect(); // Ottiene la posizione esatta 2D del bottone
-                        
-                        // Il dito è atterrato dentro i bordi del bottone?
-                        if (endTx >= rect.left && endTx <= rect.right && endTy >= rect.top && endTy <= rect.bottom) {
-                            targetHit = true;
-                            
-                            // 1. SE HAI TOCCATO LA MAIL:
-                            if (el.classList.contains('mail-box')) {
-                                // Apri direttamente l'app della mail del telefono (funziona al 100%)
-                                window.location.href = "mailto:bertonetommaso2@gmail.com";
-                                
-                                // Mostra l'effetto visivo
-                                const addr = el.querySelector('.mail-address');
-                                if(addr) addr.innerText = 'apertura mail...';
-                                el.classList.add('copied');
-                                setTimeout(() => { 
-                                    if(addr) addr.innerText = 'bertonetommaso2@gmail.com'; 
-                                    el.classList.remove('copied');
-                                }, 2000);
-                            }
-                            // 2. SE HAI TOCCATO INSTAGRAM O LINKEDIN:
-                            else if (el.tagName.toUpperCase() === 'A' && el.href) {
-                                // Apri il link nella stessa pagina per bypassare i blocchi popup di Safari
-                                window.location.href = el.href; 
-                            }
-                            // 3. SE HAI TOCCATO LE FRECCE (CHI SONO / SCORRI GIU):
-                            else {
-                                el.click();
-                            }
-                        }
-                    });
-
-                    // Crea le goccioline d'acqua dove hai toccato
-                    spawnDroplets(endTx, endTy);
+            clickables.forEach(el => {
+                if (targetHit) return;
+                const rect = el.getBoundingClientRect();
+                if (endTx >= rect.left && endTx <= rect.right && endTy >= rect.top && endTy <= rect.bottom) {
+                    targetHit = true;
+                    if (el.classList.contains('mail-box')) {
+                        window.location.href = "mailto:bertonetommaso2@gmail.com";
+                        const addr = el.querySelector('.mail-address');
+                        if(addr) addr.innerText = 'apertura mail...';
+                        el.classList.add('copied');
+                        setTimeout(() => { 
+                            if(addr) addr.innerText = 'bertonetommaso2@gmail.com'; 
+                            el.classList.remove('copied');
+                        }, 2000);
+                    }
+                    else if (el.tagName.toUpperCase() === 'A' && el.href) {
+                        window.location.href = el.href; 
+                    }
+                    else {
+                        el.click();
+                    }
                 }
             });
+            spawnDroplets(endTx, endTy);
         }
+    });
+}
 </script>
 </body>
 </html>
+
 
 
 
