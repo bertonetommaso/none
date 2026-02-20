@@ -274,7 +274,7 @@ em.italic-script { font-family: 'Georgia', serif; font-style: italic; display: b
 
 @media (min-width: 769px) {
 .presentation-content { gap: 100px; }
-.presentation-rect { width: 380px; height: 520px; }
+.presentation-rect { width: 380px; height: 520px; margin-left: 80px; }
 .presentation-text h2 { font-size: 4rem; margin-bottom: 25px; }
 }
 @media (max-width: 768px) {
@@ -291,7 +291,7 @@ em.italic-script { font-family: 'Georgia', serif; font-style: italic; display: b
 @media (min-width: 769px) { .hint-vertical { bottom: 5vh; } }
 @media (max-width: 768px) { .hint-vertical { bottom: 18vh; } }
 
-.hint-horizontal { position: absolute; right: 5vw; top: 50%; transform: translateY(-50%) display: flex; align-items: center; gap: 20px; pointer-events: all; }
+.hint-horizontal { position: absolute; right: 5vw; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 20px; pointer-events: all; }
 @media (max-width: 768px) {
 .hint-horizontal { top: 70%; flex-direction: row; gap: 8px; right: 5vw; }
 .hint-horizontal span:first-child { display: block; opacity: 0.8; } 
@@ -840,7 +840,13 @@ finishSlide(e.changedTouches[0].clientX);
 });
 
 // Mouse (PC)
-document.addEventListener('mousedown', (e) => { if (window.scrollY < vh * 0.5) { isDragging = true; startX = e.clientX; slider.style.transition = 'none'; } });
+// Mouse (PC)
+document.addEventListener('mousedown', (e) => { 
+    // SALVAVITA: Se stai cliccando una freccia o un bottone, impedisce al sito di confonderlo con un trascinamento!
+    if (e.target.closest('.hint-horizontal, .hint-horizontal-left, a, .box, #signature-btn')) return;
+    
+    if (window.scrollY < vh * 0.5) { isDragging = true; startX = e.clientX; slider.style.transition = 'none'; } 
+});
 document.addEventListener('mousemove', (e) => {
 mouseX = e.clientX; mouseY = e.clientY;
 cursor.style.left = mouseX + 'px'; cursor.style.top = mouseY + 'px';
@@ -1107,6 +1113,7 @@ window.backToTitle = function() {
 </script>
 </body>
 </html>
+
 
 
 
