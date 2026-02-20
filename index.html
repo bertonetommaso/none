@@ -322,26 +322,31 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
             .image-container { 
                 position: absolute !important;
                 
-                /* POSIZIONAMENTO (Sposta questo per alzare/abbassare) */
-                top: 80% !important; 
+                /* POSIZIONE: Usa 'vh' invece di '%'. Più alzi il numero, più scende. Prova 60vh, 65vh o 70vh */
+                top: 65vh !important; 
                 
                 left: 50% !important; 
                 transform: translate(-50%, -50%) !important; 
                 
-                /* DIMENSIONI GABBIA */
                 width: 80vw !important;  
-                height: 22vh !important; 
+                height: auto !important; /* Lascia che si adatti all'immagine */
                 
-                /* TRUCCO ANTI-FLEXBOX: togliamo flex e usiamo un block normale */
-                display: block !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
                 
                 background: transparent !important;
                 box-shadow: none !important; 
             }
 
-           .image-container img {
-                width: 100% !important;
-                height: 100% !important;
+            .image-container img {
+                width: auto !important;
+                height: auto !important;
+                max-width: 100% !important;
+                
+                /* LIMITE ALTEZZA FOTO: Abbassa questo per renderle più piccole (es. 30vh o 25vh) */
+                max-height: 30vh !important; 
+                
                 object-fit: contain !important; 
                 display: block !important;
                 box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
@@ -1034,6 +1039,7 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
+
 
 
 
