@@ -436,17 +436,18 @@ z-index: 10001 !important;       /* LA PORTA SOPRA OGNI COSA */
 pointer-events: auto !important;
 }
 
-/* 1. DIDASCALIE CENTRATE */
+/* 1. DIDASCALIE CENTRATE (ORA SOPRA L'IMMAGINE) */
             .img-caption {
                 left: 50% !important;
                 right: auto !important;
                 transform: translateX(-50%) !important;
                 text-align: center !important;
                 white-space: normal !important;
-                bottom: -45px !important; /* Più spazio sotto la foto */
-                
-                /* Usa la larghezza dello schermo, così il testo non si schiaccia se l'immagine è molto stretta */
                 width: 80vw !important; 
+                
+                /* IL TRUCCO È QUI: */
+                bottom: auto !important; /* Disattiva l'ancoraggio in basso */
+                top: -40px !important;   /* Spinge il testo 40px SOPRA il bordo superiore della foto */
             }
 
 /* 2. RIPARA TASTI ULTIMA PAGINA E SLIDER ORIZZONTALE */
@@ -1039,6 +1040,7 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
+
 
 
 
