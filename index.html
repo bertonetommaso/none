@@ -303,6 +303,19 @@
                 flex-shrink: 0; /* Il testo non si schiaccia mai */
                 z-index: 10;
             }
+            /* --- INCOLLA QUI DENTRO IL @media (max-width: 768px) --- */
+
+            /* Flexbox "Intelligente": tocca SOLO le pagine con i progetti */
+            .cube-face:has(.portfolio-content) {
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding-top: 12vh !important; 
+                padding-bottom: 120px !important; /* Spazio inferiore protetto per la navbar */
+                height: 100dvh !important;
+                box-sizing: border-box !important;
+            }
             
             .image-container { 
                 position: relative !important; /* Togli absolute */
@@ -354,18 +367,7 @@
             scroll-snap-stop: always !important; /* Obbliga a fermarsi */
             pointer-events: none; 
         }
-        /* --- INCOLLA O SOSTITUISCI DENTRO @media (max-width: 768px) --- */
-            
-            .cube-face {
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important; /* Spinge il contenuto ai bordi */
-                align-items: center !important;
-                padding-top: 12vh !important; /* Spazio in alto per il testo */
-                padding-bottom: 120px !important; /* Spazio in basso RISERVATO alla navbar */
-                height: 100dvh !important;
-                box-sizing: border-box !important;
-            }
+        
         .cube-face.active-content { pointer-events: all; }
 
         /* --- FINAL BOXES --- */
@@ -1029,6 +1031,7 @@
     </script>
 </body>
 </html>
+
 
 
 
