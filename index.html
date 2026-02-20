@@ -281,7 +281,33 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
 }
 
 /* --- PORTFOLIO CONTENT --- */
-/* --- SOSTITUISCI LE REGOLE .portfolio-content e .image-container CON QUESTE --- */
+.portfolio-content { position: absolute; z-index: 2; pointer-events: none; }
+.image-container { position: absolute; background: #ddd; box-shadow: 0 40px 80px rgba(0,0,0,0.1); z-index: 1; will-change: transform; }
+.image-container img { width: 100%; height: auto; display: block; }
+
+@media (min-width: 769px) {
+.portfolio-content { left: 33vw; top: 50%; transform: translateY(-50%); max-width: 310px; text-align: left; }
+.image-container { right: 10vw; top: 50%; transform: translateY(-50%); width: 420px; height: auto; }
+.portfolio-content h3 { font-size: 0.9rem; margin-bottom: 1rem; opacity: 0.6; }
+.portfolio-content h2 { font-size: 5rem; margin-bottom: 1.5rem; line-height: 0.9}
+}
+@media (max-width: 768px) {
+/* --- INCOLLA QUESTO dentro @media (max-width: 768px) --- */
+            
+            /* Attiva il layout flessibile SOLO per le pagine con contenuti (progetti) */
+            .cube-face:has(.portfolio-content) {
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important; /* Spinge gli elementi agli estremi */
+                align-items: center !important;
+                
+                /* Spazio vitale */
+                padding-top: 15vh !important; /* Spazio per il testo in alto */
+                padding-bottom: 130px !important; /* Spazio per la navbar in basso */
+                
+                height: 100dvh !important;
+                box-sizing: border-box !important;
+            }
 
             .portfolio-content { 
                 position: relative !important; /* Non più assoluto */
@@ -320,25 +346,6 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
                 filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); 
                 box-shadow: none !important;
             }
-
-@media (min-width: 769px) {
-.portfolio-content { left: 33vw; top: 50%; transform: translateY(-50%); max-width: 310px; text-align: left; }
-.image-container { right: 10vw; top: 50%; transform: translateY(-50%); width: 420px; height: auto; }
-.portfolio-content h3 { font-size: 0.9rem; margin-bottom: 1rem; opacity: 0.6; }
-.portfolio-content h2 { font-size: 5rem; margin-bottom: 1.5rem; line-height: 0.9}
-}
-@media (max-width: 768px) {
-.portfolio-content { top: 15%; left: 50%; transform: translateX(-50%); width: 85%; text-align: center; }
-
-/* --- FIXED: MOBILE IMAGE SIZE (40% SMALLER) --- */
-.image-container { 
-                top: 55%; /* Modificato da 65% a 55% per alzare l'immagine */
-                top: 65%; /* Modificato da 65% a 55% per alzare l'immagine */
-left: 50%; transform: translate(-50%, -50%); 
-width: 60vw; 
-height: auto; 
-box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
 
 .portfolio-content h3 { font-size: 0.7rem; margin-bottom: 0.5rem; opacity: 0.6; font-weight: 500; }
 .portfolio-content h2 { font-size: 3rem; margin-bottom: 1rem; line-height: 1; }
@@ -385,21 +392,7 @@ overflow: hidden; white-space: nowrap; position: relative;
 .mail-box.copied .mail-address { opacity: 1; }
 .mail-box.copied .mail-text { opacity: 0; }
 
-@media (max-width: 768px) {            
-            /* Attiva il layout flessibile SOLO per le pagine con contenuti (progetti) */
-            .cube-face:has(.portfolio-content) {
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important; /* Spinge gli elementi agli estremi */
-                align-items: center !important;
-                
-                /* Spazio vitale */
-                padding-top: 15vh !important; /* Spazio per il testo in alto */
-                padding-bottom: 130px !important; /* Spazio per la navbar in basso */
-                
-                height: 100dvh !important;
-                box-sizing: border-box !important;
-            }
+@media (max-width: 768px) {
 .final-links { gap: 10px; }
 .box { width: 90px; height: 90px; font-size: 0.6rem; }
 }
@@ -1040,8 +1033,6 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
-
-
 
 
 
