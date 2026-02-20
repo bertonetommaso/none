@@ -319,28 +319,34 @@ margin-left: 20px; /* <--- Aumenta questo numero per allontanare la freccia dall
             }
 
             /* --- FIXED: MOBILE IMAGE SIZE --- */
+           /* --- FIXED: MOBILE IMAGE SIZE --- */
             .image-container { 
-                position: absolute !important;
-                top: 75% !important; /* Alziamo leggermente il centro dell'immagine */
-                left: 50%; 
-                transform: translate(-50%, -50%); 
+                position: absolute !important; /* Forza il posizionamento assoluto */
+                top: 65% !important; /* <--- ORA QUESTO VALORE FUNZIONERA'. Prova 60%, 65% o 70% */
+                left: 50% !important; 
+                transform: translate(-50%, -50%) !important; 
                 
-                width: auto !important;  /* Togliamo la larghezza fissa */
-                height: auto !important;
-                max-width: 75vw !important;  /* Limite per le foto orizzontali */
-                max-height: 30vh !important; /* FONDAMENTALE: La foto non supererà mai questa altezza! */
+                width: 75vw !important;  /* Usa una larghezza definita invece di auto */
+                height: 40vh !important; /* Usa un'altezza definita invece di auto */
                 
-                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+                /* Questo serve a centrare l'immagine vera all'interno del suo "recinto" */
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                
+                background: transparent !important;
+                box-shadow: none !important; /* Sposta l'ombra sull'immagine */
             }
 
-            /* Assicuriamoci che l'immagine vera rispetti i nuovi limiti */
+            /* L'immagine si adatterà al recinto che le hai dato sopra */
             .image-container img {
+                max-width: 100% !important;
+                max-height: 100% !important;
                 width: auto !important;
                 height: auto !important;
-                max-width: 75vw !important;
-                max-height: 30vh !important;
-                object-fit: contain;
-                display: block;
+                object-fit: contain !important; /* Non deforma la foto */
+                display: block !important;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
             }
 
 .portfolio-content h3 { font-size: 0.7rem; margin-bottom: 0.5rem; opacity: 0.6; font-weight: 500; }
@@ -1030,6 +1036,7 @@ clickable.click(); // Esegue il comando (es. navigateTo o openPresentation)
 </script>
 </body>
 </html>
+
 
 
 
