@@ -966,18 +966,24 @@ const idx = Math.floor(progress);
 const f = progress - idx;
 
 // Logica Colori
-if (idx < flatFaces.length) {
-let rgb;
-if (idx < flatFaces.length - 1) {
-rgb = lerp(flatFaces[idx].color, flatFaces[idx + 1].color, f);
-} else {
-rgb = flatFaces[flatFaces.length - 1].color;
-}
-const bright = (rgb[0]*299 + rgb[1]*587 + rgb[2]*114)/1000;
-document.body.style.backgroundColor = `rgb(${rgb.join(',')})`;
-document.body.style.color = bright > 130 ? 'rgb(40,40,40)' : 'rgb(245,245,245)';
-signature.style.filter = `invert(${bright > 130 ? 0 : 1})`;
-}
+        if (idx < flatFaces.length) {
+            let rgb;
+            if (idx < flatFaces.length - 1) {
+                rgb = lerp(flatFaces[idx].color, flatFaces[idx + 1].color, f);
+            } else {
+                rgb = flatFaces[flatFaces.length - 1].color;
+            }
+            const bright = (rgb[0]*299 + rgb[1]*587 + rgb[2]*114)/1000;
+            
+            // Colora lo sfondo
+            document.body.style.backgroundColor = `rgb(${rgb.join(',')})`;
+            
+            // Fa diventare tutto il testo (incluso il bottone) bianco se lo sfondo è scuro
+            document.body.style.color = bright > 130 ? 'rgb(40,40,40)' : 'rgb(245,245,245)';
+            
+            // Rimuoviamo il filtro difettoso che lo faceva sparire!
+            signature.style.filter = 'none'; 
+        }
 
 // Navbar visibilità
 const isAtEnd = sY > (flatFaces.length - 1.2) * vh; 
@@ -1212,6 +1218,7 @@ function showCopyEffect(el) {
 </script>
 </body>
 </html>
+
 
 
 
