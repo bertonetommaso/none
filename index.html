@@ -1056,22 +1056,21 @@ window.backToTitle = function() {
     }
 };
 
-// --- FIX CLICK PASSANTE (PC E MOBILE) ---
+// --- FIX CLICK PASSANTE E GESTURES (PC E MOBILE) ---
 const ghostLayer = document.getElementById('ghost-scroll');
 
 if (ghostLayer) {
     // 1. MOTORE DEI CLICK PER PC (Mouse)
     ghostLayer.addEventListener('click', (e) => {
-        if (isMobile()) return; // Su telefono usa l'altro sistema
+        if (isMobile()) return; 
         
-        ghostLayer.style.pointerEvents = 'none'; // Spegni il vetro
+        ghostLayer.style.pointerEvents = 'none'; 
         const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
-        ghostLayer.style.pointerEvents = 'all';  // Riaccendi il vetro
+        ghostLayer.style.pointerEvents = 'all';  
 
         if (elementBelow) {
             const clickable = elementBelow.closest('.hint-vertical, .hint-horizontal, .hint-horizontal-left, .box, a, #signature-btn');
             if (clickable) {
-                // Se è la mail, copiala
                 if (clickable.classList.contains('mail-box')) {
                     navigator.clipboard.writeText('bertonetommaso2@gmail.com');
                     const addr = clickable.querySelector('.mail-address');
@@ -1083,71 +1082,14 @@ if (ghostLayer) {
                     }, 2000);
                     spawnDroplets(e.clientX, e.clientY);
                 }
-                // Se è una freccia (ha onclick nativo)
-                else if (clickable.onclick) {
-                    clickable.onclick(e);
-                }
-                // Se è un link (Instagram/Linkedin)
-                else if (clickable.href && !clickable.href.includes('#')) {
-                    window.open(clickable.href, '_blank');
-                }
-                else {
-                    clickable.click();
-                }
+                else if (clickable.onclick) clickable.onclick(e);
+                else if (clickable.href && !clickable.href.includes('#')) window.open(clickable.href, '_blank');
+                else clickable.click();
             }
         }
     });
-    // --- BOOSTER SENSIBILITÀ SCROLL (SOLO MOBILE) ---
-        // Questo script aiuta iPhone a scattare alla pagina successiva anche con piccoli movimenti veloci
-        const scroller = document.getElementById('ghost-scroll');
-        let touchStartS = 0;
-        let touchTimeS = 0;
 
-        if (scroller) {
-            scroller.addEventListener('touchstart', (e) => {
-                touchStartS = e.touches[0].clientY;
-                touchTimeS = Date.now();
-            }, { passive: true });
-
-            scroller.addEventListener('touchend', (e) => {
-                if (!isMobile()) return;
-
-                const touchEndS = e.changedTouches[0].clientY;
-                const dist = touchStartS - touchEndS; // Distanza percorsa (Positivo = Giù, Negativo = Su)
-                const time = Date.now() - touchTimeS; // Tempo impiegato
-
-                // Se il movimento è stato veloce (meno di 300ms) e deciso (più di 30px)
-                // Ma non esagerato (per evitare conflitti con scroll lunghi già gestiti dal CSS)
-                if (time < 350 && Math.abs(dist) > 30 && Math.abs(dist) < window.innerHeight / 2) {
-                    
-                    const h = window.innerHeight;
-                    const currentScroll = scroller.scrollTop;
-                    // Calcola in che pagina siamo (arrotondando)
-                    const currentPage = Math.round(currentScroll / h);
-                    
-                    let targetPage = currentPage;
-
-                    // Se scorri verso il BASSO (dito va su)
-                    if (dist > 0) {
-                        targetPage = currentPage + 1;
-                    } 
-                    // Se scorri verso l'ALTO (dito va giù)
-                    else {
-                        targetPage = currentPage - 1;
-                    }
-
-                    // Limita i confini (non andare sotto zero o oltre l'ultima pagina)
-                    // flatFaces è l'array che contiene tutte le tue pagine
-                    if (targetPage >= 0 && targetPage < flatFaces.length) {
-                        scroller.scrollTo({
-                            top: targetPage * h,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            });
-        }
-    // 2. MOTORE DEI TOCCHI PER MOBILE (Dita)
+    // 2. MOTORE DEI TOCCHI E SWIPE ORIZZONTALE PER MOBILE (Dita)
     let startTx = 0, startTy = 0;
     
     ghostLayer.addEventListener('touchstart', (e) => {
@@ -1161,7 +1103,11 @@ if (ghostLayer) {
         const endTx = e.changedTouches[0].clientX;
         const endTy = e.changedTouches[0].clientY;
         
-        if (Math.abs(endTx - startTx) < 15 && Math.abs(endTy - startTy) < 15) {
+        const distX = startTx - endTx; // Positivo se scorri a sinistra
+        const distY = startTy - endTy; // Positivo se scorri in alto
+
+        // A) SE IL DITO È STATO FERMO -> È UN CLICK SUI BOTTONI
+        if (Math.abs(distX) < 15 && Math.abs(distY) < 15) {
             const clickables = document.querySelectorAll('.box, .hint-vertical, .hint-horizontal, .hint-horizontal-left');
             let targetHit = false;
 
@@ -1180,21 +1126,43 @@ if (ghostLayer) {
                             el.classList.remove('copied');
                         }, 2000);
                     }
-                    else if (el.tagName.toUpperCase() === 'A' && el.href) {
-                        window.location.href = el.href; 
-                    }
-                    else {
-                        el.click();
-                    }
+                    else if (el.tagName.toUpperCase() === 'A' && el.href) window.location.href = el.href; 
+                    else el.click();
                 }
             });
             spawnDroplets(endTx, endTy);
+        }
+        
+        // B) SE HAI STRUSCIATO IN ORIZZONTALE -> CAMBIA PAGINA
+        else if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > 40) {
+            const scroller = document.getElementById('ghost-scroll');
+            const h = window.innerHeight;
+            const currentPage = Math.round(scroller.scrollTop / h);
+
+            // Lasciamo che la prima pagina gestisca lo slider "Who am I?"
+            if (currentPage > 0) {
+                let targetPage = currentPage;
+                
+                if (distX > 0) {
+                    // Strisciato verso sinistra (vai Avanti)
+                    targetPage++; 
+                } else {
+                    // Strisciato verso destra (vai Indietro)
+                    targetPage--; 
+                }
+
+                // Esegui lo scorrimento fluidissimo se non siamo fuori dai limiti
+                if (targetPage >= 0 && targetPage < flatFaces.length) {
+                    scroller.scrollTo({ top: targetPage * h, behavior: 'smooth' });
+                }
+            }
         }
     });
 }
 </script>
 </body>
 </html>
+
 
 
 
