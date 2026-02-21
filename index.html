@@ -1109,28 +1109,42 @@ if (ghostLayer) {
         const absX = Math.abs(distX);
         const absY = Math.abs(distY);
 
-        // A) SE IL DITO E' RIMASTO FERMO -> E' UN CLICK
-        if (absX < 15 && absY < 15) {
+        // A) SE IL DITO E' RIMASTO FERMO -> E' UN CLICK SUI BOTTONI
+        if (Math.abs(distX) < 15 && Math.abs(distY) < 15) {
             const clickables = document.querySelectorAll('.box, .hint-vertical, .hint-horizontal, .hint-horizontal-left');
             let targetHit = false;
 
             clickables.forEach(el => {
                 if (targetHit) return;
                 const rect = el.getBoundingClientRect();
+                // Controllo matematico: il dito è caduto dentro il bottone?
                 if (endTx >= rect.left && endTx <= rect.right && endTy >= rect.top && endTy <= rect.bottom) {
                     targetHit = true;
+                    
+                    // 1. GESTIONE MAIL (COPIA INCOLLA)
                     if (el.classList.contains('mail-box')) {
-                        window.location.href = "mailto:bertonetommaso2@gmail.com";
-                        const addr = el.querySelector('.mail-address');
-                        if(addr) addr.innerText = 'apertura mail...';
-                        el.classList.add('copied');
-                        setTimeout(() => { 
-                            if(addr) addr.innerText = 'bertonetommaso2@gmail.com'; 
-                            el.classList.remove('copied');
-                        }, 2000);
+                        // Tenta la copia moderna
+                        navigator.clipboard.writeText('bertonetommaso2@gmail.com').then(() => {
+                            showCopyEffect(el);
+                        }).catch(() => {
+                            // Fallback per vecchi browser o restrizioni di sicurezza
+                            const textArea = document.createElement("textarea");
+                            textArea.value = 'bertonetommaso2@gmail.com';
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            document.execCommand('copy'); // Metodo classico infallibile
+                            document.body.removeChild(textArea);
+                            showCopyEffect(el);
+                        });
                     }
-                    else if (el.tagName.toUpperCase() === 'A' && el.href) window.location.href = el.href; 
-                    else el.click();
+                    // 2. LINK ESTERNI (Instagram / LinkedIn)
+                    else if (el.tagName.toUpperCase() === 'A' && el.href) {
+                        window.open(el.href, '_blank'); 
+                    }
+                    // 3. ALTRI PULSANTI
+                    else {
+                        el.click();
+                    }
                 }
             });
             spawnDroplets(endTx, endTy);
@@ -1160,9 +1174,20 @@ if (ghostLayer) {
         }
     });
 }
+    // Funzione visiva per la conferma copia
+function showCopyEffect(el) {
+    const addr = el.querySelector('.mail-address');
+    if(addr) addr.innerText = 'copied to clipboard!';
+    el.classList.add('copied');
+    setTimeout(() => { 
+        if(addr) addr.innerText = 'bertonetommaso2@gmail.com'; 
+        el.classList.remove('copied');
+    }, 2000);
+}
 </script>
 </body>
 </html>
+
 
 
 
