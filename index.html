@@ -894,16 +894,19 @@ currentXOffset = currentXOffset === 0 ? 0 : -window.innerWidth;
 slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`;
 }
 
-// FIX TASTO B.T. -> APRE LA PRESENTAZIONE
+// FIX TASTO HOME -> RITORNA ALLA LANDING PAGE
 signature.onclick = () => { 
-navigateTo(0); // 1. Torna alla prima pagina verticale
+    navigateTo(0); // 1. Torna in cima (Pagina 0)
 
-// 2. Forza lo slider orizzontale ad aprirsi sulla presentazione
-currentXOffset = -window.innerWidth; 
+    // 2. Azzera lo slider orizzontale per mostrare il titolo
+    currentXOffset = 0; 
 
-// Applica l'animazione
-slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'; 
-slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`; 
+    // 3. Applica l'animazione
+    const slider = document.getElementById('main-slider');
+    if (slider) {
+        slider.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)'; 
+        slider.style.transform = `translate3d(${currentXOffset}px, 0, 0)`; 
+    }
 };
 
 // --- INTERACTIONS ---
@@ -1218,6 +1221,7 @@ function showCopyEffect(el) {
 </script>
 </body>
 </html>
+
 
 
 
