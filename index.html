@@ -15,11 +15,11 @@
 * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; -webkit-tap-highform-color: transparent; }
 
 html { 
-scroll-snap-type: y mandatory; 
-scroll-behavior: smooth; 
-touch-action: pan-y; 
-overscroll-behavior: none; 
-height: 100%;
+    scroll-snap-type: y mandatory; 
+    scroll-behavior: smooth; 
+    touch-action: auto; /* SBLOCCATO: Ora il telefono legge i movimenti a destra e sinistra! */
+    overscroll-behavior: none; 
+    height: 100%;
 }
 
 body { 
@@ -1103,11 +1103,14 @@ if (ghostLayer) {
         const endTx = e.changedTouches[0].clientX;
         const endTy = e.changedTouches[0].clientY;
         
-        const distX = startTx - endTx; // Positivo se scorri a sinistra
-        const distY = startTy - endTy; // Positivo se scorri in alto
+        const distX = startTx - endTx; // Valore positivo se fai swipe a SINISTRA
+        const distY = startTy - endTy; // Valore positivo se fai swipe in ALTO
+        
+        const absX = Math.abs(distX);
+        const absY = Math.abs(distY);
 
-        // A) SE IL DITO È STATO FERMO -> È UN CLICK SUI BOTTONI
-        if (Math.abs(distX) < 15 && Math.abs(distY) < 15) {
+        // A) SE IL DITO E' RIMASTO FERMO -> E' UN CLICK
+        if (absX < 15 && absY < 15) {
             const clickables = document.querySelectorAll('.box, .hint-vertical, .hint-horizontal, .hint-horizontal-left');
             let targetHit = false;
 
@@ -1133,25 +1136,23 @@ if (ghostLayer) {
             spawnDroplets(endTx, endTy);
         }
         
-        // B) SE HAI STRUSCIATO IN ORIZZONTALE -> CAMBIA PAGINA
-        else if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > 40) {
+        // B) SE HAI STRUSCIATO IN ORIZZONTALE -> CAMBIO PAGINA
+        else if (absX > absY && absX > 40) {
             const scroller = document.getElementById('ghost-scroll');
             const h = window.innerHeight;
             const currentPage = Math.round(scroller.scrollTop / h);
 
-            // Lasciamo che la prima pagina gestisca lo slider "Who am I?"
+            // Applichiamo lo swipe dalla pagina 1 in poi (per non interferire col pannello 'Who am I' iniziale)
             if (currentPage > 0) {
                 let targetPage = currentPage;
                 
                 if (distX > 0) {
-                    // Strisciato verso sinistra (vai Avanti)
-                    targetPage++; 
+                    targetPage++; // Hai strusciato a SINISTRA -> Pagina Successiva
                 } else {
-                    // Strisciato verso destra (vai Indietro)
-                    targetPage--; 
+                    targetPage--; // Hai strusciato a DESTRA -> Pagina Precedente
                 }
 
-                // Esegui lo scorrimento fluidissimo se non siamo fuori dai limiti
+                // Controllo dei limiti e scorrimento morbido
                 if (targetPage >= 0 && targetPage < flatFaces.length) {
                     scroller.scrollTo({ top: targetPage * h, behavior: 'smooth' });
                 }
@@ -1162,6 +1163,7 @@ if (ghostLayer) {
 </script>
 </body>
 </html>
+
 
 
 
