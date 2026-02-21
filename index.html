@@ -800,48 +800,65 @@ if (currentIdx < flatFaces.length - 1) navigateTo(currentIdx + 1);
 // --- SLIDER & TOUCH ---
 const slider = document.getElementById('main-slider');
 
-// GESTIONE UNIFICATA TOUCH (Mobile + PC)
+// --- GESTIONE UNIFICATA TOUCH E SLIDER (Mobile + PC) ---
+let isVerticalScroll = false; // SERRATURA: Capisce se l'utente vuole scendere
+
+document.addEventListener('touchstart', (e) => {
+    if (currentScrollY < vh * 0.5) { 
+        isDragging = false; 
+        isVerticalScroll = false; // Resetta la serratura ogni volta che tocchi
+        startX = e.touches[0].clientX; 
+        startY = e.touches[0].clientY; 
+        slider.style.transition = 'none'; 
+    }
+}, { passive: true });
+
 document.addEventListener('touchmove', (e) => {
-// 1. SALVAVITA NAVBAR: Se tocchi la navbar, FERMATI.
-if (e.target.closest('nav') || e.target.closest('.sub-nav') || e.target.closest('.nav-group')) {
-return; 
-}
+    // 1. SALVAVITA NAVBAR
+    if (e.target.closest('nav') || e.target.closest('.sub-nav') || e.target.closest('.nav-group')) {
+        return; 
+    }
 
-// 2. PC: Blocca scroll elastico
-if (!isMobile() && !isDragging) {
-e.preventDefault();
-}
+    // 2. PC
+    if (!isMobile() && !isDragging) {
+        e.preventDefault();
+    }
 
-// 3. LOGICA SLIDER ORIZZONTALE (PRIMA PAGINA)
-if (isMobile() && currentScrollY < vh * 0.5) {
-const touch = e.touches[0];
-const diffX = touch.clientX - startX;
-const diffY = touch.clientY - startY;
+    // 3. LOGICA SLIDER ORIZZONTALE INTELLIGENTE (PRIMA PAGINA)
+    if (isMobile() && currentScrollY < vh * 0.5) {
+        const touch = e.touches[0];
+        const diffX = touch.clientX - startX;
+        const diffY = touch.clientY - startY;
 
-// Se ci muoviamo più in orizzontale che in verticale, attiviamo lo slider
-if (Math.abs(diffX) > (Math.abs(diffY) * 2) && Math.abs(diffX) > 15) {
-isDragging = true;
-e.preventDefault(); 
-slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + diffX))}px, 0, 0)`;
-}
-}
+        // Se abbiamo già capito che stai andando in GIÙ, ignora totalmente i calcoli orizzontali!
+        if (isVerticalScroll) return;
 
-// 4. PARTICELLE (solo se non sto trascinando lo slider)
-if (isMobile() && !isDragging) {
-const touch = e.touches[0];
-spawnDroplets(touch.clientX, touch.clientY);
-}
+        // Se nei primi millimetri il dito va più in verticale che in orizzontale, BLOCCA l'asse
+        if (!isDragging && Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 5) {
+            isVerticalScroll = true;
+            return; // Esci e lascia fare il lavoro allo scroll nativo dell'iPhone
+        }
+
+        // Se invece il dito va chiaramente di lato, attiva lo slider
+        if (Math.abs(diffX) > (Math.abs(diffY) * 2) && Math.abs(diffX) > 15) {
+            isDragging = true;
+            e.preventDefault(); // Questo blocca la pagina per permettere lo slide orizzontale
+            slider.style.transform = `translate3d(${Math.max(-window.innerWidth, Math.min(0, currentXOffset + diffX))}px, 0, 0)`;
+        }
+    }
+
+    // 4. PARTICELLE
+    if (isMobile() && !isDragging) {
+        spawnDroplets(e.touches[0].clientX, e.touches[0].clientY);
+    }
 }, { passive: false });
 
-// LISTENER GLOBALI PER IL TOCCO
-document.addEventListener('touchstart', (e) => {
-if (currentScrollY < vh * 0.5) { 
-isDragging = false; 
-startX = e.touches[0].clientX; 
-startY = e.touches[0].clientY; 
-slider.style.transition = 'none'; 
-}
-}, { passive: true });
+document.addEventListener('touchend', (e) => {
+    if (isDragging) { 
+        isDragging = false; 
+        finishSlide(e.changedTouches[0].clientX); 
+    }
+});
 
 document.addEventListener('touchend', (e) => {
 if (isDragging) { 
@@ -1195,6 +1212,7 @@ function showCopyEffect(el) {
 </script>
 </body>
 </html>
+
 
 
 
