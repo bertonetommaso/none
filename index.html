@@ -218,25 +218,28 @@ text-transform: uppercase; letter-spacing: 2px; opacity: 0.2;
 display: flex; align-items: center; gap: 12px; transition: 0.4s; position: relative;
 }
 @media (min-width: 769px) {
-.main-link::before { content: ''; width: 12px; height: 2px; background: var(--fg-color); transition: 0.4s; }
-.main-link:hover { opacity: 0.7 !important; }
-/* NUOVO PULSANTE "BACK TO TITLE" (SOLO PC) */
-.hint-horizontal { position: absolute; right: 5vw; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 20px; pointer-events: all; cursor: pointer; z-index: 1000 !important; }
-}
-/* Corregge il margine della freccia per quando è a sinistra */
-.hint-horizontal-left {
-    position: absolute;
-    left: 5vw;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    pointer-events: all;
-    cursor: pointer;
-    z-index: 1000 !important; /* Alzato a 1000 per evitare che la foto lo copra */
-}
-.nav-group.active .main-link { opacity: 1 !important; transform: translateX(5px); }
-.nav-group.active .main-link::before { width: 25px; }
+    .main-link::before { content: ''; width: 12px; height: 2px; background: var(--fg-color); transition: 0.4s; }
+    .main-link:hover { opacity: 0.7 !important; }
+    
+    /* NUOVO PULSANTE "BACK TO TITLE" (SOLO PC) */
+    .hint-horizontal { position: absolute; right: 5vw; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 20px; pointer-events: all; cursor: pointer; z-index: 1000 !important; }
+    
+    /* Corregge il margine della freccia per quando è a sinistra */
+    .hint-horizontal-left {
+        position: absolute;
+        left: 5vw;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 40px; /* <--- ECCO LA MAGIA CHE ALLONTANA LA FRECCIA! */
+        pointer-events: all;
+        cursor: pointer;
+        z-index: 1000 !important;
+    }
+    
+    .nav-group.active .main-link { opacity: 1 !important; transform: translateX(5px); }
+    .nav-group.active .main-link::before { width: 25px; }
 }
 
 /* --- RESET SICUREZZA PER TUTTI I LINK --- */
@@ -1221,6 +1224,7 @@ function showCopyEffect(el) {
 </script>
 </body>
 </html>
+
 
 
 
