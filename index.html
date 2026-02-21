@@ -1117,36 +1117,44 @@ if (ghostLayer) {
             clickables.forEach(el => {
                 if (targetHit) return;
                 const rect = el.getBoundingClientRect();
-                // Controllo matematico: il dito è caduto dentro il bottone?
+                
+                // Il dito ha toccato esattamente questo bottone?
                 if (endTx >= rect.left && endTx <= rect.right && endTy >= rect.top && endTy <= rect.bottom) {
                     targetHit = true;
                     
-                    // 1. GESTIONE MAIL (COPIA INCOLLA)
+                    // 1. GESTIONE MAIL (COPIA FORZATA NEGLI APPUNTI)
                     if (el.classList.contains('mail-box')) {
-                        // Tenta la copia moderna
-                        navigator.clipboard.writeText('bertonetommaso2@gmail.com').then(() => {
-                            showCopyEffect(el);
-                        }).catch(() => {
-                            // Fallback per vecchi browser o restrizioni di sicurezza
-                            const textArea = document.createElement("textarea");
-                            textArea.value = 'bertonetommaso2@gmail.com';
-                            document.body.appendChild(textArea);
-                            textArea.select();
-                            document.execCommand('copy'); // Metodo classico infallibile
-                            document.body.removeChild(textArea);
-                            showCopyEffect(el);
-                        });
+                        
+                        // Trucco infallibile per mobile: crea un input invisibile, lo seleziona e lo copia
+                        const tempInput = document.createElement('input');
+                        tempInput.value = 'bertonetommaso2@gmail.com';
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        tempInput.setSelectionRange(0, 99999); // Specfico per far funzionare iOS
+                        document.execCommand('copy');
+                        document.body.removeChild(tempInput);
+                        
+                        // Effetto visivo di conferma
+                        const addr = el.querySelector('.mail-address');
+                        if (addr) addr.innerText = 'copied to clipboard!';
+                        el.classList.add('copied');
+                        setTimeout(() => { 
+                            if (addr) addr.innerText = 'bertonetommaso2@gmail.com'; 
+                            el.classList.remove('copied');
+                        }, 2000);
                     }
                     // 2. LINK ESTERNI (Instagram / LinkedIn)
                     else if (el.tagName.toUpperCase() === 'A' && el.href) {
-                        window.open(el.href, '_blank'); 
+                        window.location.href = el.href; 
                     }
-                    // 3. ALTRI PULSANTI
+                    // 3. ALTRI PULSANTI (Frecce)
                     else {
                         el.click();
                     }
                 }
             });
+            
+            // Genera l'effetto dell'acqua
             spawnDroplets(endTx, endTy);
         }
         
@@ -1187,6 +1195,7 @@ function showCopyEffect(el) {
 </script>
 </body>
 </html>
+
 
 
 
