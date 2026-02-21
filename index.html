@@ -58,7 +58,9 @@ height: 100dvh !important; /* Usa tutta l'altezza disponibile */
 overflow-y: scroll !important; /* Lo scroll avviene QUI */
 scroll-snap-type: y mandatory !important; /* Magnetismo QUI */
 scroll-behavior: smooth;
-
+/* AGGIUNTA FONDAMENTALE PER IPHONE: */
+                -webkit-overflow-scrolling: touch !important; 
+                overscroll-behavior-y: none !important;
 z-index: 50 !important; /* Deve stare sopra a tutto per prendere il tocco */
 pointer-events: all !important;
 }
@@ -1095,7 +1097,56 @@ if (ghostLayer) {
             }
         }
     });
+    // --- BOOSTER SENSIBILITÀ SCROLL (SOLO MOBILE) ---
+        // Questo script aiuta iPhone a scattare alla pagina successiva anche con piccoli movimenti veloci
+        const scroller = document.getElementById('ghost-scroll');
+        let touchStartS = 0;
+        let touchTimeS = 0;
 
+        if (scroller) {
+            scroller.addEventListener('touchstart', (e) => {
+                touchStartS = e.touches[0].clientY;
+                touchTimeS = Date.now();
+            }, { passive: true });
+
+            scroller.addEventListener('touchend', (e) => {
+                if (!isMobile()) return;
+
+                const touchEndS = e.changedTouches[0].clientY;
+                const dist = touchStartS - touchEndS; // Distanza percorsa (Positivo = Giù, Negativo = Su)
+                const time = Date.now() - touchTimeS; // Tempo impiegato
+
+                // Se il movimento è stato veloce (meno di 300ms) e deciso (più di 30px)
+                // Ma non esagerato (per evitare conflitti con scroll lunghi già gestiti dal CSS)
+                if (time < 350 && Math.abs(dist) > 30 && Math.abs(dist) < window.innerHeight / 2) {
+                    
+                    const h = window.innerHeight;
+                    const currentScroll = scroller.scrollTop;
+                    // Calcola in che pagina siamo (arrotondando)
+                    const currentPage = Math.round(currentScroll / h);
+                    
+                    let targetPage = currentPage;
+
+                    // Se scorri verso il BASSO (dito va su)
+                    if (dist > 0) {
+                        targetPage = currentPage + 1;
+                    } 
+                    // Se scorri verso l'ALTO (dito va giù)
+                    else {
+                        targetPage = currentPage - 1;
+                    }
+
+                    // Limita i confini (non andare sotto zero o oltre l'ultima pagina)
+                    // flatFaces è l'array che contiene tutte le tue pagine
+                    if (targetPage >= 0 && targetPage < flatFaces.length) {
+                        scroller.scrollTo({
+                            top: targetPage * h,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        }
     // 2. MOTORE DEI TOCCHI PER MOBILE (Dita)
     let startTx = 0, startTy = 0;
     
@@ -1144,6 +1195,7 @@ if (ghostLayer) {
 </script>
 </body>
 </html>
+
 
 
 
